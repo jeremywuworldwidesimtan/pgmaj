@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
 export const columns: ColumnDef<JobApplication>[] = [
   {
@@ -111,14 +112,20 @@ export const columns: ColumnDef<JobApplication>[] = [
       const latestUpdate = row.getValue("latestUpdate") ? new Date(row.getValue("latestUpdate")) : null;
       const interviewDate = row.getValue("latestInterviewScheduledDate") ? new Date(row.getValue("latestInterviewScheduledDate")) : null;
 
-      return <div>
-        <p className={cn("font-medium", statusColor)}>{row.getValue("status")}</p>
-        <div className="text-xs text-muted-foreground">
-          <p>{appliedDate ? `Applied ${appliedDate.getDate()}.${(appliedDate.getMonth() + 1).toString().padStart(2, "0")}.${appliedDate.getFullYear()}` : ""}</p>
-          <p>{latestUpdate ? `Updated ${latestUpdate.getDate()}.${(latestUpdate.getMonth() + 1).toString().padStart(2, "0")}.${latestUpdate.getFullYear()}` : ""}</p>
-          <p>{interviewDate ? `Interview ${interviewDate.getDate()}.${(interviewDate.getMonth() + 1).toString().padStart(2, "0")}.${interviewDate.getFullYear()}` : ""}</p>
-        </div>
-      </div>;
+      return (
+        <HoverCard openDelay={10} closeDelay={50}>
+          <HoverCardTrigger asChild className={cn("font-medium", "hover:underline", statusColor)}>
+            <p>{row.getValue("status")}</p>
+          </HoverCardTrigger>
+          <HoverCardContent className="flex w-48 flex-col gap-0.5">
+            <div className="text-xs text-muted-foreground">
+              <p>{appliedDate ? `Applied ${appliedDate.getDate()}.${(appliedDate.getMonth() + 1).toString().padStart(2, "0")}.${appliedDate.getFullYear()}` : ""}</p>
+              <p>{latestUpdate ? `Updated ${latestUpdate.getDate()}.${(latestUpdate.getMonth() + 1).toString().padStart(2, "0")}.${latestUpdate.getFullYear()}` : ""}</p>
+              <p>{interviewDate ? `Interview ${interviewDate.getDate()}.${(interviewDate.getMonth() + 1).toString().padStart(2, "0")}.${interviewDate.getFullYear()}` : ""}</p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+      )
     },
   },
   {

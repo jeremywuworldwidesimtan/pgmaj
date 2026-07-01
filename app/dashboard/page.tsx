@@ -15,7 +15,7 @@ export default async function Dashboard() {
     <div className="flex flex-col flex-1 items-center justify-center bg-background font-sans dark:bg-background">
       <main className="flex flex-1 w-full flex-col items-center py-8 px-16 sm:items-start">
         <h1 className="text-3xl font-bold leading-10 tracking-tight text-black dark:text-zinc-50">
-          PGMAJ Dashboard
+          Applications Dashboard
         </h1>
         <p>
           Here you can manage your job applications and track your progress.

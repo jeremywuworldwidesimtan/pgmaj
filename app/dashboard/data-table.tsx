@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-2">
       <div>
         <p className="text-sm text-muted-foreground">
           {table.getFilteredRowModel().rows.length} of{" "}
@@ -238,27 +238,34 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <p>
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
-        </p>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
+      <div className="flex items-center justify-between">
+        <div>
+          <p>Hover over the colored status to view date details.</p>
+        </div>
+        <div className="flex items-center justify-between space-x-4 py-2">
+          <p>
+            Page {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount()}
+          </p>
+          <div className="flex items-center justify-between space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
