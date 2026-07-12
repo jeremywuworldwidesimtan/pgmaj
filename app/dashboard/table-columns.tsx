@@ -16,8 +16,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export const columns: ColumnDef<JobApplication>[] = [
+  {
+    accessorKey: "checkbox",
+    header: ({ table }) => (
+      <></>
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        className="mr-2"
+      />
+    ),
+  },
   {
     accessorKey: "company",
     header: ({ column }) => {

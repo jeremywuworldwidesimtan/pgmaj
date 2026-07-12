@@ -8,8 +8,8 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <DashboardSidebar />
+      <SidebarTrigger size="lg" />
       <main className="flex flex-col">
-        <SidebarTrigger />
         {children}
       </main>
     </SidebarProvider>

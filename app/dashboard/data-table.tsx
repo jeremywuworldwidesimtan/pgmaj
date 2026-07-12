@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     initialState: {
       pagination: {
-        pageSize: 5, // Set default page size
+        pageSize: 10, // Set default page size
       },
       columnVisibility: {
         appliedDate: false,
@@ -72,12 +72,6 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full space-y-2">
-      <div>
-        <p className="text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} of{" "}
-          {table.getCoreRowModel().rows.length} results.
-        </p>
-      </div>
       <div className="flex items-center py-2 space-x-2">
         {/* Filters for job type, work type and application status */}
         <p>Filter by:</p>
@@ -196,7 +190,7 @@ export function DataTable<TData, TValue>({
           />
         </div>
       </div>
-      <Table className="border w-full table-auto">
+      <Table className="border min-w-320">
         <TableHeader className="bg-primary text-primary-foreground">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
@@ -240,7 +234,15 @@ export function DataTable<TData, TValue>({
       </Table>
       <div className="flex items-center justify-between">
         <div>
-          <p>Hover over the colored status to view date details.</p>
+          <p className="text-sm text-muted-foreground">
+            {table.getFilteredRowModel().rows.length} of{" "}
+            {table.getCoreRowModel().rows.length} results.
+          </p>
+        </div>
+        <div>
+          <p className="text-sm text-muted-foreground">
+            Hover over the colored status to view date details.
+          </p>
         </div>
         <div className="flex items-center justify-between space-x-4 py-2">
           <p>

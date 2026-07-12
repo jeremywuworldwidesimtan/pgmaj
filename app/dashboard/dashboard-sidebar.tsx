@@ -11,68 +11,65 @@ import {
   SidebarMenuSub,
 } from "@/components/ui/sidebar";
 import { Briefcase, CalendarDays, ClipboardCheck, Edit, HelpCircle, History, RefreshCw, Settings } from "lucide-react";
+import Link from "next/link";
 
 const navMain = [
   {
     title: "Applications",
-    url: "#",
     items: [
       {
         title: "Applications Dashboard",
-        url: "#",
+        url: "/dashboard",
         icon: Briefcase,
       },
     ],
   },
   {
     title: "Interviews",
-    url: "#",
     items: [
       {
         title: "Scheduler",
-        url: "#",
+        url: "/dashboard/interview/scheduler",
         icon: CalendarDays,
       },
       {
         title: "Interview Prep",
-        url: "#",
+        url: "/dashboard/interview/prep",
         icon: ClipboardCheck,
       },
     ],
   },
   {
     title: "Resume",
-    url: "#",
     items: [
       {
         title: "Work History",
-        url: "#",
+        url: "/dashboard/resume/work-history",
         icon: History,
       },
       {
         title: "Resume Designer",
-        url: "#",
+        url: "/dashboard/resume/designer",
         icon: Edit,
       },
     ],
   },
   {
     title: "Settings",
-    url: "#",
     items: [
       {
         title: "General",
-        url: "#",
+        url: "/dashboard/settings/general",
         icon: Settings,
       },
       {
         title: "Help",
-        url: "#",
+        url: "/dashboard/settings/help",
         icon: HelpCircle,
       },
       {
         title: "Changelog",
-        url: "#",
+        url: "/dashboard/settings/changelog",
         icon: RefreshCw,
       },
     ],
@@ -80,10 +77,12 @@ const navMain = [
 ];
 
 export function DashboardSidebar() {
+    const currentDate = new Date();
   return (
     <Sidebar>
-      <SidebarHeader>
+      <SidebarHeader className="gap-0">
         <h1 className="text-xl font-bold px-2">PGMAJ Dashboard</h1>
+        <p className="text-sm text-muted-foreground px-2">{currentDate.toLocaleDateString('en-GB', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</p>
       </SidebarHeader>
       <SidebarContent>
         {navMain.map((item, index) => (
@@ -93,10 +92,11 @@ export function DashboardSidebar() {
               {item.items?.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton className="flex items-center gap-2">
-                    {item.icon && <item.icon />}
-                    <span>{item.title}</span>
+                    <Link href={item.url} className="flex items-center gap-2">
+                        {item.icon && <item.icon />}
+                        <span>{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
-                  <SidebarMenuSub></SidebarMenuSub>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
