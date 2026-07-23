@@ -59,8 +59,9 @@ export function DataTable<TData, TValue>({
       },
       columnVisibility: {
         appliedDate: false,
-        latestUpdate: false,
-        latestInterviewScheduledDate: false,
+        jobDescription: false,
+        notes: false,
+        location: false,
       },
     },
 

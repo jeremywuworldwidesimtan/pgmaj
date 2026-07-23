@@ -10,9 +10,10 @@ export type JobApplication = {
     jobType: JobType;
     workType: WorkType;
     status: Status;
-    appliedDate: Date;
+    appliedDate?: Date;
     latestUpdate?: Date;
     latestInterviewScheduledDate?: Date;
     jobDescription?: string;
     referenceLink: string;
+    notes?: string;
 }

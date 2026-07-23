@@ -64,6 +64,21 @@ export const columns: ColumnDef<JobApplication>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const companyName = row.original.company;
+      const applicationId = row.original.id;
+      return (
+        <Link
+          href={`/dashboard/application/${applicationId}`}
+          className="font-medium hover:underline flex flex-col"
+        >
+          <span>{companyName}</span>
+          <span className="text-xs text-muted-foreground">
+            {row.original.location}
+          </span>
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "position",
@@ -86,30 +101,21 @@ export const columns: ColumnDef<JobApplication>[] = [
   },
   {
     accessorKey: "location",
-    header: ({ column }) => {
+    header: "Location",
+  },
+  {
+    accessorKey: "jobAndWorkType",
+    header: "Job & Work Type",
+    cell: ({ row }) => {
+      const jobType = row.original.jobType;
+      const workType = row.original.workType;
       return (
-        <Button
-          className="m-0 p-0 w-40 flex justify-start"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Location
-          {column.getIsSorted() === "asc" ? (
-            <ChevronUp className="ml-2 h-4 w-4" />
-          ) : column.getIsSorted() === "desc" ? (
-            <ChevronDown className="ml-2 h-4 w-4" />
-          ) : null}
-        </Button>
+        <div className="flex flex-col">
+          <span>{jobType}</span>
+          <span className="text-xs text-muted-foreground">{workType}</span>
+        </div>
       );
     },
-  },
-  {
-    accessorKey: "jobType",
-    header: "Job Type",
-  },
-  {
-    accessorKey: "workType",
-    header: "Work Type",
   },
   {
     accessorKey: "status",
@@ -139,41 +145,18 @@ export const columns: ColumnDef<JobApplication>[] = [
       const appliedDate = row.getValue("appliedDate")
         ? new Date(row.getValue("appliedDate"))
         : null;
-      const latestUpdate = row.getValue("latestUpdate")
-        ? new Date(row.getValue("latestUpdate"))
-        : null;
-      const interviewDate = row.getValue("latestInterviewScheduledDate")
-        ? new Date(row.getValue("latestInterviewScheduledDate"))
-        : null;
 
       return (
-        <HoverCard openDelay={10} closeDelay={50}>
-          <HoverCardTrigger
-            asChild
-            className={cn("font-medium", "hover:underline", statusColor)}
-          >
-            <p>{row.getValue("status")}</p>
-          </HoverCardTrigger>
-          <HoverCardContent className="flex w-48 flex-col gap-0.5">
-            <div className="text-xs text-muted-foreground">
-              <p>
-                {appliedDate
-                  ? `Applied ${appliedDate.getDate()}.${(appliedDate.getMonth() + 1).toString().padStart(2, "0")}.${appliedDate.getFullYear()}`
-                  : ""}
-              </p>
-              <p>
-                {latestUpdate
-                  ? `Updated ${latestUpdate.getDate()}.${(latestUpdate.getMonth() + 1).toString().padStart(2, "0")}.${latestUpdate.getFullYear()}`
-                  : ""}
-              </p>
-              <p>
-                {interviewDate
-                  ? `Interview ${interviewDate.getDate()}.${(interviewDate.getMonth() + 1).toString().padStart(2, "0")}.${interviewDate.getFullYear()}`
-                  : ""}
-              </p>
-            </div>
-          </HoverCardContent>
-        </HoverCard>
+        <>
+          <p className={statusColor}>{row.getValue("status")}</p>
+          <div className="text-xs text-muted-foreground flex flex-row gap-2">
+            <p>
+              {appliedDate
+                ? `App. ${appliedDate.getDate()}.${(appliedDate.getMonth() + 1).toString().padStart(2, "0")}.${appliedDate.getFullYear()}`
+                : ""}
+            </p>
+          </div>
+        </>
       );
     },
   },
@@ -182,9 +165,35 @@ export const columns: ColumnDef<JobApplication>[] = [
   },
   {
     accessorKey: "latestUpdate",
+    header: "Latest Update",
+    cell: ({ row }) => {
+      const latestUpdate = row.getValue("latestUpdate")
+        ? new Date(row.getValue("latestUpdate"))
+        : null;
+      return (
+        <p>
+          {latestUpdate
+            ? `${latestUpdate.getDate()}.${(latestUpdate.getMonth() + 1).toString().padStart(2, "0")}.${latestUpdate.getFullYear()}`
+            : "N/A"}
+        </p>
+      );
+    },
   },
   {
     accessorKey: "latestInterviewScheduledDate",
+    header: "Interview Date",
+    cell: ({ row }) => {
+      const interviewDate = row.getValue("latestInterviewScheduledDate")
+        ? new Date(row.getValue("latestInterviewScheduledDate"))
+        : null;
+      return (
+        <p>
+          {interviewDate
+            ? `${interviewDate.getDate()}.${(interviewDate.getMonth() + 1).toString().padStart(2, "0")}.${interviewDate.getFullYear()}`
+            : "N/A"}
+        </p>
+      );
+    },
   },
   {
     accessorKey: "referenceLink",

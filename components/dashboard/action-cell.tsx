@@ -42,7 +42,7 @@ export default function ActionCell({ applicationId }: ActionCellProps) {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem>
             <Link
-              href={`/dashboard/application/${application.id}`}
+              href={`/dashboard/application/edit/${application.id}`}
               className="w-full h-full"
             >
               Edit

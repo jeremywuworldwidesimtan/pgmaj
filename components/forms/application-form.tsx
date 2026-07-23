@@ -120,21 +120,18 @@ export default function ApplicationForm() {
                 name="appliedDate"
                 label="Applied Date"
                 placeholder="Select the applied date"
-                required
             />
             <DateField
                 id="latestUpdate"
                 name="latestUpdate"
                 label="Latest Update"
                 placeholder="Select the latest updated date"
-                required
             />
             <DateField
                 id="latestInterviewScheduledDate"
                 name="latestInterviewScheduledDate"
                 label="Interview Date"
                 placeholder="Select the interview date"
-                required
             />
           </FieldGroup>
         </FieldSet>
@@ -150,7 +147,6 @@ export default function ApplicationForm() {
                 name="jobDescription"
                 label="Job Description"
                 placeholder="Enter the job description"
-                required
             />
             <InputField
                 id="referenceLink"
@@ -158,6 +154,12 @@ export default function ApplicationForm() {
                 label="Reference Link"
                 placeholder="Enter the reference link"
                 required
+            />
+            <TextareaField
+                id="notes"
+                name="notes"
+                label="Notes"
+                placeholder="Enter any additional notes"
             />
           </FieldGroup>
         </FieldSet>
