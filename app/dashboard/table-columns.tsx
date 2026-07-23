@@ -151,7 +151,7 @@ export const columns: ColumnDef<JobApplication>[] = [
   },
   {
     accessorKey: "referenceLink",
-    header: "Reference Link",
+    header: "Link",
     cell: ({ row }) => {
       const formatted: string = row.getValue("referenceLink");
       return (

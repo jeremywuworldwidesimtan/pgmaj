@@ -71,7 +71,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="w-full space-y-2">
+    <div className="space-y-2">
       <div className="flex items-center py-2 space-x-2">
         {/* Filters for job type, work type and application status */}
         <p>Filter by:</p>
@@ -190,7 +190,7 @@ export function DataTable<TData, TValue>({
           />
         </div>
       </div>
-      <Table className="border min-w-320">
+      <Table className="border">
         <TableHeader className="bg-primary text-primary-foreground">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
