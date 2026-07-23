@@ -13,5 +13,6 @@ export type JobApplication = {
     appliedDate: Date;
     latestUpdate?: Date;
     latestInterviewScheduledDate?: Date;
+    jobDescription?: string;
     referenceLink: string;
 }

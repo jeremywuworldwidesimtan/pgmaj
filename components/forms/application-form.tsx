@@ -7,10 +7,12 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLegend,
+  FieldSeparator,
   FieldSet,
 } from "../ui/field";
 import SelectField from "../fields/select-field";
 import DateField from "../fields/date-field";
+import TextareaField from "../fields/textarea-field";
 
 export default function ApplicationForm() {
   //   const [state, formAction, pending] = useActionState(
@@ -52,7 +54,7 @@ export default function ApplicationForm() {
             />
           </FieldGroup>
         </FieldSet>
-
+        <FieldSeparator />
         <FieldSet>
           <FieldLegend>Job Types & Status</FieldLegend>
           <FieldDescription>
@@ -106,7 +108,7 @@ export default function ApplicationForm() {
             />
           </FieldGroup>
         </FieldSet>
-
+        <FieldSeparator />
         <FieldSet>
           <FieldLegend>Job Dates</FieldLegend>
           <FieldDescription>
@@ -132,6 +134,29 @@ export default function ApplicationForm() {
                 name="latestInterviewScheduledDate"
                 label="Interview Date"
                 placeholder="Select the interview date"
+                required
+            />
+          </FieldGroup>
+        </FieldSet>
+        <FieldSeparator />
+        <FieldSet>
+          <FieldLegend>Description & Reference</FieldLegend>
+          <FieldDescription>
+            Information about the job description and reference link for the application.
+          </FieldDescription>
+          <FieldGroup>
+            <TextareaField
+                id="jobDescription"
+                name="jobDescription"
+                label="Job Description"
+                placeholder="Enter the job description"
+                required
+            />
+            <InputField
+                id="referenceLink"
+                name="referenceLink"
+                label="Reference Link"
+                placeholder="Enter the reference link"
                 required
             />
           </FieldGroup>
