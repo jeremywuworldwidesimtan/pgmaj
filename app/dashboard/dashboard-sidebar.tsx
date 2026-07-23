@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   SidebarMenuSub,
 } from "@/components/ui/sidebar";
-import { Briefcase, CalendarDays, ClipboardCheck, Edit, HelpCircle, History, RefreshCw, Settings } from "lucide-react";
+import { Briefcase, CalendarDays, ClipboardCheck, Edit, HelpCircle, History, Info, RefreshCw, Settings } from "lucide-react";
 import Link from "next/link";
 
 const navMain = [
@@ -25,36 +25,41 @@ const navMain = [
       },
     ],
   },
-  {
-    title: "Interviews",
-    items: [
-      {
-        title: "Scheduler",
-        url: "/dashboard/interview/scheduler",
-        icon: CalendarDays,
-      },
-      {
-        title: "Interview Prep",
-        url: "/dashboard/interview/prep",
-        icon: ClipboardCheck,
-      },
-    ],
-  },
-  {
-    title: "Resume",
-    items: [
-      {
-        title: "Work History",
-        url: "/dashboard/resume/work-history",
-        icon: History,
-      },
-      {
-        title: "Resume Designer",
-        url: "/dashboard/resume/designer",
-        icon: Edit,
-      },
-    ],
-  }
+  // {
+  //   title: "Interviews",
+  //   items: [
+  //     {
+  //       title: "Scheduler",
+  //       url: "/dashboard/interview/scheduler",
+  //       icon: CalendarDays,
+  //     },
+  //     {
+  //       title: "Interview Prep",
+  //       url: "/dashboard/interview/prep",
+  //       icon: ClipboardCheck,
+  //     },
+  //   ],
+  // },
+  // {
+  //   title: "Resume",
+  //   items: [
+  //     {
+  //       title: "Experience",
+  //       url: "/dashboard/resume/experience",
+  //       icon: History,
+  //     },
+  //     {
+  //       title: "Resume Information",
+  //       url: "/dashboard/resume/information",
+  //       icon: Info, 
+  //     },
+  //     {
+  //       title: "Resume Designer",
+  //       url: "/dashboard/resume/designer",
+  //       icon: Edit,
+  //     },
+  //   ],
+  // }
 ];
 
 export function DashboardSidebar() {
