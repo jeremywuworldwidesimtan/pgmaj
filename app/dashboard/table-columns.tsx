@@ -190,7 +190,11 @@ export const columns: ColumnDef<JobApplication>[] = [
               Copy application ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href={`/dashboard/application/${application.id}`} className="w-full h-full">
+                Edit
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

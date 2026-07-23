@@ -1,3 +1,4 @@
+import { SidebarUser } from "@/components/sidebar/sidebar-user";
 import {
   Sidebar,
   SidebarContent,
@@ -53,27 +54,7 @@ const navMain = [
         icon: Edit,
       },
     ],
-  },
-  {
-    title: "Settings",
-    items: [
-      {
-        title: "General",
-        url: "/dashboard/settings/general",
-        icon: Settings,
-      },
-      {
-        title: "Help",
-        url: "/dashboard/settings/help",
-        icon: HelpCircle,
-      },
-      {
-        title: "Changelog",
-        url: "/dashboard/settings/changelog",
-        icon: RefreshCw,
-      },
-    ],
-  },
+  }
 ];
 
 export function DashboardSidebar() {
@@ -104,8 +85,11 @@ export function DashboardSidebar() {
         ))}
       </SidebarContent>
       <SidebarFooter className="gap-0">
-        <p className="text-sm text-muted-foreground px-2">Signed in as</p>
-        <h2 className="text-lg font-bold px-2 py-0">Marty Wilson</h2>
+        <SidebarUser user={{
+            name: "Marty Wilson",
+            email: "marty@example.com",
+            avatar: "/path/to/avatar.jpg",
+        }}/>
       </SidebarFooter>
     </Sidebar>
   );
