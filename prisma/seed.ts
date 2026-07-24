@@ -20,7 +20,7 @@ const userData: Prisma.UserCreateInput[] = [
     lastName: "User",
     password: "AdminPassw0rd!",
     role: "Admin",
-    membershipPlan: "Pro",
+    credits: 100,
     jobApplications: {
       create: {
         company: "PGMAJ Corporation",

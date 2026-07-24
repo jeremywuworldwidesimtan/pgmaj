@@ -31,3 +31,40 @@ export type JobApplication = {
   referenceLink?: string;
   notes?: string;
 };
+
+export type StatusPrisma =
+  | "Applied"
+  | "Shortlisted"
+  | "Interviewed"
+  | "Offered"
+  | "Rejected";
+export type JobTypePrisma =
+  | "FullTime"
+  | "PartTime"
+  | "Contract"
+  | "Internship"
+  | "Freelance";
+export type JobModePrisma = "Remote" | "OnSite" | "Hybrid";
+export type PayFrequencyPrisma = "Hourly" | "Weekly" | "Monthly" | "Yearly";
+
+export type JobApplicationPrisma = {
+ id: string;
+ company: string;
+ position: string;
+ location: string;
+ jobType: JobTypePrisma;
+ jobMode: JobModePrisma;
+ minPay: number | null;
+ maxPay: number | null;
+ payFrequency: PayFrequencyPrisma | null;
+ status: StatusPrisma;
+ appliedDate: Date | null;
+ latestUpdate: Date | null;
+ latestInterviewScheduledDate: Date | null;
+ referenceLink: string | null;
+ notes: string | null;
+ userId: string;
+ createdAt: Date;
+ updatedAt: Date;
+ softDeleted: boolean;
+}

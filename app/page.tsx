@@ -15,6 +15,7 @@ export default function Home() {
           <main className="py-4">
             <h2 className="text-2xl font-bold">The landing page is a work in progress.</h2>
           </main>
+          
           <div>
             <Button>
               <Link href="/dashboard">

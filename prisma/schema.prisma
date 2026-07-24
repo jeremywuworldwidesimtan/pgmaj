@@ -41,20 +41,15 @@ enum Role {
   Admin
 }
 
-enum MembershipPlan {
-  Free
-  Pro
-}
-
 model User {
   id              String   @id @default(uuid())
   email           String   @unique
   username        String   @unique
-  firstName       String
-  lastName        String
+  firstName       String?
+  lastName        String?
   password        String
   role            Role     @default(User)
-  membershipPlan  MembershipPlan @default(Free)
+  credits         Int      @default(0)
   jobApplications JobApplication[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

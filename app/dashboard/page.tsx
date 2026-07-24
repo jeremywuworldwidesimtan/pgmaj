@@ -1,13 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { JobApplication } from "../types";
+import { JobApplicationPrisma } from "../types";
 import { DataTable } from "./data-table";
-import { SampleJobApplications } from "./sampleData";
 import { columns } from "./table-columns";
 import Link from "next/link";
+import { verifySession } from "../lib/dal";
+import prisma from "@/lib/prisma";
 
-async function getData(): Promise<JobApplication[]> {
+async function getData(): Promise<JobApplicationPrisma[]> {
   // Fetch data from your API here.
-  return SampleJobApplications;
+  const session = await verifySession();
+  const jobApplications = await prisma.jobApplication.findMany({
+    where: {
+      userId: session.userId,
+    },
+  });
+  return jobApplications;
 }
 
 export default async function Dashboard() {

@@ -8,12 +8,13 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSub,
+  SidebarMenuItem
 } from "@/components/ui/sidebar";
 import { Briefcase, CalendarDays, ClipboardCheck, Edit, HelpCircle, History, Info, RefreshCw, Settings } from "lucide-react";
 import Link from "next/link";
 import { VERSION } from "../global-values";
+import { verifySession } from "../lib/dal";
+import { getUser } from "../actions/getUserInfo";
 
 const navMain = [
   {
@@ -63,8 +64,12 @@ const navMain = [
   // }
 ];
 
-export function DashboardSidebar() {
-    const currentDate = new Date();
+export async function DashboardSidebar() {
+  const currentDate = new Date();
+  const session = await verifySession();
+  // Fetch user-specific data from your database or data source
+  const user = await getUser(session.userId);
+
   return (
     <Sidebar>
       <SidebarHeader className="gap-0">
@@ -92,9 +97,9 @@ export function DashboardSidebar() {
       </SidebarContent>
       <SidebarFooter className="gap-0">
         <SidebarUser user={{
-            name: "Marty Wilson",
-            email: "marty@example.com",
-            avatar: "/path/to/avatar.jpg",
+            name: (user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}` : user?.username || "User",
+            email: user?.email || "",
+            avatar: "/placeholder.svg"
         }}/>
       </SidebarFooter>
     </Sidebar>

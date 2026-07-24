@@ -1,15 +1,15 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { JobApplication } from "../types";
 import Link from "next/link";
 import { ChevronUp, ChevronDown, LucideLink } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import ActionCell from "@/components/dashboard/action-cell";
+import { JobApplicationPrisma } from "../types";
 
-export const columns: ColumnDef<JobApplication>[] = [
+export const columns: ColumnDef<JobApplicationPrisma>[] = [
   {
     accessorKey: "checkbox",
     header: ({ table }) => <></>,

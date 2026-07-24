@@ -1,24 +1,24 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-import {
-  FieldDescription,
-  FieldLegend,
-  FieldSet,
-} from "@/components/ui/field";
+import { FieldDescription, FieldLegend, FieldSet } from "@/components/ui/field";
 import InputField from "../fields/input-field";
 import Link from "next/link";
+import { login } from "@/app/actions/auth";
+import { useActionState } from "react";
 
 export function LoginForm() {
+  const [state, action, pending] = useActionState(login, undefined);
   return (
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form action={action} className="p-6 md:p-8">
             <FieldSet>
               <div className="flex flex-col items-start gap-2">
                 <FieldLegend>
-                    <h1 className="text-2xl font-bold">Welcome back</h1>
+                  <h1 className="text-2xl font-bold">Welcome back</h1>
                 </FieldLegend>
                 <FieldDescription className="text-base text-muted-foreground">
                   Login to your PGMAJ account
@@ -30,6 +30,9 @@ export function LoginForm() {
                 label="Email"
                 type="email"
                 placeholder="Enter your email"
+                error={
+                  state?.errors?.email ? state.errors.email.join(", ") : ""
+                }
                 required
               />
               <InputField
@@ -38,14 +41,27 @@ export function LoginForm() {
                 label="Password"
                 type="password"
                 placeholder="Enter your password"
+                error={
+                  state?.errors?.password
+                    ? state.errors.password.join(", ")
+                    : ""
+                }
                 required
               />
               <FieldDescription className="font-xs">
                 Forgot your password? <Link href="/reset">Reset it</Link>
               </FieldDescription>
-              <Button type="submit">Login</Button>
+              {state?.message && (
+                <FieldDescription className="text-destructive">
+                  {state.message}
+                </FieldDescription>
+              )}
+              <Button type="submit" disabled={pending}>
+                {pending ? "Logging in..." : "Login"}
+              </Button>
               <FieldDescription className="font-xs">
-                Don&apos;t have an account? <Link href="/register">Sign up</Link>
+                Don&apos;t have an account?{" "}
+                <Link href="/register">Sign up</Link>
               </FieldDescription>
             </FieldSet>
           </form>
