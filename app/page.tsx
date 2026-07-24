@@ -11,7 +11,11 @@ export default function Home() {
           <p>
             Please Give Me A Job - the centralized job application management platform.
           </p>
-          <div className="mt-4">
+
+          <main className="py-4">
+            <h2 className="text-2xl font-bold">The landing page is a work in progress.</h2>
+          </main>
+          <div>
             <Button>
               <Link href="/dashboard">
                 Get Started
@@ -22,6 +26,17 @@ export default function Home() {
             </Link>
           </div>
           <div className="mt-8">
+            <p className="text-sm text-muted-foreground">
+              Made by @jeremywuworldwidesimtan.{" "}
+              <Link
+                href="https://github.com/your-repo"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Source
+              </Link>
+            </p>
             <p className="text-sm text-muted-foreground">
               This is a work in progress. Please report any issues on the{" "}
               <Link

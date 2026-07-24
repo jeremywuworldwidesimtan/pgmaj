@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Briefcase, CalendarDays, ClipboardCheck, Edit, HelpCircle, History, Info, RefreshCw, Settings } from "lucide-react";
 import Link from "next/link";
+import { VERSION } from "../global-values";
 
 const navMain = [
   {
@@ -67,7 +68,7 @@ export function DashboardSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="gap-0">
-        <h1 className="text-xl font-bold px-2">PGMAJ Dashboard</h1>
+        <h1 className="text-xl font-bold px-2">PGMAJ<sup>{VERSION}</sup></h1>
         <p className="text-sm text-muted-foreground px-2">{currentDate.toLocaleDateString('en-GB', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</p>
       </SidebarHeader>
       <SidebarContent>
