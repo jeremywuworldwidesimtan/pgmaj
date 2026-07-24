@@ -110,6 +110,43 @@ export default function ApplicationForm() {
         </FieldSet>
         <FieldSeparator />
         <FieldSet>
+          <FieldLegend>Job Pay</FieldLegend>
+          <FieldDescription>
+            Information about the pay range and frequency for the job application.
+          </FieldDescription>
+          <FieldGroup className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <InputField
+              id="minPay"
+              name="minPay"
+              label="Minimum Pay"
+              placeholder="Enter the minimum pay"
+              type="number"
+              required
+            />
+            <InputField
+              id="maxPay"
+              name="maxPay"
+              label="Maximum Pay"
+              placeholder="Enter the maximum pay"
+              type="number"
+              required
+            />
+            <SelectField
+              id="payFrequency"
+              name="payFrequency"
+              label="Pay Frequency"
+              value={""}
+              placeholder="Select the pay frequency"
+              required
+              selectItems={["Hourly", "Weekly", "Monthly", "Yearly"].map((frequency) => ({
+                label: frequency,
+                value: frequency,
+              }))}
+            />
+          </FieldGroup>
+        </FieldSet>
+        <FieldSeparator />
+        <FieldSet>
           <FieldLegend>Job Dates</FieldLegend>
           <FieldDescription>
             Information about the important dates for the job application.

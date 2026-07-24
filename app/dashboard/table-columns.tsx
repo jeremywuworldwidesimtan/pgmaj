@@ -73,6 +73,25 @@ export const columns: ColumnDef<JobApplication>[] = [
     header: "Location",
   },
   {
+    accessorKey: "payRange",
+    header: "Pay Range",
+    cell: ({ row }) => {
+      const minPay = row.original.minPay;
+      const maxPay = row.original.maxPay;
+      const payFrequency = row.original.payFrequency;
+      return (
+        <div className="flex flex-col">
+          <span>
+            {minPay && maxPay
+              ? `$${minPay.toLocaleString()} - $${maxPay.toLocaleString()}`
+              : (minPay && !maxPay ? `$${minPay.toLocaleString()}` : "N/A")}
+          </span>
+          <span className="text-xs text-muted-foreground">{payFrequency}</span>
+        </div>
+      );
+    }
+  },
+  {
     accessorKey: "jobTypeandMode",
     header: "Job Type & Mode",
     cell: ({ row }) => {

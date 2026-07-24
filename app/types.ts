@@ -11,6 +11,7 @@ export type JobType =
   | "Internship"
   | "Freelance";
 export type JobMode = "Remote" | "On-site" | "Hybrid";
+export type PayFrequency = "Hourly" | "Weekly" | "Monthly" | "Yearly";
 
 export type JobApplication = {
   id: number;
@@ -19,6 +20,9 @@ export type JobApplication = {
   location: string;
   jobType: JobType;
   jobMode: JobMode;
+  minPay?: number;
+  maxPay?: number;
+  payFrequency?: PayFrequency;
   status: Status;
   appliedDate?: Date;
   latestUpdate?: Date;
