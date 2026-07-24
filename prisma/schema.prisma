@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Status {
+  Applied
+  Shortlisted
+  Interviewed
+  Offered
+  Rejected
+}
+
+enum JobType {
+  FullTime
+  PartTime
+  Contract
+  Internship
+  Freelance
+}
+
+enum JobMode {
+  Remote
+  OnSite
+  Hybrid
+}
+
+enum PayFrequency {
+  Hourly
+  Weekly
+  Monthly
+  Yearly
+}
+
+enum Role {
+  User
+  Admin
+}
+
+enum MembershipPlan {
+  Free
+  Pro
+}
+
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  username        String   @unique
+  firstName       String
+  lastName        String
+  password        String
+  role            Role     @default(User)
+  membershipPlan  MembershipPlan @default(Free)
+  jobApplications JobApplication[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  softDeleted     Boolean  @default(false)
+}
+
+model JobApplication {
+  id                           String         @id @default(uuid())
+  company                      String
+  position                     String
+  location                     String
+  jobType                      JobType
+  jobMode                      JobMode
+  minPay                       Float?
+  maxPay                       Float?
+  payFrequency                 PayFrequency?
+  status                       Status
+  appliedDate                  DateTime?
+  latestUpdate                 DateTime?
+  latestInterviewScheduledDate DateTime?
+  jobDescription               JobDescription?
+  referenceLink                String?
+  notes                        String?
+  userId                       String
+  user                         User          @relation(fields: [userId], references: [id])
+  createdAt                    DateTime      @default(now())
+  updatedAt                    DateTime      @updatedAt
+  softDeleted                  Boolean       @default(false)
+}
+
+model JobDescription {
+  id          String   @id @default(uuid())
+  jobId       String   @unique
+  job         JobApplication @relation(fields: [jobId], references: [id])
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  softDeleted  Boolean   @default(false)
+}

@@ -14,7 +14,7 @@ export type JobMode = "Remote" | "On-site" | "Hybrid";
 export type PayFrequency = "Hourly" | "Weekly" | "Monthly" | "Yearly";
 
 export type JobApplication = {
-  id: number;
+  id: string;
   company: string;
   position: string;
   location: string;
@@ -28,6 +28,6 @@ export type JobApplication = {
   latestUpdate?: Date;
   latestInterviewScheduledDate?: Date;
   jobDescription?: string;
-  referenceLink: string;
+  referenceLink?: string;
   notes?: string;
 };

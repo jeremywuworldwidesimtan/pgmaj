@@ -2,7 +2,7 @@ import { JobApplication } from "../types";
 
 export const SampleJobApplications: JobApplication[] = [
   {
-    id: 1,
+    id: "1",
     company: "Semantic Technologies",
     position: "Frontend Developer",
     location: "Whiskview",
@@ -18,7 +18,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 2,
+    id: "2",
     company: "Papa's Global Ventures",
     position: "Software Engineer",
     location: "Tastyville",
@@ -31,7 +31,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 3,
+    id: "3",
     company: "The Cone",
     position: "Full-Stack Web Developer",
     location: "Starlight City",
@@ -44,7 +44,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 4,
+    id: "4",
     company: "MandiCo",
     position: "Junior Developer",
     location: "Starlight City",
@@ -60,7 +60,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 5,
+    id: "5",
     company: "Gigaloaf Labs",
     position: "Apprenticeship, Web Experience",
     location: "Starlight City",
@@ -76,7 +76,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 6,
+    id: "6",
     company: "Fluffmart",
     position: "Software Systems Developer",
     location: "Tastyville",
@@ -89,7 +89,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 7,
+    id: "7",
     company: "Lawton Mechatronics",
     position: "Automation Developer (Web)",
     location: "Whiskview",
@@ -102,7 +102,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 8,
+    id: "8",
     company: "Little John's Home Design",
     position: "WordPress Developer",
     location: "Oniontown",
@@ -118,7 +118,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 9,
+    id: "9",
     company: "Janana Talent Management",
     position: "WordPress Developer",
     location: "Whiskview",
@@ -131,7 +131,7 @@ export const SampleJobApplications: JobApplication[] = [
     referenceLink: "https://www.example.com",
   },
   {
-    id: 10,
+    id: "10",
     company: "Office of the Mayor",
     position: "Frontend Web Developer",
     location: "Tacodale",
