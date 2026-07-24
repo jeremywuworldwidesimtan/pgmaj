@@ -74,7 +74,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-2">
       <div className="flex items-center py-2 space-x-2">
-        {/* Filters for job type, work type and application status */}
+        {/* Filters for job type, job mode and application status */}
         <p>Filter by:</p>
         <div className="flex items-center space-x-2">
           <Select
@@ -108,20 +108,20 @@ export function DataTable<TData, TValue>({
         <div className="flex items-center space-x-2">
           <Select
             onValueChange={(value) =>
-              table.getColumn("workType")?.setFilterValue(value)
+              table.getColumn("jobMode")?.setFilterValue(value)
             }
           >
             <SelectTrigger className="w-full max-w-48">
-              <SelectValue placeholder="Select a work type" />
+              <SelectValue placeholder="Select a job mode" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectItem key="" value="">
                   N/A
                 </SelectItem>
-                {["Remote", "On-site", "Hybrid"].map((workType) => (
-                  <SelectItem key={workType} value={workType}>
-                    {workType}
+                {["Remote", "On-site", "Hybrid"].map((jobMode) => (
+                  <SelectItem key={jobMode} value={jobMode}>
+                    {jobMode}
                   </SelectItem>
                 ))}
               </SelectGroup>

@@ -3,11 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { JobApplication } from "../types";
 import Link from "next/link";
-import {
-  ChevronUp,
-  ChevronDown,
-  LucideLink,
-} from "lucide-react";
+import { ChevronUp, ChevronDown, LucideLink } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -77,15 +73,15 @@ export const columns: ColumnDef<JobApplication>[] = [
     header: "Location",
   },
   {
-    accessorKey: "jobAndWorkType",
-    header: "Job & Work Type",
+    accessorKey: "jobTypeandMode",
+    header: "Job Type & Mode",
     cell: ({ row }) => {
       const jobType = row.original.jobType;
-      const workType = row.original.workType;
+      const jobMode = row.original.jobMode;
       return (
         <div className="flex flex-col">
           <span>{jobType}</span>
-          <span className="text-xs text-muted-foreground">{workType}</span>
+          <span className="text-xs text-muted-foreground">{jobMode}</span>
         </div>
       );
     },

@@ -77,15 +77,15 @@ export default function ApplicationForm() {
               ].map((jobType) => ({ label: jobType, value: jobType }))}
             />
             <SelectField
-              id="workType"
-              name="workType"
-              label="Work Type"
+              id="jobMode"
+              name="jobMode"
+              label="Job Mode"
               value={""}
-              placeholder="Select the work type"
+              placeholder="Select the job mode"
               required
-              selectItems={["Remote", "On-site", "Hybrid"].map((workType) => ({
-                label: workType,
-                value: workType,
+              selectItems={["Remote", "On-site", "Hybrid"].map((jobMode) => ({
+                label: jobMode,
+                value: jobMode,
               }))}
             />
             <SelectField
@@ -116,22 +116,22 @@ export default function ApplicationForm() {
           </FieldDescription>
           <FieldGroup className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <DateField
-                id="appliedDate"
-                name="appliedDate"
-                label="Applied Date"
-                placeholder="Select the applied date"
+              id="appliedDate"
+              name="appliedDate"
+              label="Applied Date"
+              placeholder="Select the applied date"
             />
             <DateField
-                id="latestUpdate"
-                name="latestUpdate"
-                label="Latest Update"
-                placeholder="Select the latest updated date"
+              id="latestUpdate"
+              name="latestUpdate"
+              label="Latest Update"
+              placeholder="Select the latest updated date"
             />
             <DateField
-                id="latestInterviewScheduledDate"
-                name="latestInterviewScheduledDate"
-                label="Interview Date"
-                placeholder="Select the interview date"
+              id="latestInterviewScheduledDate"
+              name="latestInterviewScheduledDate"
+              label="Interview Date"
+              placeholder="Select the interview date"
             />
           </FieldGroup>
         </FieldSet>
@@ -139,27 +139,28 @@ export default function ApplicationForm() {
         <FieldSet>
           <FieldLegend>Description & Reference</FieldLegend>
           <FieldDescription>
-            Information about the job description and reference link for the application.
+            Information about the job description and reference link for the
+            application.
           </FieldDescription>
           <FieldGroup>
             <TextareaField
-                id="jobDescription"
-                name="jobDescription"
-                label="Job Description"
-                placeholder="Enter the job description"
+              id="jobDescription"
+              name="jobDescription"
+              label="Job Description"
+              placeholder="Enter the job description"
             />
             <InputField
-                id="referenceLink"
-                name="referenceLink"
-                label="Reference Link"
-                placeholder="Enter the reference link"
-                required
+              id="referenceLink"
+              name="referenceLink"
+              label="Reference Link"
+              placeholder="Enter the reference link"
+              required
             />
             <TextareaField
-                id="notes"
-                name="notes"
-                label="Notes"
-                placeholder="Enter any additional notes"
+              id="notes"
+              name="notes"
+              label="Notes"
+              placeholder="Enter any additional notes"
             />
           </FieldGroup>
         </FieldSet>
