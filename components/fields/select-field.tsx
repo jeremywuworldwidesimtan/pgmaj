@@ -44,7 +44,6 @@ export default function SelectField({
   enableDefaultOption = true,
   selectItems,
 }: SelectFieldProps) {
-  console.log("SelectField value:", value);
   if (enableDefaultOption) {
     selectItems = [
       { value: "", label: placeholder || "Select an option" },

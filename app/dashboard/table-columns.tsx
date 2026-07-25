@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import ActionCell from "@/components/dashboard/action-cell";
 import { JobApplicationPrisma } from "../types";
+import { formatType, parseDate } from "../lib/helper";
 
 export const columns: ColumnDef<JobApplicationPrisma>[] = [
   {
@@ -97,10 +98,11 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
     cell: ({ row }) => {
       const jobType = row.original.jobType;
       const jobMode = row.original.jobMode;
+
       return (
         <div className="flex flex-col">
-          <span>{jobType}</span>
-          <span className="text-xs text-muted-foreground">{jobMode}</span>
+          <span>{formatType(jobType)}</span>
+          <span className="text-xs text-muted-foreground">{formatType(jobMode)}</span>
         </div>
       );
     },
@@ -140,7 +142,7 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
           <div className="text-xs text-muted-foreground flex flex-row gap-2">
             <p>
               {appliedDate
-                ? `App. ${appliedDate.getDate()}.${(appliedDate.getMonth() + 1).toString().padStart(2, "0")}.${appliedDate.getFullYear()}`
+                ? `App. ${parseDate(appliedDate, "british", "short", "dot")}`
                 : ""}
             </p>
           </div>
@@ -161,7 +163,7 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
       return (
         <p>
           {latestUpdate
-            ? `${latestUpdate.getDate()}.${(latestUpdate.getMonth() + 1).toString().padStart(2, "0")}.${latestUpdate.getFullYear()}`
+            ? parseDate(latestUpdate, "british", "short", "dot")
             : "N/A"}
         </p>
       );
@@ -177,7 +179,7 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
       return (
         <p>
           {interviewDate
-            ? `${interviewDate.getDate()}.${(interviewDate.getMonth() + 1).toString().padStart(2, "0")}.${interviewDate.getFullYear()}`
+            ? parseDate(interviewDate, "british", "short", "dot")
             : "N/A"}
         </p>
       );

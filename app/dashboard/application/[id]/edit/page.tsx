@@ -1,7 +1,36 @@
 import ApplicationForm from "@/components/forms/application-form";
+import prisma from "@/lib/prisma";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export default function EditApplication() {
+async function getFormData(id: string) {
+  // Fetch data from your API here.
+  const response = await prisma.jobApplication.findFirst({
+    where: {
+      id: id,
+    },
+  });
+  return response;
+}
+
+async function getJobDesc(id: string) {
+  // Fetch data from your API here.
+  const response = await prisma.jobDescription.findFirst({
+    where: {
+      jobId: id,
+    },
+  });
+  return response;
+}
+
+export default async function EditApplication({ params }: { params: { id: string } }) {
+  const { id } = await params;
+  const data = await getFormData(id);
+  const jobDesc = await getJobDesc(id);
+
+  if (!data || data.softDeleted) {
+    notFound();
+  }
   return (
     <>
         <Link href="/dashboard" className="text-sm hover:underline">
@@ -10,7 +39,7 @@ export default function EditApplication() {
         <h1 className="text-3xl font-bold mt-2">Edit Application</h1>
 
         <div>
-            <ApplicationForm />
+            <ApplicationForm formData={{ ...data, jobDescription: jobDesc?.description || null }} />
         </div>
     </>
   )

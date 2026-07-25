@@ -12,6 +12,7 @@ async function getData(): Promise<JobApplicationPrisma[]> {
   const jobApplications = await prisma.jobApplication.findMany({
     where: {
       userId: session.userId,
+      softDeleted: false,
     },
   });
   return jobApplications;

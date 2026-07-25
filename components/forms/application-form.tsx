@@ -13,17 +13,58 @@ import {
 import SelectField from "../fields/select-field";
 import DateField from "../fields/date-field";
 import TextareaField from "../fields/textarea-field";
+import {
+  JobTypePrisma,
+  JobModePrisma,
+  PayFrequencyPrisma,
+  StatusPrisma,
+} from "@/app/types";
+import { submitApplicationForm } from "@/app/actions/application";
+import { type ApplicationFormState } from "@/app/lib/definitions";
 
-export default function ApplicationForm() {
-  //   const [state, formAction, pending] = useActionState(
-  //     submitApplicationForm,
-  //     initialState,
-  //   );
+export type ApplicationFormProps = {
+  formData: {
+    id: string;
+    company: string;
+    position: string;
+    location: string;
+    jobType: JobTypePrisma;
+    jobMode: JobModePrisma;
+    minPay: number | null;
+    maxPay: number | null;
+    payFrequency: PayFrequencyPrisma | null;
+    status: StatusPrisma;
+    appliedDate: Date | null;
+    latestUpdate: Date | null;
+    latestInterviewScheduledDate: Date | null;
+    referenceLink: string | null;
+    notes: string | null;
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    softDeleted: boolean;
+    jobDescription?: string | null;
+  };
+};
+
+const initialState: ApplicationFormState = undefined;
+
+export default function ApplicationForm({
+  formData: data,
+}: ApplicationFormProps) {
+
+    const [state, formAction, pending] = useActionState(
+      submitApplicationForm,
+      initialState,
+    );
 
   return (
     <>
       {/* <form action={formAction} className="mt-4 flex flex-col gap-4"> */}
-      <form className="mt-4 flex flex-col gap-4">
+      <form action={formAction} className="mt-4 flex flex-col gap-4">
+        {data?.id ? (
+          <input type="hidden" name="jobId" value={data.id} />
+        ) : null}
         <FieldSet>
           <FieldLegend>Job Information</FieldLegend>
           <FieldDescription>
@@ -35,21 +76,27 @@ export default function ApplicationForm() {
               id="company"
               name="company"
               label="Company"
+              value={data?.company || ""}
               placeholder="Enter the company name"
+              error = {state?.errors?.company ? state.errors.company.join(", ") : ""}
               required
             />
             <InputField
               id="position"
               name="position"
               label="Position"
+              value={data?.position || ""}
               placeholder="Enter the position"
+              error = {state?.errors?.position ? state.errors.position.join(", ") : ""}
               required
             />
             <InputField
               id="location"
               name="location"
               label="Location"
+              value={data?.location || ""}
               placeholder="Enter the location"
+              error = {state?.errors?.location ? state.errors.location.join(", ") : ""}
               required
             />
           </FieldGroup>
@@ -65,46 +112,47 @@ export default function ApplicationForm() {
               id="jobType"
               name="jobType"
               label="Job Type"
-              value={""}
+              value={data?.jobType || ""}
               placeholder="Select the job type"
+              error = {state?.errors?.jobType ? state.errors.jobType.join(", ") : ""}
               required
               selectItems={[
-                "Full-time",
-                "Part-time",
-                "Contract",
-                "Internship",
-                "Freelance",
-              ].map((jobType) => ({ label: jobType, value: jobType }))}
+                { label: "Full-time", value: "FullTime" },
+                { label: "Part-time", value: "PartTime" },
+                { label: "Contract", value: "Contract" },
+                { label: "Internship", value: "Internship" },
+                { label: "Freelance", value: "Freelance" },
+              ]}
             />
             <SelectField
               id="jobMode"
               name="jobMode"
               label="Job Mode"
-              value={""}
+              value={data?.jobMode || ""}
               placeholder="Select the job mode"
+              error = {state?.errors?.jobMode ? state.errors.jobMode.join(", ") : ""}
               required
-              selectItems={["Remote", "On-site", "Hybrid"].map((jobMode) => ({
-                label: jobMode,
-                value: jobMode,
-              }))}
+              selectItems={[
+                { label: "Remote", value: "Remote" },
+                { label: "On-site", value: "OnSite" },
+                { label: "Hybrid", value: "Hybrid" },
+              ]}
             />
             <SelectField
               id="status"
               name="status"
               label="Application Status"
-              value={""}
+              value={data?.status || ""}
               placeholder="Select the application status"
+              error = {state?.errors?.status ? state.errors.status.join(", ") : ""}
               required
               selectItems={[
-                "Applied",
-                "Shortlisted",
-                "Interviewed",
-                "Offered",
-                "Rejected",
-              ].map((status) => ({
-                label: status,
-                value: status,
-              }))}
+                { label: "Applied", value: "Applied" },
+                { label: "Shortlisted", value: "Shortlisted" },
+                { label: "Interviewed", value: "Interviewed" },
+                { label: "Offered", value: "Offered" },
+                { label: "Rejected", value: "Rejected" },
+              ]}
             />
           </FieldGroup>
         </FieldSet>
@@ -112,14 +160,17 @@ export default function ApplicationForm() {
         <FieldSet>
           <FieldLegend>Job Pay</FieldLegend>
           <FieldDescription>
-            Information about the pay range and frequency for the job application.
+            Information about the pay range and frequency for the job
+            application.
           </FieldDescription>
           <FieldGroup className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <InputField
               id="minPay"
               name="minPay"
               label="Minimum Pay"
+              value={data?.minPay || ""}
               placeholder="Enter the minimum pay"
+              error = {state?.errors?.minPay ? state.errors.minPay.join(", ") : ""}
               type="number"
               required
             />
@@ -127,7 +178,9 @@ export default function ApplicationForm() {
               id="maxPay"
               name="maxPay"
               label="Maximum Pay"
+              value={data?.maxPay || ""}
               placeholder="Enter the maximum pay"
+              error = {state?.errors?.maxPay ? state.errors.maxPay.join(", ") : ""}
               type="number"
               required
             />
@@ -135,13 +188,16 @@ export default function ApplicationForm() {
               id="payFrequency"
               name="payFrequency"
               label="Pay Frequency"
-              value={""}
+              value={data?.payFrequency || ""}
               placeholder="Select the pay frequency"
+              error = {state?.errors?.payFrequency ? state.errors.payFrequency.join(", ") : ""}
               required
-              selectItems={["Hourly", "Weekly", "Monthly", "Yearly"].map((frequency) => ({
-                label: frequency,
-                value: frequency,
-              }))}
+              selectItems={["Hourly", "Weekly", "Monthly", "Yearly"].map(
+                (frequency) => ({
+                  label: frequency,
+                  value: frequency,
+                }),
+              )}
             />
           </FieldGroup>
         </FieldSet>
@@ -156,18 +212,24 @@ export default function ApplicationForm() {
               id="appliedDate"
               name="appliedDate"
               label="Applied Date"
+              value={data?.appliedDate || ""}
+              error = {state?.errors?.appliedDate ? state.errors.appliedDate.join(", ") : ""}
               placeholder="Select the applied date"
             />
             <DateField
               id="latestUpdate"
               name="latestUpdate"
               label="Latest Update"
+              value={data?.latestUpdate || ""}
+              error = {state?.errors?.latestUpdate ? state.errors.latestUpdate.join(", ") : ""}
               placeholder="Select the latest updated date"
             />
             <DateField
               id="latestInterviewScheduledDate"
               name="latestInterviewScheduledDate"
               label="Interview Date"
+              value={data?.latestInterviewScheduledDate || ""}
+              error = {state?.errors?.latestInterviewScheduledDate ? state.errors.latestInterviewScheduledDate.join(", ") : ""}
               placeholder="Select the interview date"
             />
           </FieldGroup>
@@ -184,12 +246,16 @@ export default function ApplicationForm() {
               id="jobDescription"
               name="jobDescription"
               label="Job Description"
+              value={data?.jobDescription || ""}
+              error = {state?.errors?.jobDescription ? state.errors.jobDescription.join(", ") : ""}
               placeholder="Enter the job description"
             />
             <InputField
               id="referenceLink"
               name="referenceLink"
               label="Reference Link"
+              value={data?.referenceLink || ""}
+              error = {state?.errors?.referenceLink ? state.errors.referenceLink.join(", ") : ""}
               placeholder="Enter the reference link"
               required
             />
@@ -197,16 +263,21 @@ export default function ApplicationForm() {
               id="notes"
               name="notes"
               label="Notes"
+              value={data?.notes || ""}
+              error = {state?.errors?.notes ? state.errors.notes.join(", ") : ""}
               placeholder="Enter any additional notes"
             />
           </FieldGroup>
         </FieldSet>
         <Button
           type="submit"
-          //   disabled={pending}
-          className="w-full bg-white text-black font-medium rounded-md px-4 py-2 hover:bg-gray-200"
+          disabled={pending}
+          className="w-full md:w-auto"
+          onClick={() => {
+            console.log(`Data to be submitted: ${JSON.stringify(data)}`);
+          }}
         >
-          Save
+          {pending ? "Saving..." : "Save"}
         </Button>
       </form>
     </>

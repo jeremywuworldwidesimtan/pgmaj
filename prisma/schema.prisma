@@ -84,7 +84,7 @@ model JobDescription {
   id          String   @id @default(uuid())
   jobId       String   @unique
   job         JobApplication @relation(fields: [jobId], references: [id])
-  description String
+  description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   softDeleted  Boolean   @default(false)
