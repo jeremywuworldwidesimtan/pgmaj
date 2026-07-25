@@ -1,3 +1,5 @@
+import { StatusPrisma } from "../types";
+
 export function formatType(type: string): string {
   switch (type) {
     case "FullTime":
@@ -99,5 +101,22 @@ export function parseDate(
       return `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
     default:
       throw new Error(`Invalid date format: ${format}`);
+  }
+}
+
+export function colorStatus(status: StatusPrisma): string {
+  switch (status) {
+    case "Applied":
+      return "text-blue-500";
+    case "Shortlisted":
+      return "text-yellow-500";
+    case "Interviewed":
+      return "text-purple-500";
+    case "Offered":
+      return "text-green-500";
+    case "Rejected":
+      return "text-red-500";
+    default:
+      return "text-gray-500";
   }
 }

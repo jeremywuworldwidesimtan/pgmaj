@@ -121,18 +121,22 @@ export function SidebarUser({
                 </Link>
               ))}
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <HelpCircle />
-                Help
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <RefreshCw />
-                Changelog
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator /> */}
+            <DropdownMenuGroup>
+              <Link href="/kb">
+                <DropdownMenuItem>
+                  <HelpCircle />
+                  Help
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/kb/changelog">
+                <DropdownMenuItem>
+                  <RefreshCw />
+                  Changelog
+                </DropdownMenuItem>
+              </Link>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>
               <LogOut />
               Log out

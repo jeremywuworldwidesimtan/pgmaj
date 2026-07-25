@@ -30,6 +30,7 @@ interface SelectFieldProps {
   error?: string;
   enableDefaultOption?: boolean;
   selectItems: selectItem[];
+  onChange?: (value: string) => void;
 }
 
 export default function SelectField({
@@ -43,6 +44,7 @@ export default function SelectField({
   error,
   enableDefaultOption = true,
   selectItems,
+  onChange,
 }: SelectFieldProps) {
   if (enableDefaultOption) {
     selectItems = [
@@ -53,7 +55,7 @@ export default function SelectField({
   return (
     <Field data-invalid={Boolean(error)}>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <Select name={name ?? id} required={required} defaultValue={String(value) ?? null}>
+      <Select name={name ?? id} required={required} defaultValue={String(value) ?? null} onValueChange={onChange}>
         <SelectTrigger>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>

@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import prisma from "@/lib/prisma";
 import {
@@ -6,6 +6,10 @@ import {
   ApplicationFormState,
   JobDescriptionComponentSchema,
   JobDescriptionComponentState,
+  JobNotesComponentSchema,
+  JobNotesComponentState,
+  JobStatusUpdateSchema,
+  JobStatusUpdateState,
 } from "../lib/definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -56,7 +60,10 @@ async function updatejobApplication(
   });
 }
 
-export async function updateJobDescription(state: JobDescriptionComponentState | undefined, formData: FormData): Promise<JobDescriptionComponentState> {
+export async function updateJobDescription(
+  state: JobDescriptionComponentState | undefined,
+  formData: FormData,
+): Promise<JobDescriptionComponentState> {
   const validatedFields = JobDescriptionComponentSchema.safeParse({
     jobDescription: formData.get("jobDescription"),
     jobId: formData.get("jobId"),
@@ -66,8 +73,8 @@ export async function updateJobDescription(state: JobDescriptionComponentState |
 
   if (!validatedFields.success) {
     return {
-        "errors": validatedFields.error.flatten().fieldErrors,
-    }
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
   }
 
   const { jobId, jobDescription } = validatedFields.data;
@@ -76,6 +83,95 @@ export async function updateJobDescription(state: JobDescriptionComponentState |
     where: { jobId },
     data: { description: jobDescription },
   });
+  revalidatePath("/dashboard/application/" + jobId);
+  redirect("/dashboard/application/" + jobId);
+}
+
+export async function updateJobNotes(
+  state: JobNotesComponentState | undefined,
+  formData: FormData,
+): Promise<JobNotesComponentState> {
+  const validatedFields = JobNotesComponentSchema.safeParse({
+    notes: formData.get("notes"),
+    jobId: formData.get("jobId"),
+  });
+
+  console.log("Received Notes:", validatedFields.data?.notes);
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { jobId, notes } = validatedFields.data;
+
+  await prisma.jobApplication.update({
+    where: { id: jobId },
+    data: { notes: notes },
+  });
+  revalidatePath("/dashboard/application/" + jobId);
+  redirect("/dashboard/application/" + jobId);
+}
+
+export async function updateJobStatus(
+  state: JobStatusUpdateState | undefined,
+  formData: FormData,
+): Promise<JobStatusUpdateState> {
+  console.log("Form Data:", Object.fromEntries(formData.entries()));
+  const validatedFields = JobStatusUpdateSchema.safeParse({
+    status: formData.get("status"),
+    updateDates: formData.get("updateDates") === "on" ? true : false,
+    latestUpdate: formData.get("latestUpdate")
+      ? new Date(formData.get("latestUpdate") as string)
+      : null,
+    latestInterviewScheduledDate: formData.get("latestInterviewScheduledDate")
+      ? new Date(formData.get("latestInterviewScheduledDate") as string)
+      : null,
+    jobId: formData.get("jobId"),
+  });
+
+  console.log("Received Status Update:", validatedFields.data);
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const {
+    jobId,
+    status,
+    latestUpdate,
+    latestInterviewScheduledDate,
+    updateDates,
+  } = validatedFields.data;
+
+  if (!updateDates) {
+    await prisma.jobApplication.update({
+      where: { id: jobId },
+      data: { status },
+    });
+  } else {
+    // if only update date changed
+    if (latestUpdate && !latestInterviewScheduledDate) {
+      await prisma.jobApplication.update({
+        where: { id: jobId },
+        data: { status, latestUpdate },
+      });
+    // if only interview date changed
+    } else if (!latestUpdate && latestInterviewScheduledDate) {
+      await prisma.jobApplication.update({
+        where: { id: jobId },
+        data: { status, latestInterviewScheduledDate },
+      });
+    } else {
+      await prisma.jobApplication.update({
+        where: { id: jobId },
+        data: { status, latestUpdate, latestInterviewScheduledDate },
+      });
+    }
+  }
   revalidatePath("/dashboard/application/" + jobId);
   redirect("/dashboard/application/" + jobId);
 }
@@ -122,7 +218,7 @@ export async function submitApplicationForm(
   _state: ApplicationFormState,
   formData: FormData,
 ): Promise<ApplicationFormState> {
-    console.log("Form Data:", Object.fromEntries(formData.entries()));
+  console.log("Form Data:", Object.fromEntries(formData.entries()));
 
   const validatedFields = ApplicationFormSchema.safeParse({
     company: formData.get("company"),
@@ -131,9 +227,15 @@ export async function submitApplicationForm(
     jobType: formData.get("jobType"),
     jobMode: formData.get("jobMode"),
     status: formData.get("status"),
-    appliedDate: formData.get("appliedDate") ? new Date(formData.get("appliedDate") as string) : null,
-    latestUpdate: formData.get("latestUpdate") ? new Date(formData.get("latestUpdate") as string) : null,
-    latestInterviewScheduledDate: formData.get("latestInterviewScheduledDate") ? new Date(formData.get("latestInterviewScheduledDate") as string) : null,
+    appliedDate: formData.get("appliedDate")
+      ? new Date(formData.get("appliedDate") as string)
+      : null,
+    latestUpdate: formData.get("latestUpdate")
+      ? new Date(formData.get("latestUpdate") as string)
+      : null,
+    latestInterviewScheduledDate: formData.get("latestInterviewScheduledDate")
+      ? new Date(formData.get("latestInterviewScheduledDate") as string)
+      : null,
     minPay: Number(formData.get("minPay")),
     maxPay: Number(formData.get("maxPay")),
     payFrequency: formData.get("payFrequency"),

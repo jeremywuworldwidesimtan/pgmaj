@@ -81,6 +81,22 @@ export const JobDescriptionComponentSchema = z.object({
   jobId: z.string().trim().min(1, { error: "Job ID is required." }),
 });
 
+export const JobNotesComponentSchema = z.object({
+  notes: z.string().trim().nullable(),
+  jobId: z.string().trim().min(1, { error: "Job ID is required." }),
+});
+
+export const JobStatusUpdateSchema = z.object({
+  status: z.custom<StatusPrisma>(
+    (value) => typeof value === "string" && ["Applied", "Shortlisted", "Interviewed", "Offered", "Rejected"].includes(value),
+    { error: "Please select a status." },
+  ),
+  updateDates: z.boolean(),
+  latestUpdate: z.date().nullable(),
+  latestInterviewScheduledDate: z.date().nullable(),
+  jobId: z.string().trim().min(1, { error: "Job ID is required." }),
+});
+
 export type SignupFormState =
   | {
       errors?: {
@@ -151,6 +167,38 @@ export type JobDescriptionComponentState =
       message?: string;
       values?: {
         jobDescription: string | null;
+        jobId: string;
+      };
+    }
+  | undefined;
+
+export type JobNotesComponentState =
+  | {
+      errors?: {
+        notes?: string[];
+        jobId?: string[];
+      };
+      message?: string;
+      values?: {
+        notes: string | null;
+        jobId: string;
+      };
+    }
+  | undefined;
+
+export type JobStatusUpdateState =
+  | {
+      errors?: {
+        status?: string[];
+        latestUpdate?: string[];
+        latestInterviewScheduledDate?: string[];
+        jobId?: string[];
+      };
+      message?: string;
+      values?: {
+        status: StatusPrisma;
+        latestUpdate: Date | null;
+        latestInterviewScheduledDate: Date | null;
         jobId: string;
       };
     }

@@ -21,6 +21,7 @@ interface DateFieldProps {
   required?: boolean;
   value?: string | Date;
   error?: string;
+  disabled?: boolean;
 }
 
 function formatDate(date: Date): string {
@@ -34,6 +35,7 @@ export default function DateField({
   required,
   value,
   error,
+  disabled = false,
 }: DateFieldProps) {
   const [date, setDate] = useState<Date | undefined>(
     value ? new Date(value) : undefined
@@ -49,12 +51,12 @@ export default function DateField({
         type="hidden"
         placeholder={description}
         required={required}
-        value={date ? date.toISOString() : undefined}
+        value={date ? date.toISOString() : ""}
         readOnly
       />
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" id={id} className="justify-start font-normal" value={date ? formatDate(date) : ""}>
+          <Button variant="outline" id={id} className="justify-start font-normal" value={date ? formatDate(date) : ""} disabled={disabled}>
             {date ? formatDate(date) : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>

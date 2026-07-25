@@ -1,5 +1,8 @@
-import { formatType, parseDate } from "@/app/lib/helper";
+import { colorStatus, formatType, parseDate } from "@/app/lib/helper";
+import DeleteButton from "@/components/dashboard/delete";
 import JobDescriptionComponent from "@/components/dashboard/job-description";
+import JobNotesComponent from "@/components/dashboard/job-notes";
+import UpdateStatusButton from "@/components/dashboard/update-status";
 import TextareaField from "@/components/fields/textarea-field";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
@@ -54,61 +57,66 @@ export default async function ApplicationDetailsPage({
           <p className="text-xl">at {data.company}</p>
           <p>in {data.location}</p>
         </div>
-        <div className="flex gap-2">
-          <Button asChild>
-            <Link href={`/dashboard/application/${data.id}/edit`}>
-              Edit Application
-            </Link>
-          </Button>
-          <Button asChild variant="destructive">
-            <Link href={`/dashboard/application/${data.id}/delete`}>
-              Delete Application
-            </Link>
-          </Button>
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link href={`/dashboard/application/${data.id}/edit`}>
+                Edit Application
+              </Link>
+            </Button>
+            <DeleteButton jobId={data.id} />
+          </div>
+          <div className="flex gap-2">
+            <UpdateStatusButton status={data.status} jobId={data.id} />
+          </div>
         </div>
       </div>
       <hr className="my-4" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 mt-4">
-          <div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <p>
               <strong>Job Type:</strong> {formatType(data.jobType)}
             </p>
             <p>
               <strong>Job Mode:</strong> {formatType(data.jobMode)}
             </p>
-            <p>
-              <strong>Status:</strong> {formatType(data.status)}
+            <p >
+              <strong>Status:</strong> <span className={colorStatus(data.status)}>{formatType(data.status)}</span>
             </p>
+          </div>
+          <div>
+            <p><strong>Dates</strong></p>
+            <hr className="my-1" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <p>
+                <strong>Applied:</strong>{" "}
+                {data.appliedDate
+                  ? parseDate(data.appliedDate, "british", "short", "dot")
+                  : "N/A"}
+              </p>
+              <p>
+                <strong>Updated:</strong>{" "}
+                {data.latestUpdate
+                  ? parseDate(data.latestUpdate, "british", "short", "dot")
+                  : "N/A"}
+              </p>
+              <p>
+                <strong>Interview:</strong>{" "}
+                {data.latestInterviewScheduledDate
+                  ? parseDate(
+                      data.latestInterviewScheduledDate,
+                      "british",
+                      "short",
+                      "dot",
+                    )
+                  : "N/A"}
+              </p>
+            </div>
           </div>
           <div>
             <p>
               Pay Range: ${data.minPay} - ${data.maxPay} ({data.payFrequency})
-            </p>
-          </div>
-          <div>
-            <p>
-              <strong>Application Date:</strong>{" "}
-              {data.appliedDate
-                ? parseDate(data.appliedDate, "british", "short", "dot")
-                : "N/A"}
-            </p>
-            <p>
-              <strong>Latest Update:</strong>{" "}
-              {data.latestUpdate
-                ? parseDate(data.latestUpdate, "british", "short", "dot")
-                : "N/A"}
-            </p>
-            <p>
-              <strong>Interview Date:</strong>{" "}
-              {data.latestInterviewScheduledDate
-                ? parseDate(
-                    data.latestInterviewScheduledDate,
-                    "british",
-                    "short",
-                    "dot",
-                  )
-                : "N/A"}
             </p>
           </div>
           <div>
@@ -125,15 +133,7 @@ export default async function ApplicationDetailsPage({
             </p>
           </div>
           <div>
-            <form action="">
-              <TextareaField
-                id="notes"
-                name="notes"
-                label="Notes"
-                placeholder="Enter your notes here..."
-                value={data.notes || ""}
-              />
-            </form>
+            <JobNotesComponent notes={data.notes} jobId={data.id} />
           </div>
         </div>
         <JobDescriptionComponent

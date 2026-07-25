@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import ActionCell from "@/components/dashboard/action-cell";
 import { JobApplicationPrisma } from "../types";
-import { formatType, parseDate } from "../lib/helper";
+import { colorStatus, formatType, parseDate } from "../lib/helper";
 
 export const columns: ColumnDef<JobApplicationPrisma>[] = [
   {
@@ -111,34 +111,13 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      let statusColor = "";
-      switch (row.getValue("status")) {
-        case "Applied":
-          statusColor = "text-blue-500";
-          break;
-        case "Shortlisted":
-          statusColor = "text-yellow-500";
-          break;
-        case "Interviewed":
-          statusColor = "text-purple-500";
-          break;
-        case "Offered":
-          statusColor = "text-green-500";
-          break;
-        case "Rejected":
-          statusColor = "text-red-500";
-          break;
-        default:
-          statusColor = "text-gray-500";
-      }
-
       const appliedDate = row.getValue("appliedDate")
         ? new Date(row.getValue("appliedDate"))
         : null;
 
       return (
         <>
-          <p className={statusColor}>{row.getValue("status")}</p>
+          <p className={colorStatus(row.getValue("status"))}>{row.getValue("status")}</p>
           <div className="text-xs text-muted-foreground flex flex-row gap-2">
             <p>
               {appliedDate
