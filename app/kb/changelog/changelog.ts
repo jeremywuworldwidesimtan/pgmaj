@@ -16,6 +16,9 @@ export const changelog = [
   {
     version: "Beta 0.1.1",
     date: "2026-07-26",
-    changes: ["Initial release of the Knowledge Base and Changelog."],
+    changes: [
+        "Initial release of the Knowledge Base and Changelog.",
+        "First push of project to GitHub.",
+    ],
   },
 ];
