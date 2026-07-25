@@ -212,6 +212,9 @@ export async function deletejobApplication(jobId: string) {
     where: { jobId },
     data: { softDeleted: true },
   });
+
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }
 
 export async function submitApplicationForm(

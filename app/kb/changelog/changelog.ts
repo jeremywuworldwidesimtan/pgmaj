@@ -19,6 +19,7 @@ export const changelog = [
     changes: [
         "Initial release of the Knowledge Base and Changelog.",
         "First push of project to GitHub.",
+        "Fix delete redirect issue.",
     ],
   },
 ];
