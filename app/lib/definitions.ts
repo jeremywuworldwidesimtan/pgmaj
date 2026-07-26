@@ -10,8 +10,8 @@ export const SignupFormSchema = z.object({
   username: z
     .string()
     .min(2, { error: "Username must be at least 2 characters long." })
-    .regex(/^[a-zA-Z0-9_]+$/, {
-      error: "Username can only contain letters, numbers, and underscores.",
+    .regex(/^[a-z0-9_]+$/, {
+      error: "Username can only contain lowercase letters, numbers, and underscores.",
     })
     .trim(),
   email: z.email({ error: "Please enter a valid email." }).trim(),
@@ -136,6 +136,12 @@ export type SignupFormState =
         password?: string[];
       };
       message?: string;
+      values?: {
+        username: string;
+        email: string;
+        firstName: string;
+        lastName: string;
+      };
     }
   | undefined;
 

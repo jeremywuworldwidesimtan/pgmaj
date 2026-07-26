@@ -9,6 +9,7 @@ import {
   RefreshCw,
   Settings,
   Sparkles,
+  TriangleAlert,
   User,
 } from "lucide-react";
 
@@ -138,6 +139,12 @@ export function SidebarUser({
                 <DropdownMenuItem>
                   <RefreshCw />
                   Changelog
+                </DropdownMenuItem>
+              </Link>
+              <Link href="https://github.com/jeremywuworldwidesimtan/pgmaj/issues">
+                <DropdownMenuItem>
+                  <TriangleAlert />
+                  Report an Issue
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>

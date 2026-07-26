@@ -12,7 +12,6 @@ export async function updateProfile(
   state: ProfileEditFormState,
   formData: FormData,
 ): Promise<ProfileEditFormState> {
-    console.log("FormData received in updateProfile:", Object.fromEntries(formData.entries()));
   const validatedFields = ProfileEditFormSchema.safeParse({
     id: formData.get("id"),
     firstName: formData.get("firstName"),
@@ -33,10 +32,19 @@ export async function updateProfile(
     };
   }
 
-  const { id, firstName, lastName, contact_number, addr_line1, addr_line2, city, st, country, zip_code } =
-    validatedFields.data;
+  const {
+    id,
+    firstName,
+    lastName,
+    contact_number,
+    addr_line1,
+    addr_line2,
+    city,
+    st,
+    country,
+    zip_code,
+  } = validatedFields.data;
 
-    console.log("Validated fields:", validatedFields.data);
   // Update the user in the database
   await prisma.user.update({
     where: { id },

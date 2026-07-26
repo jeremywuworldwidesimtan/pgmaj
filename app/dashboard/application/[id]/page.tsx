@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 async function getData(id: string) {
   // Fetch data from your API here.
@@ -51,6 +52,7 @@ export default async function ApplicationDetailsPage({
       </Link>
       <h2 className="text-2xl font-bold mt-2">Application Details</h2>
 
+      <Suspense fallback={<div>Loading Application...</div>}>
       <div className="mt-4 flex flex-col md:flex-row md:justify-between gap-4">
         <div>
           <h1 className="text-4xl font-bold">{data.position}</h1>
@@ -131,14 +133,19 @@ export default async function ApplicationDetailsPage({
             </p>
           </div>
           <div>
-            <JobNotesComponent notes={data.notes} jobId={data.id} />
+            <Suspense fallback={<div>Loading Notes...</div>}>
+              <JobNotesComponent notes={data.notes} jobId={data.id} />
+            </Suspense>
           </div>
         </div>
-        <JobDescriptionComponent
-          jobDescription={jobDesc?.description || null}
-          jobId={data.id}
-        />
+        <Suspense fallback={<div>Loading Job Description...</div>}>
+          <JobDescriptionComponent
+            jobDescription={jobDesc?.description || null}
+            jobId={data.id}
+          />
+        </Suspense>
       </div>
+      </Suspense>
     </>
   );
 }

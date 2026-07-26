@@ -252,6 +252,29 @@ export async function submitApplicationForm(
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
+      values: {
+        company: formData.get("company") as string,
+        position: formData.get("position") as string,
+        location: formData.get("location") as string,
+        jobType: formData.get("jobType") as JobTypePrisma,
+        jobMode: formData.get("jobMode") as JobModePrisma,
+        status: formData.get("status") as StatusPrisma,
+        appliedDate: formData.get("appliedDate")
+          ? new Date(formData.get("appliedDate") as string)
+          : null,
+        latestUpdate: formData.get("latestUpdate")
+          ? new Date(formData.get("latestUpdate") as string)
+          : null,
+        latestInterviewScheduledDate: formData.get("latestInterviewScheduledDate")
+          ? new Date(formData.get("latestInterviewScheduledDate") as string)
+          : null,
+        minPay: Number(formData.get("minPay")),
+        maxPay: Number(formData.get("maxPay")),
+        payFrequency: formData.get("payFrequency") as PayFrequencyPrisma | null,
+        jobDescription: formData.get("jobDescription") as string | null,
+        referenceLink: formData.get("referenceLink") as string | null,
+        notes: formData.get("notes") as string | null,
+      },
     };
   }
 

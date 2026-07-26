@@ -73,7 +73,7 @@ export default function ApplicationForm({
               id="company"
               name="company"
               label="Company"
-              value={data?.company || ""}
+              value={data?.company || state?.values?.company || ""}
               placeholder="Enter the company name"
               error={
                 state?.errors?.company ? state.errors.company.join(", ") : ""
@@ -84,7 +84,7 @@ export default function ApplicationForm({
               id="position"
               name="position"
               label="Position"
-              value={data?.position || ""}
+              value={data?.position || state?.values?.position || ""}
               placeholder="Enter the position"
               error={
                 state?.errors?.position ? state.errors.position.join(", ") : ""
@@ -95,7 +95,7 @@ export default function ApplicationForm({
               id="location"
               name="location"
               label="Location"
-              value={data?.location || ""}
+              value={data?.location || state?.values?.location || ""}
               placeholder="Enter the location"
               error={
                 state?.errors?.location ? state.errors.location.join(", ") : ""
@@ -115,7 +115,7 @@ export default function ApplicationForm({
               id="jobType"
               name="jobType"
               label="Job Type"
-              value={data?.jobType || ""}
+              value={data?.jobType || state?.values?.jobType || ""}
               placeholder="Select the job type"
               error={
                 state?.errors?.jobType ? state.errors.jobType.join(", ") : ""
@@ -133,7 +133,7 @@ export default function ApplicationForm({
               id="jobMode"
               name="jobMode"
               label="Job Mode"
-              value={data?.jobMode || ""}
+              value={data?.jobMode || state?.values?.jobMode || ""}
               placeholder="Select the job mode"
               error={
                 state?.errors?.jobMode ? state.errors.jobMode.join(", ") : ""
@@ -149,7 +149,7 @@ export default function ApplicationForm({
               id="status"
               name="status"
               label="Application Status"
-              value={data?.status || ""}
+              value={data?.status || state?.values?.status || ""}
               placeholder="Select the application status"
               error={
                 state?.errors?.status ? state.errors.status.join(", ") : ""
@@ -177,7 +177,7 @@ export default function ApplicationForm({
               id="minPay"
               name="minPay"
               label="Minimum Pay"
-              value={data?.minPay || ""}
+              value={data?.minPay || state?.values?.minPay || ""}
               placeholder="Enter the minimum pay"
               error={
                 state?.errors?.minPay ? state.errors.minPay.join(", ") : ""
@@ -189,7 +189,7 @@ export default function ApplicationForm({
               id="maxPay"
               name="maxPay"
               label="Maximum Pay"
-              value={data?.maxPay || ""}
+              value={data?.maxPay || state?.values?.maxPay || ""}
               placeholder="Enter the maximum pay"
               error={
                 state?.errors?.maxPay ? state.errors.maxPay.join(", ") : ""
@@ -201,7 +201,7 @@ export default function ApplicationForm({
               id="payFrequency"
               name="payFrequency"
               label="Pay Frequency"
-              value={data?.payFrequency || ""}
+              value={data?.payFrequency || state?.values?.payFrequency || ""}
               placeholder="Select the pay frequency"
               error={
                 state?.errors?.payFrequency
@@ -229,7 +229,7 @@ export default function ApplicationForm({
               id="appliedDate"
               name="appliedDate"
               label="Applied Date"
-              value={data?.appliedDate || ""}
+              value={data?.appliedDate || state?.values?.appliedDate || ""}
               error={
                 state?.errors?.appliedDate
                   ? state.errors.appliedDate.join(", ")
@@ -241,7 +241,7 @@ export default function ApplicationForm({
               id="latestUpdate"
               name="latestUpdate"
               label="Latest Update"
-              value={data?.latestUpdate || ""}
+              value={data?.latestUpdate || state?.values?.latestUpdate || ""}
               error={
                 state?.errors?.latestUpdate
                   ? state.errors.latestUpdate.join(", ")
@@ -253,7 +253,7 @@ export default function ApplicationForm({
               id="latestInterviewScheduledDate"
               name="latestInterviewScheduledDate"
               label="Interview Date"
-              value={data?.latestInterviewScheduledDate || ""}
+              value={data?.latestInterviewScheduledDate || state?.values?.latestInterviewScheduledDate || ""}
               error={
                 state?.errors?.latestInterviewScheduledDate
                   ? state.errors.latestInterviewScheduledDate.join(", ")
@@ -275,7 +275,7 @@ export default function ApplicationForm({
               id="jobDescription"
               name="jobDescription"
               label="Job Description"
-              value={data?.jobDescription || ""}
+              value={data?.jobDescription || state?.values?.jobDescription || ""}
               error={
                 state?.errors?.jobDescription
                   ? state.errors.jobDescription.join(", ")
@@ -287,7 +287,7 @@ export default function ApplicationForm({
               id="referenceLink"
               name="referenceLink"
               label="Reference Link"
-              value={data?.referenceLink || "https://"}
+              value={data?.referenceLink || state?.values?.referenceLink || "https://www."}
               error={
                 state?.errors?.referenceLink
                   ? state.errors.referenceLink.join(", ")
@@ -300,7 +300,7 @@ export default function ApplicationForm({
               id="notes"
               name="notes"
               label="Notes"
-              value={data?.notes || ""}
+              value={data?.notes || state?.values?.notes || ""}
               error={state?.errors?.notes ? state.errors.notes.join(", ") : ""}
               placeholder="Enter any additional notes"
             />

@@ -13,6 +13,12 @@ export const roadmap = [
     ],
   },
   {
+    version: "Beta 0.3",
+    features: [
+      "Rich text/markdown support for job description and notes.",
+    ],
+  },
+  {
     version: "medium-term",
     features: [
       "Master resume builder.",

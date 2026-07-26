@@ -12,9 +12,12 @@ import InputField from "../fields/input-field";
 import Link from "next/link";
 import { signup } from "@/app/actions/auth";
 import { useActionState } from "react";
+import { SignupFormState } from "@/app/lib/definitions";
+
+const initialState: SignupFormState = undefined;
 
 export function RegisterForm() {
-  const [state, action, pending] = useActionState(signup, undefined);
+  const [state, action, pending] = useActionState(signup, initialState);
 
   return (
     <div className="flex flex-col gap-6">
@@ -38,6 +41,7 @@ export function RegisterForm() {
                   label="Email"
                   type="email"
                   placeholder="Enter your email"
+                  value={state?.values?.email || ""}
                   error={
                     state?.errors?.email ? state.errors.email.join(", ") : ""
                   }
@@ -49,11 +53,13 @@ export function RegisterForm() {
                   label="Username"
                   type="text"
                   placeholder="Enter your username"
+                  value={state?.values?.username || ""}
                   error={
                     state?.errors?.username
                       ? state.errors.username.join(", ")
                       : ""
                   }
+                  description="The username cannot be changed later."
                   required
                 />
               </FieldGroup>
@@ -64,6 +70,7 @@ export function RegisterForm() {
                   name="firstName"
                   label="First Name"
                   type="text"
+                  value={state?.values?.firstName || ""}
                   placeholder="Enter your first name"
                 />
                 <InputField
@@ -71,6 +78,7 @@ export function RegisterForm() {
                   name="lastName"
                   label="Last Name"
                   type="text"
+                  value={state?.values?.lastName || ""}
                   placeholder="Enter your last name"
                 />
               </FieldGroup>

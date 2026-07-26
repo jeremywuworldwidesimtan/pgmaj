@@ -10,10 +10,16 @@ import bcrypt from "bcrypt";
 import { createSession, deleteSession } from "../lib/sessions";
 import { redirect } from "next/navigation";
 
+async function hashPassword(password: string): Promise<string> {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  return hashedPassword;
+}
+
 export async function signup(
-  state: SignupFormState | undefined,
+  state: SignupFormState,
   formData: FormData,
-) {
+): Promise<SignupFormState> {
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
     username: formData.get("username"),
@@ -28,6 +34,12 @@ export async function signup(
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
+      values: {
+        username: formData.get("username") as string,
+        email: formData.get("email") as string,
+        firstName: formData.get("firstName") as string,
+        lastName: formData.get("lastName") as string,
+      },
     };
   }
 
@@ -41,20 +53,23 @@ export async function signup(
     confirmPassword: validatedFields.data.confirmPassword,
   };
 
-  // Encrypt the password with bcrypt
-  const hashedPassword = await bcrypt.hash(data.password, 10);
-  const hashedConfirmPassword = await bcrypt.hash(data.confirmPassword, 10);
-
-  data.password = hashedPassword;
-  data.confirmPassword = hashedConfirmPassword;
-
   if (data.password !== data.confirmPassword) {
     return {
       errors: {
         password: ["Passwords do not match."],
       },
+      values: {
+        username: formData.get("username") as string,
+        email: formData.get("email") as string,
+        firstName: formData.get("firstName") as string,
+        lastName: formData.get("lastName") as string,
+      },
     };
   }
+  // Encrypt the password with bcrypt
+  const hashedPassword = await hashPassword(data.password);
+
+  data.password = hashedPassword;
 
   // Add user to db
   const user = await prisma.user.create({
@@ -73,6 +88,12 @@ export async function signup(
   if (!user) {
     return {
       message: "An error occurred while creating your account.",
+      values: {
+        username: formData.get("username") as string,
+        email: formData.get("email") as string,
+        firstName: formData.get("firstName") as string,
+        lastName: formData.get("lastName") as string,
+      },
     };
   }
 

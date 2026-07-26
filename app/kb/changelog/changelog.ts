@@ -28,7 +28,6 @@ export const changelog = [
     changes: [
         "Added roadmap page.",
         "Added user profile page with edit profile functionality.",
-        "Added user profile page.",
     ],
   }
 ];

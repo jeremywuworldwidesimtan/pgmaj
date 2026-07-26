@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PGMAJ
+Please Give Me A Job (PGMAJ) - an all-in-one centralized job application management and soon, interview prep, platform
 
-## Getting Started
+![PGMAJ dashboard](public\pgmaj_dashboard.png)
 
-First, run the development server:
+## Vercel deployment coming soon!
+---
+## Current features
+- Track your job applications in one place.
+- Keep notes for each application.
+- View job descriptions and details.
+- See and edit profiles
+- Multi-user accounts
+---
+## Tech Stack Used
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+| Stack | Technologies Used |
+|---|---|
+| Frontend | ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Next JS](https://img.shields.io/badge/Next-black.svg?style=for-the-badge&logo=next.js&logoColor=white) ![Shadcn/ui](https://img.shields.io/badge/shadcn/ui-%23000000?style=for-the-badge&logo=shadcnui&logoColor=white) ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) |
+| Backend/Database | ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white) ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) |
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
+## Local Installation
+You can install PGMAJ locally instead of using the Vercel version. 
+### Requirements
+- A compatible OS (Windows/Mac/Linux)
+- Node.js v22.14.0 or later
+- PostgreSQL 18.1 or later
+- Git
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Installation steps
+1. Clone this repo with `git clone https://github.com/jeremywuworldwidesimtan/pgmaj`
+2. Create a PostgreSQL database named `pgmaj` with pgAdmin 4 or any other database tool
+3. `cd` into the `pgmaj` directory or open it in a code editor
+4. Configure `.env`:
+    ```env
+    DATABASE_URL="postgresql://{your postgres username}:{your postgres password}@localhost:{your postgres port, default 5432}/pgmaj"
+    SESSION_SECRET={your session secret, you can use your own secret key or create one with openssl}
+    ```
+5. Run `npm run dev` to install dependencies
+6. Initialize Prisma with `npx prisma generate`
+7. Optionally, seed the database with `npx prisma seed`
+8. The website is ready at [`localhost:3000`](http://localhost:3000)
+9. If you choose to seed the database, you can log in to the system using the following credentials:
+    ```
+    email: admin@pgmaj.local
+    password: AdminPassw0rd!
+    ```
+    otherwise, you can go to [`localhost:3000/register`](http://localhost:3000/register) to create your own account.
