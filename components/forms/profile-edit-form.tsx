@@ -19,6 +19,7 @@ export type ProfileEditFormProps = {
     username: string;
     firstName: string | null;
     lastName: string | null;
+    preferredCurrency: string | null;
     userDetails: {
       state: string | null;
       contact_number: string | null;
@@ -82,6 +83,21 @@ export default function ProfileEditForm({
             }
             description="Your last name."
           />
+        </FieldGroup>
+        <FieldGroup>
+            <InputField
+              id="preferredCurrency"
+              name="preferredCurrency"
+              label="Preferred Currency"
+              type="text"
+              value={initialValues?.preferredCurrency ?? "$"}
+              error={
+                state?.errors?.preferredCurrency
+                  ? state.errors.preferredCurrency.join(", ")
+                  : ""
+              }
+              description="Your preferred currency."
+            />
         </FieldGroup>
       </FieldSet>
       <FieldSet className="mt-6">

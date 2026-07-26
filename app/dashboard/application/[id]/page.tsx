@@ -1,3 +1,5 @@
+import { getUser } from "@/app/actions/getUserInfo";
+import { verifySession } from "@/app/lib/dal";
 import { colorStatus, formatType, parseDate } from "@/app/lib/helper";
 import DeleteButton from "@/components/dashboard/delete";
 import JobDescriptionComponent from "@/components/dashboard/job-description";
@@ -40,6 +42,9 @@ export default async function ApplicationDetailsPage({
   const { id } = await params;
   const data = await getData(id);
   const jobDesc = await getJobDesc(id);
+  const session = await verifySession();
+  const user = await getUser(session.userId);
+  const preferredCurrency = user?.preferredCurrency || "$"; // Default to "$" if not set
 
   if (!data || data.softDeleted) {
     notFound();
@@ -115,9 +120,9 @@ export default async function ApplicationDetailsPage({
             </div>
           </div>
           <div>
-            <p>
-              Pay Range: ${data.minPay} - ${data.maxPay} ({data.payFrequency})
-            </p>
+            {data.minPay && data.maxPay ? <p>
+              Pay Range: {preferredCurrency}{data.minPay} - {preferredCurrency}{data.maxPay} ({data.payFrequency})
+            </p> : (data.minPay && !data.maxPay ? <p>Pay Range: {preferredCurrency}{data.minPay} ({data.payFrequency})</p> : <p>Pay Range: N/A</p>)}
           </div>
           <div>
             <p>

@@ -78,8 +78,8 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
         <div className="flex flex-col">
           <span>
             {minPay && maxPay
-              ? `$${minPay.toLocaleString()} - $${maxPay.toLocaleString()}`
-              : (minPay && !maxPay ? `$${minPay.toLocaleString()}` : "N/A")}
+              ? `${row.original.preferredCurrency ?? "$"}${minPay.toLocaleString()} - ${row.original.preferredCurrency ?? "$"}${maxPay.toLocaleString()}`
+              : (minPay && !maxPay ? `${row.original.preferredCurrency ?? "$"}${minPay.toLocaleString()}` : "N/A")}
           </span>
           <span className="text-xs text-muted-foreground">{payFrequency}</span>
         </div>

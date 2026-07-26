@@ -23,6 +23,7 @@ export async function updateProfile(
     st: formData.get("st"),
     country: formData.get("country"),
     zip_code: formData.get("zip_code"),
+    preferredCurrency: formData.get("preferredCurrency"),
   });
 
   if (!validatedFields.success) {
@@ -43,6 +44,7 @@ export async function updateProfile(
     st,
     country,
     zip_code,
+    preferredCurrency,
   } = validatedFields.data;
 
   // Update the user in the database
@@ -51,6 +53,7 @@ export async function updateProfile(
     data: {
       firstName,
       lastName,
+      preferredCurrency,
       userDetails: {
         update: {
           contact_number: contact_number,

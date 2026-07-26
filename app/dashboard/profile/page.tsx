@@ -27,7 +27,8 @@ export default async function ProfilePage() {
             <strong>User Info</strong>
           </p>
           <div>
-            <p>Email: {user?.email} (Not Verified)</p>
+            <p>Email: {user?.email}</p>
+            <p>Preferred Currency: {user?.preferredCurrency || "$"}</p>
             {user?.userDetails?.contact_number && (
               <p>
                 Contact Number: {user?.userDetails?.contact_number ?? "N/A"}

@@ -13,6 +13,7 @@ export const getUser = async (userId: string) => {
         firstName: true,
         lastName: true,
         credits: true,
+        preferredCurrency: true
       },
     });
 
@@ -36,7 +37,7 @@ export const getFullUserInfo = async (userId: string) => {
         email: true,
         firstName: true,
         lastName: true,
-        credits: true,
+        preferredCurrency: true,
         userDetails: {
           select: {
             contact_number: true,

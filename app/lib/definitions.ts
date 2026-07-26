@@ -126,6 +126,7 @@ export const ProfileEditFormSchema = z.object({
   st: z.string().trim().nullable(),
   country: z.string().trim().nullable(),
   zip_code: z.string().trim().nullable(),
+  preferredCurrency: z.string().max(3, { error: "Preferred currency must be at most 3 characters." }).min(1, { error: "Preferred currency is required." }).nullable(),
 });
 
 export type SignupFormState =
@@ -254,6 +255,7 @@ export type ProfileEditFormState =
         st?: string[];
         country?: string[];
         zip_code?: string[];
+        preferredCurrency?: string[];
       };
       message?: string;
       values?: {
@@ -267,6 +269,7 @@ export type ProfileEditFormState =
         st: string | null;
         country: string | null;
         zip_code: string | null;
+        preferredCurrency: string | null;
       };
     }
   | undefined;

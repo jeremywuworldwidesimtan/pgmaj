@@ -51,6 +51,7 @@ model User {
   role            Role     @default(User)
   credits         Int      @default(0)
   jobApplications JobApplication[]
+  preferredCurrency String?  @default("$")
   userDetails     UserDetails?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

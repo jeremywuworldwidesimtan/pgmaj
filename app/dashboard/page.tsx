@@ -5,10 +5,13 @@ import { columns } from "./table-columns";
 import Link from "next/link";
 import { verifySession } from "../lib/dal";
 import prisma from "@/lib/prisma";
+import { getUser } from "../actions/getUserInfo";
 
 async function getData(): Promise<JobApplicationPrisma[]> {
   // Fetch data from your API here.
   const session = await verifySession();
+  const user = await getUser(session.userId);
+  const preferredCurrency = user?.preferredCurrency || "$"; // Default to "$" if not set
   const jobApplications = await prisma.jobApplication.findMany({
     where: {
       userId: session.userId,
@@ -18,7 +21,10 @@ async function getData(): Promise<JobApplicationPrisma[]> {
       appliedDate: "desc",
     },
   });
-  return jobApplications;
+  return jobApplications.map((app) => ({
+    ...app,
+    preferredCurrency, // Add the preferred currency to each application
+  }));
 }
 
 export default async function Dashboard() {

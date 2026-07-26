@@ -64,6 +64,7 @@ export type JobApplicationPrisma = {
  referenceLink: string | null;
  notes: string | null;
  userId: string;
+ preferredCurrency: string | null;
  createdAt: Date;
  updatedAt: Date;
  softDeleted: boolean;
