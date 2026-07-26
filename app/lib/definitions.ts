@@ -59,15 +59,15 @@ export const ApplicationFormSchema = z.object({
   minPay: z
     .number({error: "Minimum pay must be a number."})
     .gt(0, { error: "Minimum pay must be greater than 0." })
-    .nullable(),
+    .optional(),
   maxPay: z
     .number({error: "Maximum pay must be a number."})
     .gt(0, { error: "Maximum pay must be greater than 0." })
-    .nullable(),
+    .optional(),
   payFrequency: z.custom<PayFrequencyPrisma>(
     (value) => typeof value === "string" && ["Hourly", "Weekly", "Monthly", "Yearly"].includes(value),
     { error: "Please select a pay frequency." },
-  ).nullable(),
+  ).optional(),
   jobDescription: z.string().trim().nullable(),
   referenceLink: z
     .url({ error: "Please enter a valid URL." })

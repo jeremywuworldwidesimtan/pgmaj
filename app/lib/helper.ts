@@ -107,7 +107,7 @@ export function parseDate(
 export function colorStatus(status: StatusPrisma): string {
   switch (status) {
     case "Applied":
-      return "text-blue-500";
+      return "text-sky-300";
     case "Shortlisted":
       return "text-yellow-500";
     case "Interviewed":
@@ -120,3 +120,4 @@ export function colorStatus(status: StatusPrisma): string {
       return "text-gray-500";
   }
 }
+

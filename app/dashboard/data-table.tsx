@@ -62,6 +62,8 @@ export function DataTable<TData, TValue>({
         jobDescription: false,
         notes: false,
         location: false,
+        jobType: false,
+        jobMode: false,
       },
     },
 
@@ -73,122 +75,130 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center py-2 space-x-2">
+      <div className="flex items-center justify-between">
         {/* Filters for job type, job mode and application status */}
-        <p>Filter by:</p>
-        <div className="flex items-center space-x-2">
-          <Select
-            onValueChange={(value) =>
-              table.getColumn("jobType")?.setFilterValue(value)
-            }
-          >
-            <SelectTrigger className="w-full max-w-48">
-              <SelectValue placeholder="Select a job type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem key="" value="">
-                  N/A
-                </SelectItem>
-                {[
-                  "Full-time",
-                  "Part-time",
-                  "Contract",
-                  "Internship",
-                  "Freelance",
-                ].map((jobType) => (
-                  <SelectItem key={jobType} value={jobType}>
-                    {jobType}
+        <div className="flex items-center py-2 gap-2">
+          <p>Filter by:</p>
+          <div className="flex items-center space-x-2">
+            <Select
+              onValueChange={(value) =>
+                table.getColumn("jobType")?.setFilterValue(value)
+              }
+            >
+              <SelectTrigger className="w-full max-w-48">
+                <SelectValue placeholder="Select a job type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem key="" value="">
+                    N/A
                   </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Select
-            onValueChange={(value) =>
-              table.getColumn("jobMode")?.setFilterValue(value)
-            }
-          >
-            <SelectTrigger className="w-full max-w-48">
-              <SelectValue placeholder="Select a job mode" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem key="" value="">
-                  N/A
-                </SelectItem>
-                {["Remote", "On-site", "Hybrid"].map((jobMode) => (
-                  <SelectItem key={jobMode} value={jobMode}>
-                    {jobMode}
+                  {[
+                    {key: "Full-time", value: "FullTime"},
+                    {key: "Part-time", value: "PartTime"},
+                    {key: "Contract", value: "Contract"},
+                    {key: "Internship", value: "Internship"},
+                    {key: "Freelance", value: "Freelance"},
+                  ].map(({key, value}) => (
+                    <SelectItem key={key} value={value}>
+                      {key}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Select
+              onValueChange={(value) =>
+                table.getColumn("jobMode")?.setFilterValue(value)
+              }
+            >
+              <SelectTrigger className="w-full max-w-48">
+                <SelectValue placeholder="Select a job mode" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem key="" value="">
+                    N/A
                   </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Select
-            onValueChange={(value) =>
-              table.getColumn("status")?.setFilterValue(value)
-            }
-          >
-            <SelectTrigger className="w-full max-w-48">
-              <SelectValue placeholder="Select a status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem key="" value="">
-                  N/A
-                </SelectItem>
-                {[
-                  "Applied",
-                  "Shortlisted",
-                  "Interviewed",
-                  "Offered",
-                  "Rejected",
-                ].map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status}
+                  {[
+                    {key: "Remote", value: "Remote"},
+                    {key: "On-site", value: "OnSite"},
+                    {key: "Hybrid", value: "Hybrid"},
+                  ].map(({key, value}) => (
+                    <SelectItem key={key} value={value}>
+                      {key}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Select
+              onValueChange={(value) =>
+                table.getColumn("status")?.setFilterValue(value)
+              }
+            >
+              <SelectTrigger className="w-full max-w-48">
+                <SelectValue placeholder="Select a status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem key="" value="">
+                    N/A
                   </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+                  {[
+                    "Applied",
+                    "Shortlisted",
+                    "Interviewed",
+                    "Offered",
+                    "Rejected",
+                  ].map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="flex items-center">
-          <Input
-            placeholder="Filter company..."
-            value={
-              (table.getColumn("company")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("company")?.setFilterValue(event.target.value)
-            }
-          />
-        </div>
-        <div className="flex items-center">
-          <Input
-            placeholder="Filter position..."
-            value={
-              (table.getColumn("position")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("position")?.setFilterValue(event.target.value)
-            }
-          />
-        </div>
-        <div className="flex items-center">
-          <Input
-            placeholder="Filter location..."
-            value={
-              (table.getColumn("location")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("location")?.setFilterValue(event.target.value)
-            }
-          />
+        <div className="flex items-center py-2 gap-2">
+          <div className="flex items-center">
+            <Input
+              placeholder="Filter company..."
+              value={
+                (table.getColumn("company")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("company")?.setFilterValue(event.target.value)
+              }
+            />
+          </div>
+          <div className="flex items-center">
+            <Input
+              placeholder="Filter position..."
+              value={
+                (table.getColumn("position")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("position")?.setFilterValue(event.target.value)
+              }
+            />
+          </div>
+          <div className="flex items-center">
+            <Input
+              placeholder="Filter location..."
+              value={
+                (table.getColumn("location")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("location")?.setFilterValue(event.target.value)
+              }
+            />
+          </div>
         </div>
       </div>
       <Table className="border">

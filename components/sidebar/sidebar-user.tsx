@@ -2,12 +2,14 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
+  Coins,
   CreditCard,
   HelpCircle,
   LogOut,
   RefreshCw,
   Settings,
   Sparkles,
+  User,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,6 +32,11 @@ import Link from "next/link";
 import { logout } from "@/app/actions/auth";
 
 const dropdownNav = [
+  {
+    title: "Profile",
+    url: "/dashboard/profile",
+    icon: User,
+  },
   {
     title: "General Settings",
     url: "/dashboard/settings/general",
@@ -54,6 +61,7 @@ export function SidebarUser({
     name: string;
     email: string;
     avatar: string;
+    credits: number;
   };
 }) {
   return (
@@ -66,7 +74,7 @@ export function SidebarUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage className="grayscale" src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
                   {user.name
                     .split(" ")
@@ -97,15 +105,12 @@ export function SidebarUser({
                   </span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
+                <div className="flex items-center gap-1 rounded-md bg-muted px-2 py-1 text-muted-foreground">
+                  <Coins className="size-4" />
+                  <span className="text-sm font-bold">{user.credits}</span>
+                </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {/* <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               {dropdownNav.map((item) => (
@@ -121,7 +126,7 @@ export function SidebarUser({
                 </Link>
               ))}
             </DropdownMenuGroup>
-            <DropdownMenuSeparator /> */}
+            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <Link href="/kb">
                 <DropdownMenuItem>

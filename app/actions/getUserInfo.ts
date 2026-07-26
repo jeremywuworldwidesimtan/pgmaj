@@ -12,6 +12,7 @@ export const getUser = async (userId: string) => {
         email: true,
         firstName: true,
         lastName: true,
+        credits: true,
       },
     });
 

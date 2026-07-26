@@ -254,7 +254,7 @@ export default function ApplicationForm({
               id="referenceLink"
               name="referenceLink"
               label="Reference Link"
-              value={data?.referenceLink || ""}
+              value={data?.referenceLink || "https://"}
               error = {state?.errors?.referenceLink ? state.errors.referenceLink.join(", ") : ""}
               placeholder="Enter the reference link"
               required

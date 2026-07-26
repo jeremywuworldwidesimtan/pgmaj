@@ -14,6 +14,9 @@ async function getData(): Promise<JobApplicationPrisma[]> {
       userId: session.userId,
       softDeleted: false,
     },
+    orderBy: {
+      appliedDate: "desc",
+    },
   });
   return jobApplications;
 }
@@ -37,7 +40,9 @@ export default async function Dashboard() {
         </div>
       </div>
 
-      <div className="w-full mt-4">
+      <hr className="my-2" />
+
+      <div className="w-full">
         <DataTable columns={columns} data={data} />
       </div>
     </>

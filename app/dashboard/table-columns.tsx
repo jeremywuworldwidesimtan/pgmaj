@@ -5,17 +5,11 @@ import Link from "next/link";
 import { ChevronUp, ChevronDown, LucideLink } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import ActionCell from "@/components/dashboard/action-cell";
 import { JobApplicationPrisma } from "../types";
 import { colorStatus, formatType, parseDate } from "../lib/helper";
 
 export const columns: ColumnDef<JobApplicationPrisma>[] = [
-  {
-    accessorKey: "checkbox",
-    header: ({ table }) => <></>,
-    cell: ({ row }) => <Checkbox className="mr-2" />,
-  },
   {
     accessorKey: "company",
     header: ({ column }) => {
@@ -91,6 +85,12 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
         </div>
       );
     }
+  },
+  {
+    accessorKey: "jobType",
+  },
+  {
+    accessorKey: "jobMode",
   },
   {
     accessorKey: "jobTypeandMode",

@@ -4,17 +4,21 @@ import { cookies } from 'next/headers'
  
 // 1. Specify protected and public routes
 const protectedRoutes = ['/dashboard']
-const publicRoutes = ['/login', '/signup', '/kb', '/']
+const logoutRoutes = ['/login', '/signup']
+const publicRoutes = ['/kb', '/']
  
 export default async function proxy(req: NextRequest) {
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname
   const isProtectedRoute = protectedRoutes.includes(path)
+  const isLogoutRoute = logoutRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)
  
   // 3. Decrypt the session from the cookie
   const cookie = (await cookies()).get('session')?.value
   const session = await decrypt(cookie)
+
+  console.log(`Path: ${path}, session: ${JSON.stringify(session)}`)
  
   // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session?.userId) {
@@ -23,9 +27,8 @@ export default async function proxy(req: NextRequest) {
  
   // 5. Redirect to /dashboard if the user is authenticated
   if (
-    isPublicRoute &&
-    session?.userId &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
+    isLogoutRoute &&
+    session?.userId
   ) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
   }

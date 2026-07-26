@@ -30,7 +30,7 @@ export default function Home() {
             <p className="text-sm text-muted-foreground">
               Made by @jeremywuworldwidesimtan.{" "}
               <Link
-                href="https://github.com/your-repo"
+                href="https://github.com/jeremywuworldwidesimtan/pgmaj"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline"
@@ -41,7 +41,7 @@ export default function Home() {
             <p className="text-sm text-muted-foreground">
               This is a work in progress. Please report any issues on the{" "}
               <Link
-                href="https://github.com/your-repo/issues"
+                href="https://github.com/jeremywuworldwidesimtan/pgmaj/issues"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="underline"

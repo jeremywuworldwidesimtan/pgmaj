@@ -99,7 +99,8 @@ export async function DashboardSidebar() {
         <SidebarUser user={{
             name: (user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}` : user?.username || "User",
             email: user?.email || "",
-            avatar: "/placeholder.svg"
+            avatar: "/placeholder.png",
+            credits: user?.credits || 0
         }}/>
       </SidebarFooter>
     </Sidebar>

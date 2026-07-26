@@ -12,6 +12,7 @@ export default function KBLayout({
         <div className="flex flex-row gap-4">
             <Link href="/kb" className="hover:underline">Home</Link>
             <Link href="/kb/changelog" className="hover:underline">Changelog</Link>
+            <Link href="/kb/roadmap" className="hover:underline">Roadmap</Link>
         </div>
       </div>
       <main className="px-4">{children}</main>
