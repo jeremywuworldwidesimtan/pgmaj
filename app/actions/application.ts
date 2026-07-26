@@ -221,8 +221,6 @@ export async function submitApplicationForm(
   _state: ApplicationFormState,
   formData: FormData,
 ): Promise<ApplicationFormState> {
-  console.log("Form Data:", Object.fromEntries(formData.entries()));
-
   const validatedFields = ApplicationFormSchema.safeParse({
     company: formData.get("company"),
     position: formData.get("position"),
@@ -246,8 +244,6 @@ export async function submitApplicationForm(
     referenceLink: formData.get("referenceLink"),
     notes: formData.get("notes"),
   });
-
-  console.log("Validated Fields:", validatedFields);
 
   if (!validatedFields.success) {
     return {
@@ -280,6 +276,12 @@ export async function submitApplicationForm(
 
   const jobId = formData.get("jobId") as string | null;
   const payload = validatedFields.data;
+
+  if (!payload.payFrequency) {
+    payload.payFrequency = null; // Set to null if empty string
+  }
+
+  console.log("Payload to be submitted:", payload);
 
   if (typeof jobId === "string" && jobId.length > 0) {
     if (!(await prisma.jobApplication.findUnique({ where: { id: jobId } }))) {

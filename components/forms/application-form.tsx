@@ -183,7 +183,6 @@ export default function ApplicationForm({
                 state?.errors?.minPay ? state.errors.minPay.join(", ") : ""
               }
               type="number"
-              required
             />
             <InputField
               id="maxPay"
@@ -195,7 +194,6 @@ export default function ApplicationForm({
                 state?.errors?.maxPay ? state.errors.maxPay.join(", ") : ""
               }
               type="number"
-              required
             />
             <SelectField
               id="payFrequency"
@@ -208,7 +206,6 @@ export default function ApplicationForm({
                   ? state.errors.payFrequency.join(", ")
                   : ""
               }
-              required
               selectItems={["Hourly", "Weekly", "Monthly", "Yearly"].map(
                 (frequency) => ({
                   label: frequency,
