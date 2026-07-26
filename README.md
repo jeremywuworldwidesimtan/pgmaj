@@ -1,9 +1,13 @@
 # PGMAJ
 Please Give Me A Job (PGMAJ) - an all-in-one centralized job application management and soon, interview prep, platform
 
-![PGMAJ dashboard](public\pgmaj_dashboard.png)
-
 ## [Vercel Live Demo Link](https://pgmaj.vercel.app/)
+
+## [Demo video (YouTube)](https://youtu.be/PISj3b2GQUA)
+
+![PGMAJ dashboard](/public/pgmaj_dashboard.png)
+
+
 ---
 ## Current features
 - Track your job applications in one place.
