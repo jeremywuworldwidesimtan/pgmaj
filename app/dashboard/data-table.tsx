@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -237,7 +238,7 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                No results. <Link href="/dashboard/application/add" className="text-primary hover:underline">Add a new application</Link> or go to <Link href="/dashboard/profile" className="text-primary hover:underline">profile settings</Link> to customize your experience.
               </TableCell>
             </TableRow>
           )}

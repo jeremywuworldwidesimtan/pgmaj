@@ -28,6 +28,9 @@ export const changelog = [
     changes: [
         "Added roadmap page.",
         "Added user profile page with edit profile functionality.",
+        "Added preferred currency option.",
+        "Created documentation on GitHub.",
+        "First deployment on Vercel. Yippy!",
     ],
   }
 ];
