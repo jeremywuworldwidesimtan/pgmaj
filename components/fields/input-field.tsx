@@ -16,6 +16,7 @@ interface InputFieldProps {
   required?: boolean;
   value?: string | number;
   error?: string;
+  disabled?: boolean;
 }
 
 export default function InputField({
@@ -28,6 +29,7 @@ export default function InputField({
   required,
   value,
   error,
+  disabled,
 }: InputFieldProps) {
   return (
     <Field data-invalid={Boolean(error)}>
@@ -40,6 +42,7 @@ export default function InputField({
         required={required}
         defaultValue={value ?? ""}
         aria-invalid={Boolean(error)}
+        disabled={disabled}
         {...(type === "number" ? { step: "any" } : {})}
       />
       {description && <FieldDescription>{description}</FieldDescription>}

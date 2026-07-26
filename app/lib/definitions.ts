@@ -42,32 +42,46 @@ export const ApplicationFormSchema = z.object({
   position: z.string().trim().min(1, { error: "Position is required." }),
   location: z.string().trim().min(1, { error: "Location is required." }),
   jobType: z.custom<JobTypePrisma>(
-    (value) => typeof value === "string" && ["FullTime", "PartTime", "Contract", "Internship", "Freelance"].includes(value),
+    (value) =>
+      typeof value === "string" &&
+      ["FullTime", "PartTime", "Contract", "Internship", "Freelance"].includes(
+        value,
+      ),
     { error: "Please select a job type." },
   ),
   jobMode: z.custom<JobModePrisma>(
-    (value) => typeof value === "string" && ["Remote", "OnSite", "Hybrid"].includes(value),
+    (value) =>
+      typeof value === "string" &&
+      ["Remote", "OnSite", "Hybrid"].includes(value),
     { error: "Please select a job mode." },
   ),
   status: z.custom<StatusPrisma>(
-    (value) => typeof value === "string" && ["Applied", "Shortlisted", "Interviewed", "Offered", "Rejected"].includes(value),
+    (value) =>
+      typeof value === "string" &&
+      ["Applied", "Shortlisted", "Interviewed", "Offered", "Rejected"].includes(
+        value,
+      ),
     { error: "Please select a status." },
   ),
   appliedDate: z.date({ error: "Please enter a valid date." }),
   latestUpdate: z.date().nullable(),
   latestInterviewScheduledDate: z.date().nullable(),
   minPay: z
-    .number({error: "Minimum pay must be a number."})
+    .number({ error: "Minimum pay must be a number." })
     .gt(0, { error: "Minimum pay must be greater than 0." })
     .optional(),
   maxPay: z
-    .number({error: "Maximum pay must be a number."})
+    .number({ error: "Maximum pay must be a number." })
     .gt(0, { error: "Maximum pay must be greater than 0." })
     .optional(),
-  payFrequency: z.custom<PayFrequencyPrisma>(
-    (value) => typeof value === "string" && ["Hourly", "Weekly", "Monthly", "Yearly"].includes(value),
-    { error: "Please select a pay frequency." },
-  ).optional(),
+  payFrequency: z
+    .custom<PayFrequencyPrisma>(
+      (value) =>
+        typeof value === "string" &&
+        ["Hourly", "Weekly", "Monthly", "Yearly"].includes(value),
+      { error: "Please select a pay frequency." },
+    )
+    .optional(),
   jobDescription: z.string().trim().nullable(),
   referenceLink: z
     .url({ error: "Please enter a valid URL." })
@@ -88,13 +102,30 @@ export const JobNotesComponentSchema = z.object({
 
 export const JobStatusUpdateSchema = z.object({
   status: z.custom<StatusPrisma>(
-    (value) => typeof value === "string" && ["Applied", "Shortlisted", "Interviewed", "Offered", "Rejected"].includes(value),
+    (value) =>
+      typeof value === "string" &&
+      ["Applied", "Shortlisted", "Interviewed", "Offered", "Rejected"].includes(
+        value,
+      ),
     { error: "Please select a status." },
   ),
   updateDates: z.boolean(),
   latestUpdate: z.date().nullable(),
   latestInterviewScheduledDate: z.date().nullable(),
   jobId: z.string().trim().min(1, { error: "Job ID is required." }),
+});
+
+export const ProfileEditFormSchema = z.object({
+  id: z.string().trim().min(1, { error: "User ID is required." }),
+  firstName: z.string().trim().nullable(),
+  lastName: z.string().trim().nullable(),
+  contact_number: z.string().trim().nullable(),
+  addr_line1: z.string().trim().nullable(),
+  addr_line2: z.string().trim().nullable(),
+  city: z.string().trim().nullable(),
+  st: z.string().trim().nullable(),
+  country: z.string().trim().nullable(),
+  zip_code: z.string().trim().nullable(),
 });
 
 export type SignupFormState =
@@ -204,6 +235,35 @@ export type JobStatusUpdateState =
     }
   | undefined;
 
+export type ProfileEditFormState =
+  | {
+      errors?: {
+        id?: string[];
+        firstName?: string[];
+        lastName?: string[];
+        contact_number?: string[];
+        addr_line1?: string[];
+        addr_line2?: string[];
+        city?: string[];
+        st?: string[];
+        country?: string[];
+        zip_code?: string[];
+      };
+      message?: string;
+      values?: {
+        id: string;
+        firstName: string | null;
+        lastName: string | null;
+        contact_number: string | null;
+        addr_line1: string | null;
+        addr_line2: string | null;
+        city: string | null;
+        st: string | null;
+        country: string | null;
+        zip_code: string | null;
+      };
+    }
+  | undefined;
 
 export type SessionPayload = {
   userId: string;

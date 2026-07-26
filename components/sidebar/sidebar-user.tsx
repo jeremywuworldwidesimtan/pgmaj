@@ -39,19 +39,19 @@ const dropdownNav = [
   },
   {
     title: "General Settings",
-    url: "/dashboard/settings/general",
+    url: "/dashboard/profile/edit",
     icon: Settings,
   },
-  {
-    title: "Account Settings",
-    url: "/dashboard/settings/account",
-    icon: BadgeCheck,
-  },
-  {
-    title: "Billing",
-    url: "/dashboard/settings/billing",
-    icon: CreditCard,
-  },
+  // {
+  //   title: "Account Settings",
+  //   url: "/dashboard/settings/account",
+  //   icon: BadgeCheck,
+  // },
+  // {
+  //   title: "Billing",
+  //   url: "/dashboard/settings/billing",
+  //   icon: CreditCard,
+  // },
 ];
 
 export function SidebarUser({

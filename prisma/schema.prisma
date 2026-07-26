@@ -51,9 +51,25 @@ model User {
   role            Role     @default(User)
   credits         Int      @default(0)
   jobApplications JobApplication[]
+  userDetails     UserDetails?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   softDeleted     Boolean  @default(false)
+}
+
+model UserDetails {
+  userId    String   @id @unique
+  user      User     @relation(fields: [userId], references: [id])
+  contact_number String?
+  addr_line1 String?
+  addr_line2 String?
+  city       String?
+  state      String?
+  country    String?
+  zip_code   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  softDeleted Boolean @default(false)
 }
 
 model JobApplication {

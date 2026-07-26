@@ -10,22 +10,20 @@ export const roadmap = [
       "Selfhosted GitHub version (CE).",
       "GitHub documentation.",
       "Vercel deployment.",
-    ]
+    ],
   },
   {
     version: "medium-term",
     features: [
+      "Master resume builder.",
       "Mobile layout.",
       "Interview prep.",
       "Proper dashboard.",
-      "Scheduler."
-    ]
+      "Scheduler.",
+    ],
   },
   {
     version: "long-term",
-    features: [
-      "AI integration.",
-      "Actual payment system for credits.",
-    ]
+    features: ["AI integration.", "Actual payment system for credits."],
   },
 ];

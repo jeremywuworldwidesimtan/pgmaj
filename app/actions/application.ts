@@ -30,14 +30,14 @@ type JobApplicationPayload = {
   jobMode: JobModePrisma;
   status: StatusPrisma;
   appliedDate: Date | null;
-  latestUpdate: Date | null;
-  latestInterviewScheduledDate: Date | null;
-  minPay: number | null;
-  maxPay: number | null;
-  payFrequency: PayFrequencyPrisma | null;
-  jobDescription: string | null;
-  referenceLink: string | null;
-  notes: string | null;
+  latestUpdate?: Date | null;
+  latestInterviewScheduledDate?: Date | null;
+  minPay?: number | null | undefined;
+  maxPay?: number | null | undefined;
+  payFrequency?: PayFrequencyPrisma | null;
+  jobDescription?: string | null;
+  referenceLink?: string | null;
+  notes?: string | null;
 };
 
 async function updatejobApplication(

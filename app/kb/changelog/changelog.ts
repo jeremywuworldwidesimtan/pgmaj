@@ -22,4 +22,13 @@ export const changelog = [
         "Fix delete redirect issue.",
     ],
   },
+  {
+    version: "Beta 0.2.0",
+    date: "2026-07-26",
+    changes: [
+        "Added roadmap page.",
+        "Added user profile page with edit profile functionality.",
+        "Added user profile page.",
+    ],
+  }
 ];

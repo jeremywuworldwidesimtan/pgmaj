@@ -52,19 +52,16 @@ const initialState: ApplicationFormState = undefined;
 export default function ApplicationForm({
   formData: data,
 }: ApplicationFormProps) {
-
-    const [state, formAction, pending] = useActionState(
-      submitApplicationForm,
-      initialState,
-    );
+  const [state, formAction, pending] = useActionState(
+    submitApplicationForm,
+    initialState,
+  );
 
   return (
     <>
       {/* <form action={formAction} className="mt-4 flex flex-col gap-4"> */}
       <form action={formAction} className="mt-4 flex flex-col gap-4">
-        {data?.id ? (
-          <input type="hidden" name="jobId" value={data.id} />
-        ) : null}
+        {data?.id ? <input type="hidden" name="jobId" value={data.id} /> : null}
         <FieldSet>
           <FieldLegend>Job Information</FieldLegend>
           <FieldDescription>
@@ -78,7 +75,9 @@ export default function ApplicationForm({
               label="Company"
               value={data?.company || ""}
               placeholder="Enter the company name"
-              error = {state?.errors?.company ? state.errors.company.join(", ") : ""}
+              error={
+                state?.errors?.company ? state.errors.company.join(", ") : ""
+              }
               required
             />
             <InputField
@@ -87,7 +86,9 @@ export default function ApplicationForm({
               label="Position"
               value={data?.position || ""}
               placeholder="Enter the position"
-              error = {state?.errors?.position ? state.errors.position.join(", ") : ""}
+              error={
+                state?.errors?.position ? state.errors.position.join(", ") : ""
+              }
               required
             />
             <InputField
@@ -96,7 +97,9 @@ export default function ApplicationForm({
               label="Location"
               value={data?.location || ""}
               placeholder="Enter the location"
-              error = {state?.errors?.location ? state.errors.location.join(", ") : ""}
+              error={
+                state?.errors?.location ? state.errors.location.join(", ") : ""
+              }
               required
             />
           </FieldGroup>
@@ -114,7 +117,9 @@ export default function ApplicationForm({
               label="Job Type"
               value={data?.jobType || ""}
               placeholder="Select the job type"
-              error = {state?.errors?.jobType ? state.errors.jobType.join(", ") : ""}
+              error={
+                state?.errors?.jobType ? state.errors.jobType.join(", ") : ""
+              }
               required
               selectItems={[
                 { label: "Full-time", value: "FullTime" },
@@ -130,7 +135,9 @@ export default function ApplicationForm({
               label="Job Mode"
               value={data?.jobMode || ""}
               placeholder="Select the job mode"
-              error = {state?.errors?.jobMode ? state.errors.jobMode.join(", ") : ""}
+              error={
+                state?.errors?.jobMode ? state.errors.jobMode.join(", ") : ""
+              }
               required
               selectItems={[
                 { label: "Remote", value: "Remote" },
@@ -144,7 +151,9 @@ export default function ApplicationForm({
               label="Application Status"
               value={data?.status || ""}
               placeholder="Select the application status"
-              error = {state?.errors?.status ? state.errors.status.join(", ") : ""}
+              error={
+                state?.errors?.status ? state.errors.status.join(", ") : ""
+              }
               required
               selectItems={[
                 { label: "Applied", value: "Applied" },
@@ -170,7 +179,9 @@ export default function ApplicationForm({
               label="Minimum Pay"
               value={data?.minPay || ""}
               placeholder="Enter the minimum pay"
-              error = {state?.errors?.minPay ? state.errors.minPay.join(", ") : ""}
+              error={
+                state?.errors?.minPay ? state.errors.minPay.join(", ") : ""
+              }
               type="number"
               required
             />
@@ -180,7 +191,9 @@ export default function ApplicationForm({
               label="Maximum Pay"
               value={data?.maxPay || ""}
               placeholder="Enter the maximum pay"
-              error = {state?.errors?.maxPay ? state.errors.maxPay.join(", ") : ""}
+              error={
+                state?.errors?.maxPay ? state.errors.maxPay.join(", ") : ""
+              }
               type="number"
               required
             />
@@ -190,7 +203,11 @@ export default function ApplicationForm({
               label="Pay Frequency"
               value={data?.payFrequency || ""}
               placeholder="Select the pay frequency"
-              error = {state?.errors?.payFrequency ? state.errors.payFrequency.join(", ") : ""}
+              error={
+                state?.errors?.payFrequency
+                  ? state.errors.payFrequency.join(", ")
+                  : ""
+              }
               required
               selectItems={["Hourly", "Weekly", "Monthly", "Yearly"].map(
                 (frequency) => ({
@@ -213,7 +230,11 @@ export default function ApplicationForm({
               name="appliedDate"
               label="Applied Date"
               value={data?.appliedDate || ""}
-              error = {state?.errors?.appliedDate ? state.errors.appliedDate.join(", ") : ""}
+              error={
+                state?.errors?.appliedDate
+                  ? state.errors.appliedDate.join(", ")
+                  : ""
+              }
               placeholder="Select the applied date"
             />
             <DateField
@@ -221,7 +242,11 @@ export default function ApplicationForm({
               name="latestUpdate"
               label="Latest Update"
               value={data?.latestUpdate || ""}
-              error = {state?.errors?.latestUpdate ? state.errors.latestUpdate.join(", ") : ""}
+              error={
+                state?.errors?.latestUpdate
+                  ? state.errors.latestUpdate.join(", ")
+                  : ""
+              }
               placeholder="Select the latest updated date"
             />
             <DateField
@@ -229,7 +254,11 @@ export default function ApplicationForm({
               name="latestInterviewScheduledDate"
               label="Interview Date"
               value={data?.latestInterviewScheduledDate || ""}
-              error = {state?.errors?.latestInterviewScheduledDate ? state.errors.latestInterviewScheduledDate.join(", ") : ""}
+              error={
+                state?.errors?.latestInterviewScheduledDate
+                  ? state.errors.latestInterviewScheduledDate.join(", ")
+                  : ""
+              }
               placeholder="Select the interview date"
             />
           </FieldGroup>
@@ -247,7 +276,11 @@ export default function ApplicationForm({
               name="jobDescription"
               label="Job Description"
               value={data?.jobDescription || ""}
-              error = {state?.errors?.jobDescription ? state.errors.jobDescription.join(", ") : ""}
+              error={
+                state?.errors?.jobDescription
+                  ? state.errors.jobDescription.join(", ")
+                  : ""
+              }
               placeholder="Enter the job description"
             />
             <InputField
@@ -255,7 +288,11 @@ export default function ApplicationForm({
               name="referenceLink"
               label="Reference Link"
               value={data?.referenceLink || "https://"}
-              error = {state?.errors?.referenceLink ? state.errors.referenceLink.join(", ") : ""}
+              error={
+                state?.errors?.referenceLink
+                  ? state.errors.referenceLink.join(", ")
+                  : ""
+              }
               placeholder="Enter the reference link"
               required
             />
@@ -264,7 +301,7 @@ export default function ApplicationForm({
               name="notes"
               label="Notes"
               value={data?.notes || ""}
-              error = {state?.errors?.notes ? state.errors.notes.join(", ") : ""}
+              error={state?.errors?.notes ? state.errors.notes.join(", ") : ""}
               placeholder="Enter any additional notes"
             />
           </FieldGroup>

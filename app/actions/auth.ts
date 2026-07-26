@@ -64,6 +64,9 @@ export async function signup(
       lastName: data.lastName,
       email: data.email,
       password: data.password,
+      userDetails: {
+        create: {}
+      }
     },
   });
 
