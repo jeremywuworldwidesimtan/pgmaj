@@ -23,7 +23,7 @@ import { submitApplicationForm } from "@/app/actions/application";
 import { type ApplicationFormState } from "@/app/lib/definitions";
 
 export type ApplicationFormProps = {
-  formData: {
+  formData?: {
     id: string;
     company: string;
     position: string;
