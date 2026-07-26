@@ -13,8 +13,8 @@ export function LoginForm() {
   return (
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden p-0">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <form action={action} className="p-6 md:p-8">
+        <CardContent className="grid p-0 md:grid-cols-2 lg:h-[85vh]">
+          <form action={action} className="my-auto p-6 md:p-8">
             <FieldSet>
               <div className="flex flex-col items-start gap-2">
                 <FieldLegend>
@@ -63,15 +63,25 @@ export function LoginForm() {
                 Don&apos;t have an account?{" "}
                 <Link href="/register">Sign up</Link>
               </FieldDescription>
+              <FieldDescription className="text-xs text-muted-foreground">
+                Photo by{" "}
+                <Link href="https://unsplash.com/@snapsbyclark?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
+                  Clark Van Der Beken
+                </Link>{" "}
+                on{" "}
+                <Link href="https://unsplash.com/photos/an-airplane-is-flying-in-front-of-a-building-y1kOrwA28yc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
+                  Unsplash
+                </Link>
+              </FieldDescription>
             </FieldSet>
           </form>
           <div className="relative hidden bg-muted md:block">
             <Image
-              src="/placeholder.svg"
+              src="/scraper.jpg"
               alt="Image"
               width={400}
               height={400}
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              className="absolute inset-0 h-full w-full object-cover grayscale brightness-50" // tint photo color
             />
           </div>
         </CardContent>
