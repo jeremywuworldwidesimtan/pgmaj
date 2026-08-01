@@ -313,9 +313,6 @@ export default function ApplicationForm({
           type="submit"
           disabled={pending}
           className="w-full md:w-auto"
-          onClick={() => {
-            console.log(`Data to be submitted: ${JSON.stringify(data)}`);
-          }}
         >
           {pending ? "Saving..." : "Save"}
         </Button>

@@ -45,6 +45,7 @@ export const changelog = [
     date: "2026-08-02",
     changes: [
         "Fixed sidebar not closing on mobile.",
+        "Added proper titles for the pages.",
     ],
   }
 ];

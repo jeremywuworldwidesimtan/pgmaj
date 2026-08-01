@@ -1,7 +1,13 @@
 import ApplicationForm from "@/components/forms/application-form";
 import prisma from "@/lib/prisma";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Edit Application",
+  description: "Edit an existing job application.",
+};
 
 async function getFormData(id: string) {
   // Fetch data from your API here.

@@ -6,11 +6,32 @@ import JobDescriptionComponent from "@/components/dashboard/job-description";
 import JobNotesComponent from "@/components/dashboard/job-notes";
 import UpdateStatusButton from "@/components/dashboard/update-status";
 import { Button } from "@/components/ui/button";
-import { useIsMobile } from "@/hooks/use-mobile";
 import prisma from "@/lib/prisma";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const applicationInfo = await prisma.jobApplication.findFirst({
+    where: {
+    id: id,
+    },
+    select: {
+      position: true,
+      company: true,
+    },
+  });
+  return {
+    title: `${applicationInfo?.position} at ${applicationInfo?.company} - Application Details`,
+    description: "View your application details",
+  };
+}
 
 async function getData(id: string) {
   // Fetch data from your API here.
@@ -55,7 +76,6 @@ export default async function ApplicationDetailsPage({
       <Link href="/dashboard" className="text-sm hover:underline">
         &larr; Back to Dashboard
       </Link>
-      <h2 className="text-2xl font-bold mt-2">Application Details</h2>
 
       <Suspense fallback={<div>Loading Application...</div>}>
         <div className="mt-4 flex flex-col lg:flex-row lg:justify-between gap-4">

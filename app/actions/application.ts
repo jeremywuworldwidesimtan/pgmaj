@@ -296,5 +296,6 @@ export async function submitApplicationForm(
   }
 
   revalidatePath("/dashboard");
-  redirect("/dashboard");
+  revalidatePath("/dashboard/application/" + jobId);
+  redirect("/dashboard/application/" + jobId);
 }

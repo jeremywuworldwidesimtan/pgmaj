@@ -1,7 +1,18 @@
 import { getFullUserInfo, getUser } from "@/app/actions/getUserInfo";
 import { verifySession } from "@/app/lib/dal";
 import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const session = await verifySession();
+  const user = await getUser(session.userId);
+
+  return {
+    title: `${user?.firstName} ${user?.lastName} (@${user?.username}) User Profile`,
+    description: "View and edit your profile information.",
+  };
+}
 
 export default async function ProfilePage() {
   const session = await verifySession();
@@ -9,18 +20,15 @@ export default async function ProfilePage() {
   const user = await getFullUserInfo(session.userId);
   return (
     <>
-      <div className="flex justify-between">
-        <h1 className="text-3xl font-bold">Profile</h1>
-        <Link href="/dashboard/profile/edit">
-          <Button>Edit Profile</Button>
-        </Link>
-      </div>
-
-      <hr className="my-4" />
       <div>
-        <h2 className="text-3xl font-bold">
-          {user?.firstName} {user?.lastName} (@{user?.username})
-        </h2>
+        <div className="flex justify-between">
+          <h2 className="text-3xl font-bold">
+            {user?.firstName} {user?.lastName} (@{user?.username})
+          </h2>
+          <Link href="/dashboard/profile/edit">
+            <Button>Edit Profile</Button>
+          </Link>
+        </div>
 
         <div className="mt-2">
           <p>
