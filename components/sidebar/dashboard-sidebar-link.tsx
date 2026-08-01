@@ -6,9 +6,11 @@ import Link from "next/link";
 export function DashboardSidebarLink({
   children,
   href,
+  className,
 }: Readonly<{
   children: React.ReactNode;
   href: string;
+  className?: string;
 }>) {
   const { isMobile, setOpenMobile } = useSidebar();
 
@@ -19,7 +21,7 @@ export function DashboardSidebarLink({
   }
 
   return (
-    <Link href={href} onClick={handleClick} className="flex items-center gap-2">
+    <Link href={href} onClick={handleClick} className={className}>
       {children}
     </Link>
   );

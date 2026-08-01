@@ -141,22 +141,26 @@ const secondLevelCountryCodeDomains = new Set([
 ]);
 
 export function shortenWebURL(url: string): string {
-  const hostname = new URL(url).hostname.toLowerCase();
-  const labels = hostname.split(".").filter(Boolean);
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+    const labels = hostname.split(".").filter(Boolean);
 
-  if (labels.length <= 2) {
-    return hostname;
+    if (labels.length <= 2) {
+      return hostname;
+    }
+
+    const topLevelDomain = labels.at(-1) ?? ""; // e.g., .com or .uk
+    const possibleSecondLevelDomain = labels.at(-2) ?? ""; // e.g., .co.uk or .edu.us
+    const domainLabelCount =
+      topLevelDomain.length === 2 && // .uk, .ca but not .com, .org, etc.
+      secondLevelCountryCodeDomains.has(possibleSecondLevelDomain) // has .com, .org, .co, etc. as second-level domain
+        ? 3 // e.g., example.co.uk -> example.co.uk
+        : 2; // e.g., example.co -> example.co
+
+    // This can prevent generic .co from being treated as a ccTLD
+
+    return labels.slice(-domainLabelCount).join(".");
+  } catch (error) {
+    return url;
   }
-
-  const topLevelDomain = labels.at(-1) ?? ""; // e.g., .com or .uk
-  const possibleSecondLevelDomain = labels.at(-2) ?? ""; // e.g., .co.uk or .edu.us
-  const domainLabelCount =
-    (topLevelDomain.length === 2 && // .uk, .ca but not .com, .org, etc.
-    secondLevelCountryCodeDomains.has(possibleSecondLevelDomain)) // has .com, .org, .co, etc. as second-level domain
-      ? 3 // e.g., example.co.uk -> example.co.uk
-      : 2; // e.g., example.co -> example.co
-
-  // This can prevent generic .co from being treated as a ccTLD
-
-  return labels.slice(-domainLabelCount).join(".");
 }

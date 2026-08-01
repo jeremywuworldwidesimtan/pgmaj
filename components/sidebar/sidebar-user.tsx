@@ -29,11 +29,10 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 import { logout } from "@/app/actions/auth";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { DashboardSidebarLink } from "./dashboard-sidebar-link";
 
 const dropdownNav = [
   {
@@ -119,7 +118,7 @@ export function SidebarUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               {dropdownNav.map((item) => (
-                <Link
+                <DashboardSidebarLink
                   key={item.title}
                   href={item.url}
                   className="w-full h-full"
@@ -128,29 +127,29 @@ export function SidebarUser({
                     {item.icon && <item.icon />}
                     {item.title}
                   </DropdownMenuItem>
-                </Link>
+                </DashboardSidebarLink>
               ))}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <Link href="/kb">
+              <DashboardSidebarLink href="/kb">
                 <DropdownMenuItem>
                   <HelpCircle />
                   Help
                 </DropdownMenuItem>
-              </Link>
-              <Link href="/kb/changelog">
+              </DashboardSidebarLink>
+              <DashboardSidebarLink href="/kb/changelog">
                 <DropdownMenuItem>
                   <RefreshCw />
                   Changelog
                 </DropdownMenuItem>
-              </Link>
-              <Link href="https://github.com/jeremywuworldwidesimtan/pgmaj/issues">
+              </DashboardSidebarLink>
+              <DashboardSidebarLink href="https://github.com/jeremywuworldwidesimtan/pgmaj/issues">
                 <DropdownMenuItem>
                   <TriangleAlert />
                   Report an Issue
                 </DropdownMenuItem>
-              </Link>
+              </DashboardSidebarLink>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>

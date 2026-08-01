@@ -1,12 +1,12 @@
 import { getUser } from "@/app/actions/getUserInfo";
 import { verifySession } from "@/app/lib/dal";
-import { colorStatus, formatType, parseDate } from "@/app/lib/helper";
+import { colorStatus, formatType, parseDate, shortenWebURL } from "@/app/lib/helper";
 import DeleteButton from "@/components/dashboard/delete";
 import JobDescriptionComponent from "@/components/dashboard/job-description";
 import JobNotesComponent from "@/components/dashboard/job-notes";
 import UpdateStatusButton from "@/components/dashboard/update-status";
-import TextareaField from "@/components/fields/textarea-field";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -58,112 +58,134 @@ export default async function ApplicationDetailsPage({
       <h2 className="text-2xl font-bold mt-2">Application Details</h2>
 
       <Suspense fallback={<div>Loading Application...</div>}>
-      <div className="mt-4 flex flex-col lg:flex-row lg:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl lg:text-4xl font-bold">{data.position}</h1>
-          <p className="text-lg lg:text-xl">at {data.company}</p>
-          <p className="text-sm">in {data.location}</p>
-        </div>
-        <div className="hidden lg:flex flex-col items-end gap-2">
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={`/dashboard/application/${data.id}/edit`}>
-                Edit Application
-              </Link>
-            </Button>
-            <DeleteButton jobId={data.id} />
-          </div>
-          <div className="flex gap-2">
-            <UpdateStatusButton status={data.status} jobId={data.id} />
-          </div>
-        </div>
-        <div className="lg:hidden flex flex-col items-start gap-2">
-          <div className="flex gap-2">
-            <Button asChild>
-              <Link href={`/dashboard/application/${data.id}/edit`}>
-                Edit
-              </Link>
-            </Button>
-            <DeleteButton jobId={data.id} />
-            <UpdateStatusButton status={data.status} jobId={data.id} />
-          </div>
-        </div>
-      </div>
-      <hr className="my-2 lg:my-4" />
-      <Link href="#job-description" className="text-sm block lg:hidden">
-        &darr; Go to Job Description
-      </Link>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-2 mt-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
-            <p>
-              <strong>Job Type:</strong> {formatType(data.jobType)}
-            </p>
-            <p>
-              <strong>Job Mode:</strong> {formatType(data.jobMode)}
-            </p>
-            <p >
-              <strong>Status:</strong> <span className={colorStatus(data.status)}>{formatType(data.status)}</span>
-            </p>
-          </div>
+        <div className="mt-4 flex flex-col lg:flex-row lg:justify-between gap-4">
           <div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
-              <p>
-                <strong>Applied:</strong>{" "}
-                {data.appliedDate
-                  ? parseDate(data.appliedDate, "british", "short", "dot")
-                  : "N/A"}
-              </p>
-              <p>
-                <strong>Updated:</strong>{" "}
-                {data.latestUpdate
-                  ? parseDate(data.latestUpdate, "british", "short", "dot")
-                  : "N/A"}
-              </p>
-              <p>
-                <strong>Interview:</strong>{" "}
-                {data.latestInterviewScheduledDate
-                  ? parseDate(
-                      data.latestInterviewScheduledDate,
-                      "british",
-                      "short",
-                      "dot",
-                    )
-                  : "N/A"}
-              </p>
+            <h1 className="text-2xl lg:text-4xl font-bold">{data.position}</h1>
+            <p className="text-lg lg:text-xl">at {data.company}</p>
+            <p className="text-sm">in {data.location}</p>
+          </div>
+          <div className="hidden lg:flex flex-col items-end gap-2">
+            <div className="flex gap-2">
+              <Button asChild>
+                <Link href={`/dashboard/application/${data.id}/edit`}>
+                  Edit Application
+                </Link>
+              </Button>
+              <DeleteButton jobId={data.id} />
+            </div>
+            <div className="flex gap-2">
+              <UpdateStatusButton status={data.status} jobId={data.id} />
             </div>
           </div>
-          <div>
-            {data.minPay && data.maxPay ? <p>
-              Pay Range: {preferredCurrency}{data.minPay} - {preferredCurrency}{data.maxPay} ({data.payFrequency})
-            </p> : (data.minPay && !data.maxPay ? <p>Pay Range: {preferredCurrency}{data.minPay} ({data.payFrequency})</p> : <p>Pay Range: N/A</p>)}
-          </div>
-          <div>
-            <p>
-              Website:{" "}
-              <Link
-                href={data.referenceLink || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 hover:underline truncate"
-              >
-                {data.referenceLink}
-              </Link>
-            </p>
-          </div>
-          <div>
-            <Suspense fallback={<div>Loading Notes...</div>}>
-              <JobNotesComponent notes={data.notes} jobId={data.id} />
-            </Suspense>
+          <div className="lg:hidden flex flex-col items-start gap-2">
+            <div className="flex gap-2">
+              <Button asChild>
+                <Link href={`/dashboard/application/${data.id}/edit`}>
+                  Edit
+                </Link>
+              </Button>
+              <DeleteButton jobId={data.id} />
+              <UpdateStatusButton status={data.status} jobId={data.id} />
+            </div>
           </div>
         </div>
-        <Suspense fallback={<div>Loading Job Description...</div>}>
-          <JobDescriptionComponent
-            jobDescription={jobDesc?.description || null}
-            jobId={data.id}
-          />
-        </Suspense>
-      </div>
+        <hr className="my-2 lg:my-4" />
+        <Link href="#job-description" className="text-sm block lg:hidden">
+          &darr; Go to Job Description
+        </Link>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2 mt-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
+              <p>
+                <strong>Job Type:</strong> {formatType(data.jobType)}
+              </p>
+              <p>
+                <strong>Job Mode:</strong> {formatType(data.jobMode)}
+              </p>
+              <p>
+                <strong>Status:</strong>{" "}
+                <span className={colorStatus(data.status)}>
+                  {formatType(data.status)}
+                </span>
+              </p>
+            </div>
+            <div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
+                <p>
+                  <strong>Applied:</strong>{" "}
+                  {data.appliedDate
+                    ? parseDate(data.appliedDate, "british", "short", "dot")
+                    : "N/A"}
+                </p>
+                <p>
+                  <strong>Updated:</strong>{" "}
+                  {data.latestUpdate
+                    ? parseDate(data.latestUpdate, "british", "short", "dot")
+                    : "N/A"}
+                </p>
+                <p>
+                  <strong>Interview:</strong>{" "}
+                  {data.latestInterviewScheduledDate
+                    ? parseDate(
+                        data.latestInterviewScheduledDate,
+                        "british",
+                        "short",
+                        "dot",
+                      )
+                    : "N/A"}
+                </p>
+              </div>
+            </div>
+            <div>
+              {data.minPay && data.maxPay ? (
+                <p>
+                  Pay Range: {preferredCurrency}
+                  {data.minPay.toLocaleString()} - {preferredCurrency}
+                  {data.maxPay.toLocaleString()} ({data.payFrequency})
+                </p>
+              ) : data.minPay && !data.maxPay ? (
+                <p>
+                  Pay Range: {preferredCurrency}
+                  {data.minPay.toLocaleString()} ({data.payFrequency})
+                </p>
+              ) : (
+                <p>Pay Range: N/A</p>
+              )}
+            </div>
+            <div>
+              <p>
+                Website:{" "}
+                <Link
+                  href={data.referenceLink || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline hidden lg:inline"
+                >
+                  {data.referenceLink}
+                </Link>
+                <Link
+                  href={data.referenceLink || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:underline inline lg:hidden"
+                >
+                  {shortenWebURL(data.referenceLink || "#")}
+                </Link>
+              </p>
+            </div>
+            <div>
+              <Suspense fallback={<div>Loading Notes...</div>}>
+                <JobNotesComponent notes={data.notes} jobId={data.id} />
+              </Suspense>
+            </div>
+          </div>
+          <Suspense fallback={<div>Loading Job Description...</div>}>
+            <JobDescriptionComponent
+              jobDescription={jobDesc?.description || null}
+              jobId={data.id}
+            />
+          </Suspense>
+        </div>
       </Suspense>
     </>
   );
