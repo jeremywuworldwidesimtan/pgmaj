@@ -98,7 +98,7 @@ export function parseDate(
         return `${formattedDay}${sep}${monthName}${sep}${year}`;
       }
     case "iso":
-      return `${year}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+      return `${year}${sep}${month.toString().padStart(2, "0")}${sep}${day.toString().padStart(2, "0")}`;
     default:
       throw new Error(`Invalid date format: ${format}`);
   }
@@ -121,3 +121,7 @@ export function colorStatus(status: StatusPrisma): string {
   }
 }
 
+export function shortenWebURL(url: string): string {
+  const formatted = url;
+  return `${formatted.split("/")[2].replace("www.", "").split(".").slice(-2)[0]}.${formatted.split("/")[2].replace("www.", "").split(".").slice(-2)[1]}`;
+}
