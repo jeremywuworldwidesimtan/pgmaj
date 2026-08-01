@@ -1,31 +1,21 @@
 export const roadmap = [
   {
-    version: "Beta 0.2",
+    version: "Beta 0.4",
     features: [
-      "Photo upload for profile.",
-      "Profile page.",
-      "Settings for profiles.",
-      "Credits system (fake).",
-      "Landing page.",
-      "Selfhosted GitHub version (CE).",
-      "GitHub documentation.",
-      "Vercel deployment.",
-    ],
-  },
-  {
-    version: "Beta 0.3",
-    features: [
-      "Rich text/markdown support for job description and notes.",
+      "Resume information storage including education, experience, skills and certifications.",
+      "Linked your In.",
+      "Support for Roy's Roadside Guide."
     ],
   },
   {
     version: "medium-term",
     features: [
       "Master resume builder.",
-      "Mobile layout.",
+      "Rich text/markdown support for job description and notes.",
       "Interview prep.",
       "Proper dashboard.",
       "Scheduler.",
+      "API integration with selected job platforms.",
     ],
   },
   {

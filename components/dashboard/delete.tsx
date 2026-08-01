@@ -13,14 +13,16 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function DeleteButton({ jobId }: { jobId: string }) {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const mobile = useIsMobile();
 
   return (
     <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">Delete Application</Button>
+        <Button variant="destructive">{mobile ? "Delete" : "Delete Application"}</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

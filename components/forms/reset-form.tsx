@@ -32,7 +32,7 @@ export function ResetForm() {
                 required
               />
               <Button type="submit">Reset</Button>
-              <FieldDescription className="text-xs text-muted-foreground">
+              <FieldDescription className="text-xs text-muted-foreground hidden md:block">
                 Photo by{" "}
                 <Link href="https://unsplash.com/@snapsbyclark?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
                   Clark Van Der Beken
