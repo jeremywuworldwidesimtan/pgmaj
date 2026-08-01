@@ -32,5 +32,12 @@ export const changelog = [
         "Created documentation on GitHub.",
         "First deployment on Vercel. Yippy!",
     ],
+  },
+  {
+    version: "Beta 0.3.0",
+    date: "2026-08-01",
+    changes: [
+        "Added responsive mobile support for all components.",
+    ],
   }
 ];
