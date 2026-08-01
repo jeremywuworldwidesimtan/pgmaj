@@ -68,7 +68,7 @@ export function parseDate(
   }
 
   let sep = " ";
-  if (size === "short") {
+  if (size === "short" || format === "iso") {
     switch (separator) {
       case "slash":
         sep = "/";
@@ -80,6 +80,7 @@ export function parseDate(
         sep = ".";
         break;
       default:
+        /* istanbul ignore next */
         throw new Error(`Invalid date separator: ${separator}`);
     }
   }
@@ -100,6 +101,7 @@ export function parseDate(
     case "iso":
       return `${year}${sep}${month.toString().padStart(2, "0")}${sep}${day.toString().padStart(2, "0")}`;
     default:
+      /* istanbul ignore next */
       throw new Error(`Invalid date format: ${format}`);
   }
 }
@@ -117,11 +119,44 @@ export function colorStatus(status: StatusPrisma): string {
     case "Rejected":
       return "text-red-500";
     default:
+      /* istanbul ignore next */
       return "text-gray-500";
   }
 }
 
+const secondLevelCountryCodeDomains = new Set([
+  "ac",
+  "co",
+  "or",
+  "ne",
+  "go",
+  "com",
+  "edu",
+  "gov",
+  "gob",
+  "info",
+  "mil",
+  "net",
+  "org",
+]);
+
 export function shortenWebURL(url: string): string {
-  const formatted = url;
-  return `${formatted.split("/")[2].replace("www.", "").split(".").slice(-2)[0]}.${formatted.split("/")[2].replace("www.", "").split(".").slice(-2)[1]}`;
+  const hostname = new URL(url).hostname.toLowerCase();
+  const labels = hostname.split(".").filter(Boolean);
+
+  if (labels.length <= 2) {
+    return hostname;
+  }
+
+  const topLevelDomain = labels.at(-1) ?? ""; // e.g., .com or .uk
+  const possibleSecondLevelDomain = labels.at(-2) ?? ""; // e.g., .co.uk or .edu.us
+  const domainLabelCount =
+    (topLevelDomain.length === 2 && // .uk, .ca but not .com, .org, etc.
+    secondLevelCountryCodeDomains.has(possibleSecondLevelDomain)) // has .com, .org, .co, etc. as second-level domain
+      ? 3 // e.g., example.co.uk -> example.co.uk
+      : 2; // e.g., example.co -> example.co
+
+  // This can prevent generic .co from being treated as a ccTLD
+
+  return labels.slice(-domainLabelCount).join(".");
 }

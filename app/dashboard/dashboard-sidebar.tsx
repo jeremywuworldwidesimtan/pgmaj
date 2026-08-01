@@ -8,13 +8,13 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 import { VERSION } from "../global-values";
 import { verifySession } from "../lib/dal";
 import { getUser } from "../actions/getUserInfo";
 import { navMain } from "./dashboard-nav";
+import { DashboardSidebarLink } from "../../components/sidebar/dashboard-sidebar-link";
 
 export async function DashboardSidebar() {
   const currentDate = new Date();
@@ -37,11 +37,11 @@ export async function DashboardSidebar() {
             <SidebarMenu>
               {item.items?.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton className="flex items-center gap-2">
-                    <Link href={item.url} className="flex items-center gap-2">
-                        {item.icon && <item.icon />}
-                        <span>{item.title}</span>
-                    </Link>
+                  <SidebarMenuButton asChild>
+                    <DashboardSidebarLink href={item.url}>
+                      {item.icon && <item.icon />}
+                      <span>{item.title}</span>
+                    </DashboardSidebarLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
