@@ -41,7 +41,7 @@ export default function Home() {
             </div>
           </main>
           
-          <div className="mt-4 flex flex-col lg:flex-row gap-2">
+          <div className="mt-4 flex flex-col lg:flex-row gap-2 lg:items-center">
             <Button>
               <Link href="/register">
                 Get Started

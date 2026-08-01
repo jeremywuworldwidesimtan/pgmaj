@@ -58,7 +58,7 @@ export default async function ApplicationDetailsPage({
       <h2 className="text-2xl font-bold mt-2">Application Details</h2>
 
       <Suspense fallback={<div>Loading Application...</div>}>
-      <div className="mt-4 flex flex-col md:flex-row md:justify-between gap-4">
+      <div className="mt-4 flex flex-col lg:flex-row lg:justify-between gap-4">
         <div>
           <h1 className="text-2xl lg:text-4xl font-bold">{data.position}</h1>
           <p className="text-lg lg:text-xl">at {data.company}</p>
@@ -93,9 +93,9 @@ export default async function ApplicationDetailsPage({
       <Link href="#job-description" className="text-sm block lg:hidden">
         &darr; Go to Job Description
       </Link>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 lg:gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
             <p>
               <strong>Job Type:</strong> {formatType(data.jobType)}
             </p>
@@ -107,7 +107,7 @@ export default async function ApplicationDetailsPage({
             </p>
           </div>
           <div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 lg:gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
               <p>
                 <strong>Applied:</strong>{" "}
                 {data.appliedDate
@@ -145,7 +145,7 @@ export default async function ApplicationDetailsPage({
                 href={data.referenceLink || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 hover:underline truncate"
               >
                 {data.referenceLink}
               </Link>

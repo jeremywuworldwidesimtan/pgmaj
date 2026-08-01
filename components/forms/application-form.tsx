@@ -149,11 +149,12 @@ export default function ApplicationForm({
               id="status"
               name="status"
               label="Application Status"
-              value={data?.status || state?.values?.status || ""}
+              value={data?.status || state?.values?.status || "Applied"}
               placeholder="Select the application status"
               error={
                 state?.errors?.status ? state.errors.status.join(", ") : ""
               }
+              enableDefaultOption={false}
               required
               selectItems={[
                 { label: "Applied", value: "Applied" },
@@ -280,6 +281,7 @@ export default function ApplicationForm({
               }
               placeholder="Enter the job description"
             />
+          <FieldGroup>
             <InputField
               id="referenceLink"
               name="referenceLink"
@@ -293,6 +295,10 @@ export default function ApplicationForm({
               placeholder="Enter the reference link"
               required
             />
+            {/* <Button>
+              Paste from clipboard
+            </Button> */}
+          </FieldGroup>
             <TextareaField
               id="notes"
               name="notes"

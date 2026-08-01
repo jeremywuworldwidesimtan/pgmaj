@@ -149,6 +149,9 @@ export type LoginFormState =
         password?: string[];
       };
       message?: string;
+      values?: {
+        email: string;
+      };
     }
   | undefined;
 

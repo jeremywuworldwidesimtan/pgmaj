@@ -7,7 +7,7 @@ import { ChevronUp, ChevronDown, LucideLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ActionCell from "@/components/dashboard/action-cell";
 import { JobApplicationPrisma } from "../types";
-import { colorStatus, formatType, parseDate } from "../lib/helper";
+import { colorStatus, formatType, parseDate, shortenWebURL } from "../lib/helper";
 
 export const columns: ColumnDef<JobApplicationPrisma>[] = [
   {
@@ -177,7 +177,7 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
           rel="noopener noreferrer"
         >
           <LucideLink className="mr-2 h-4 w-4 inline" />
-          {`${formatted.split("/")[2].replace("www.", "")}`}
+          {shortenWebURL(formatted)}
         </Link>
       );
     },
