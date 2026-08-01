@@ -34,13 +34,13 @@ export async function DashboardSidebar() {
         {navMain.map((item, index) => (
           <SidebarGroup key={index}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarMenu>
+            <SidebarMenu className="flex flex-col gap-2">
               {item.items?.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <DashboardSidebarLink href={item.url}>
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
+                      {item.icon && <item.icon className="h-4 w-4" />}
+                      <span className="text-sm">{item.title}</span>
                     </DashboardSidebarLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

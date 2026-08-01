@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import ApplicationCard from "@/components/dashboard/application-card";
 import { JobApplicationPrisma } from "../types";
 import { DataTable } from "./data-table";
 import { columns } from "./table-columns";
@@ -8,6 +7,12 @@ import { verifySession } from "../lib/dal";
 import prisma from "@/lib/prisma";
 import { getUser } from "../actions/getUserInfo";
 import MobileCards from "@/components/dashboard/mobile-cards";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Applications Dashboard | PGMAJ Dashboard",
+  description: "Manage your job applications and track your progress.",
+};
 
 async function getData(): Promise<JobApplicationPrisma[]> {
   // Fetch data from your API here.

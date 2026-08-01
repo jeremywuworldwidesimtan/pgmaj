@@ -1,6 +1,12 @@
 import { getFullUserInfo } from "@/app/actions/getUserInfo";
 import { verifySession } from "@/app/lib/dal";
 import ProfileEditForm from "@/components/forms/profile-edit-form";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Edit Profile",
+  description: "Edit your profile information.",
+};
 
 export default async function ProfileEditPage() {
     const session = await verifySession();

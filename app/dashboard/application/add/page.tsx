@@ -1,5 +1,11 @@
 import ApplicationForm from "@/components/forms/application-form";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Add Application",
+  description: "Add a new job application.",
+};
 
 export default function AddApplication() {
   return (
