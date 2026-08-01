@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 interface InputFieldProps {
   id: string;
   name?: string;
-  label: string;
+  label?: string;
   description?: string;
   placeholder?: string;
   type?: string;
@@ -17,6 +17,7 @@ interface InputFieldProps {
   value?: string | number;
   error?: string;
   disabled?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function InputField({
@@ -30,10 +31,11 @@ export default function InputField({
   value,
   error,
   disabled,
+  onChange,
 }: InputFieldProps) {
   return (
     <Field data-invalid={Boolean(error)}>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
       <Input
         id={id}
         name={name ?? id}
@@ -43,6 +45,7 @@ export default function InputField({
         defaultValue={value ?? ""}
         aria-invalid={Boolean(error)}
         disabled={disabled}
+        onChange={onChange}
         {...(type === "number" ? { step: "any" } : {})}
       />
       {description && <FieldDescription>{description}</FieldDescription>}

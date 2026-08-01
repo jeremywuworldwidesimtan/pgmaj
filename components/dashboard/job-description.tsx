@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import TextareaField from "../fields/textarea-field";
 import { updateJobDescription } from "@/app/actions/application";
 import { JobDescriptionComponentState } from "@/app/lib/definitions";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export type JobDescriptionComponentProps = {
   jobDescription: string | null;
@@ -22,9 +23,10 @@ export default function JobDescriptionComponent({
     updateJobDescription,
     initialState,
   );
+  const mobile = useIsMobile();
 
   return (
-    <div>
+    <div id="job-description">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-2xl font-bold">Job Description</h2>
         {!editMode && (
@@ -35,7 +37,7 @@ export default function JobDescriptionComponent({
               setEditMode(!editMode);
             }}
           >
-            Edit Job Description
+            {mobile ? "Edit" : "Edit Job Description"}
           </Button>
         )}
       </div>

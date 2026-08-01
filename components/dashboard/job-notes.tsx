@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import TextareaField from "../fields/textarea-field";
 import { updateJobNotes } from "@/app/actions/application";
 import { JobNotesComponentState } from "@/app/lib/definitions";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export type JobNotesComponentProps = {
   notes: string | null;
@@ -22,6 +23,7 @@ export default function JobNotesComponent({
     updateJobNotes,
     initialState,
   );
+  const mobile = useIsMobile();
 
   return (
     <div>
@@ -35,7 +37,7 @@ export default function JobNotesComponent({
               setEditMode(!editMode);
             }}
           >
-            Edit Job Notes
+            {mobile ? "Edit" : "Edit Job Notes"}
           </Button>
         )}
       </div>

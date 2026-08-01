@@ -22,7 +22,7 @@ export type selectItem = {
 interface SelectFieldProps {
   id: string;
   name?: string;
-  label: string;
+  label?: string;
   description?: string;
   placeholder?: string;
   required?: boolean;
@@ -54,7 +54,7 @@ export default function SelectField({
   }
   return (
     <Field data-invalid={Boolean(error)}>
-      <FieldLabel htmlFor={id}>{label}</FieldLabel>
+      {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
       <Select name={name ?? id} required={required} defaultValue={String(value) ?? null} onValueChange={onChange}>
         <SelectTrigger>
           <SelectValue placeholder={placeholder} />

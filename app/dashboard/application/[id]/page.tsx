@@ -60,11 +60,11 @@ export default async function ApplicationDetailsPage({
       <Suspense fallback={<div>Loading Application...</div>}>
       <div className="mt-4 flex flex-col md:flex-row md:justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold">{data.position}</h1>
-          <p className="text-xl">at {data.company}</p>
-          <p>in {data.location}</p>
+          <h1 className="text-2xl lg:text-4xl font-bold">{data.position}</h1>
+          <p className="text-lg lg:text-xl">at {data.company}</p>
+          <p className="text-sm">in {data.location}</p>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="hidden lg:flex flex-col items-end gap-2">
           <div className="flex gap-2">
             <Button asChild>
               <Link href={`/dashboard/application/${data.id}/edit`}>
@@ -77,11 +77,25 @@ export default async function ApplicationDetailsPage({
             <UpdateStatusButton status={data.status} jobId={data.id} />
           </div>
         </div>
+        <div className="lg:hidden flex flex-col items-start gap-2">
+          <div className="flex gap-2">
+            <Button asChild>
+              <Link href={`/dashboard/application/${data.id}/edit`}>
+                Edit
+              </Link>
+            </Button>
+            <DeleteButton jobId={data.id} />
+            <UpdateStatusButton status={data.status} jobId={data.id} />
+          </div>
+        </div>
       </div>
-      <hr className="my-4" />
+      <hr className="my-2 lg:my-4" />
+      <Link href="#job-description" className="text-sm block lg:hidden">
+        &darr; Go to Job Description
+      </Link>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex flex-col gap-2 mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 lg:gap-4">
             <p>
               <strong>Job Type:</strong> {formatType(data.jobType)}
             </p>
@@ -93,7 +107,7 @@ export default async function ApplicationDetailsPage({
             </p>
           </div>
           <div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 lg:gap-4">
               <p>
                 <strong>Applied:</strong>{" "}
                 {data.appliedDate

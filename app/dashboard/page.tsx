@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ApplicationCard from "@/components/dashboard/application-card";
 import { JobApplicationPrisma } from "../types";
 import { DataTable } from "./data-table";
 import { columns } from "./table-columns";
@@ -6,6 +7,7 @@ import Link from "next/link";
 import { verifySession } from "../lib/dal";
 import prisma from "@/lib/prisma";
 import { getUser } from "../actions/getUserInfo";
+import MobileCards from "@/components/dashboard/mobile-cards";
 
 async function getData(): Promise<JobApplicationPrisma[]> {
   // Fetch data from your API here.
@@ -32,14 +34,14 @@ export default async function Dashboard() {
 
   return (
     <>
-      <div className="flex w-full items-center justify-between gap-2">
+      <div className="flex flex-col md:flex-row w-full items-center justify-between gap-2">
         <div>
-          <h1 className="text-3xl font-bold">Applications Dashboard</h1>
-          <p>
+          <h1 className="text-2xl md:text-3xl font-bold">Applications Dashboard</h1>
+          <p className="text-sm text-muted-foreground">
             Here you can manage your job applications and track your progress.
           </p>
         </div>
-        <div>
+        <div className="w-full md:w-auto">
           <Link href="/dashboard/application/add">
             <Button>Add Application</Button>
           </Link>
@@ -48,8 +50,13 @@ export default async function Dashboard() {
 
       <hr className="my-2" />
 
-      <div className="w-full">
+      <div className="w-full hidden md:block">
         <DataTable columns={columns} data={data} />
+      </div>
+
+      {/* use a card-based approach for mobile */}
+      <div className="w-full md:hidden">
+        <MobileCards applications={data} />
       </div>
     </>
   );

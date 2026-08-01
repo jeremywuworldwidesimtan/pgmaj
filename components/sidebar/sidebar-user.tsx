@@ -1,3 +1,5 @@
+"use client";
+
 import {
   BadgeCheck,
   Bell,
@@ -31,6 +33,7 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { logout } from "@/app/actions/auth";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const dropdownNav = [
   {
@@ -65,6 +68,7 @@ export function SidebarUser({
     credits: number;
   };
 }) {
+  const mobile = useIsMobile();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -94,7 +98,7 @@ export function SidebarUser({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side="right"
+            side={mobile ? "bottom" : "right"}
             align="end"
             sideOffset={4}
           >

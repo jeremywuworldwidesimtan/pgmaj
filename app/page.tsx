@@ -4,13 +4,13 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-background font-sans dark:bg-background">
-      <main className="flex flex-1 w-full flex-col items-center py-8 px-16 sm:items-start">
-          <header className="flex flex-row items-center justify-between w-full">
+      <main className="flex flex-1 w-full flex-col items-center py-2 px-4 lg:py-8 lg:px-16 sm:items-start">
+          <header className="flex flex-col lg:flex-row items-center justify-between w-full">
             <div>
-              <h1 className="text-3xl font-bold leading-10 tracking-tight">
+              <h1 className="text-2xl lg:text-3xl font-bold">
                 PGMAJ
               </h1>
-              <p>
+              <p className="text-sm">
                 Please Give Me A Job - the centralized job application management platform.
               </p>
             </div>
@@ -32,7 +32,7 @@ export default function Home() {
               height={400}
             />
             <div>
-              <h2 className="text-2xl font-bold">The all-in-one job application management platform.</h2>
+              <h2 className="text-xl lg:text-2xl font-bold">The all-in-one job application management platform.</h2>
               <ul className="list-disc pl-5">
                 <li>Track your job applications in one place.</li>
                 <li>Keep notes for each application.</li>
@@ -41,13 +41,13 @@ export default function Home() {
             </div>
           </main>
           
-          <div>
+          <div className="mt-4 flex flex-col lg:flex-row gap-2">
             <Button>
               <Link href="/register">
                 Get Started
               </Link>
             </Button>
-            <Link href="/login" className="ml-4 text-sm hover:underline">
+            <Link href="/login" className="text-sm hover:underline">
               Already have an account? Log in
             </Link>
           </div>

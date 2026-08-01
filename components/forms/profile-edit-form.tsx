@@ -39,7 +39,7 @@ export default function ProfileEditForm({
 }: ProfileEditFormProps) {
   const [state, action, pending] = useActionState(updateProfile, initialState);
   return (
-    <form action={action} className="w-3xl">
+    <form action={action} className="lg:w-3xl">
       <input type="hidden" name="id" value={initialValues?.id ?? ""} />
       <FieldSet>
         <FieldGroup className="grid grid-cols-1 gap-4 md:grid-cols-2">
