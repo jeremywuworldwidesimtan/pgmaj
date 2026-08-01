@@ -7,9 +7,12 @@ import InputField from "../fields/input-field";
 import Link from "next/link";
 import { login } from "@/app/actions/auth";
 import { useActionState } from "react";
+import { LoginFormState } from "@/app/lib/definitions";
+
+const initialState: LoginFormState = undefined;
 
 export function LoginForm() {
-  const [state, action, pending] = useActionState(login, undefined);
+  const [state, action, pending] = useActionState(login, initialState);
   return (
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden p-0">
@@ -30,6 +33,7 @@ export function LoginForm() {
                 label="Email"
                 type="email"
                 placeholder="Enter your email"
+                value={state?.values?.email || ""}
                 error={
                   state?.errors?.email ? state.errors.email.join(", ") : ""
                 }

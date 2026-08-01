@@ -106,7 +106,7 @@ export async function signup(
 export async function login(
   state: LoginFormState | undefined,
   formData: FormData,
-) {
+): Promise<LoginFormState | undefined> {
   // Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
     email: formData.get("email"),
