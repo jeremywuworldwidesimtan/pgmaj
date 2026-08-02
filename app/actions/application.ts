@@ -44,7 +44,7 @@ type JobApplicationPayload = {
 type interviewPayload = {
   jobId: string;
   interviewIdx: number;
-  interviewId: string;
+  interviewId: string | null;
   interviewDate: Date;
   interviewLocation: string;
   interviewerName: string | null;
@@ -65,6 +65,13 @@ async function updatejobApplication(
   await prisma.jobApplication.update({
     where: { id: jobId },
     data: updateData,
+  });
+
+  // to combat duplicates, we need to hard delete (flush) interviews first
+  await prisma.interview.deleteMany({
+    where: {
+      jobId,
+    },
   });
 
   for (const interview of interviews) {
@@ -88,20 +95,6 @@ async function updatejobApplication(
       },
     });
   }
-
-  // soft delete any interviews that are not in the payload
-  const interviewIds = interviews.map((interview) => interview.interviewId);
-  await prisma.interview.updateMany({
-    where: {
-      jobId,
-      id: {
-        notIn: interviewIds,
-      },
-    },
-    data: {
-      softDeleted: true,
-    },
-  });
 
   await prisma.jobDescription.update({
     where: { jobId },
@@ -168,6 +161,17 @@ export async function updateJobStatus(
   formData: FormData,
 ): Promise<JobStatusUpdateState> {
   console.log("Form Data:", Object.fromEntries(formData.entries()));
+
+  const highestIdx = await prisma.interview.aggregate({
+    where: {
+      jobId: formData.get("jobId") as string,
+      softDeleted: false,
+    },
+    _max: {
+      interviewIdx: true,
+    },
+  });
+
   const validatedFields = JobStatusUpdateSchema.safeParse({
     status: formData.get("status"),
     updateDates: formData.get("updateDates") === "on" ? true : false,
@@ -178,22 +182,37 @@ export async function updateJobStatus(
       ? new Date(formData.get("latestInterviewScheduledDate") as string)
       : null,
     jobId: formData.get("jobId"),
+    interviewIdx: highestIdx._max.interviewIdx ? highestIdx._max.interviewIdx + 1 : 0,
+    interviewId: formData.get("interviewId") || null,
+    interviewDate: formData.get("interviewDate")
+      ? new Date(formData.get("interviewDate") as string)
+      : null,
+    interviewLocation: formData.get("interviewLocation"),
+    interviewerName: formData.get("interviewerName") || null,
+    interviewerContact: formData.get("interviewerContact") || null,
   });
+
+  
 
   console.log("Received Status Update:", validatedFields.data);
 
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    };
+      errors: validatedFields?.error?.flatten()?.fieldErrors || {},
+      message: "Validation failed. Please check the form fields.",
+    }
   }
 
   const {
     jobId,
     status,
     latestUpdate,
-    latestInterviewScheduledDate,
     updateDates,
+    interviewIdx,
+    interviewDate,
+    interviewLocation,
+    interviewerName,
+    interviewerContact,
   } = validatedFields.data;
 
   if (!updateDates) {
@@ -203,21 +222,37 @@ export async function updateJobStatus(
     });
   } else {
     // if only update date changed
-    if (latestUpdate && !latestInterviewScheduledDate) {
+    if (latestUpdate && !formData.get("interviewDate")) {
       await prisma.jobApplication.update({
         where: { id: jobId },
         data: { status, latestUpdate },
       });
     // if only interview date changed
-    } else if (!latestUpdate && latestInterviewScheduledDate) {
-      await prisma.jobApplication.update({
-        where: { id: jobId },
-        data: { status, latestInterviewScheduledDate },
+    } else if (!latestUpdate && interviewDate) {
+      await prisma.interview.create({
+        data: {
+          jobId,
+          interviewIdx: interviewIdx || 0,
+          interviewDate: interviewDate || new Date(),
+          interviewLocation: interviewLocation || "",
+          interviewerName: interviewerName || null,
+          interviewerContact: interviewerContact || null,
+        },
       });
     } else {
       await prisma.jobApplication.update({
         where: { id: jobId },
-        data: { status, latestUpdate, latestInterviewScheduledDate },
+        data: { status, latestUpdate },
+      });
+      await prisma.interview.create({
+        data: {
+          jobId,
+          interviewIdx: interviewIdx || 0,
+          interviewDate: interviewDate || new Date(),
+          interviewLocation: interviewLocation || "",
+          interviewerName: interviewerName || null,
+          interviewerContact: interviewerContact || null,
+        },
       });
     }
   }
@@ -342,6 +377,8 @@ export async function submitApplicationForm(
     notes: formData.get("notes"),
   });
 
+  console.log("Application form schema validation passed")
+
   let interviewValidation = true;
   const validatedInterviews = [];
 
@@ -358,11 +395,14 @@ export async function submitApplicationForm(
     });
     if (!validatedInterview.success) {
       interviewValidation = false;
+      console.error("Interview schema validation failed for interview index", interview.interviewIdx, ":", validatedInterview.error.flatten().fieldErrors);
       break;
     } else {
       validatedInterviews.push(validatedInterview.data);
+      console.log("Interview schema validation passed")
     }
   }
+
 
   if (!validatedFields.success || !interviewValidation) {
     return {

@@ -34,6 +34,7 @@ async function getInterviews(id: string) {
   const response = await prisma.interview.findMany({
     where: {
       jobId: id,
+      softDeleted: false,
     },
   });
   return response;

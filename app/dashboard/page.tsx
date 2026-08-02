@@ -28,8 +28,28 @@ async function getData(): Promise<JobApplicationPrisma[]> {
       appliedDate: "desc",
     },
   });
+  const latestInterviews = await Promise.all(
+    jobApplications.map((app) =>
+      prisma.interview.findFirst({
+        where: {
+          jobId: app.id,
+          softDeleted: false,
+        },
+        orderBy: {
+          interviewDate: "desc",
+        },
+        select: {
+          id: true,
+          jobId: true,
+          interviewDate: true,
+          interviewLocation: true,
+        },
+      })
+    )
+  );
   return jobApplications.map((app) => ({
     ...app,
+    latestInterview: latestInterviews.find(interview => interview?.jobId === app.id) || null,
     preferredCurrency, // Add the preferred currency to each application
   }));
 }

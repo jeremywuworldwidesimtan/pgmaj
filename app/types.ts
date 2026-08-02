@@ -65,6 +65,7 @@ export type JobApplicationPrisma = {
   notes: string | null;
   userId: string;
   preferredCurrency: string | null;
+  latestInterview?: Partial<Interview> | null;
   createdAt: Date;
   updatedAt: Date;
   softDeleted: boolean;

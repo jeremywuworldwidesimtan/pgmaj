@@ -21,6 +21,7 @@ import {
 } from "@/app/types";
 import { submitApplicationForm } from "@/app/actions/application";
 import { type ApplicationFormState } from "@/app/lib/definitions";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
 
 export type ApplicationFormProps = {
   formData?: {
@@ -284,9 +285,25 @@ export default function ApplicationForm({
             </div>
             <div className="flex gap-2">
               {interviewCount > 0 && (
-                <Button variant="destructive" size="sm" type="button" onClick={() => setInterviewCount(interviewCount - 1)}>
-                  Remove Interview
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="destructive" size="sm" type="button">
+                      Remove Interview
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure you want to remove the last interview?</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogDescription>
+                      This action will remove the last interview from the form. If you have already saved this interview, it will also be removed from the database. This action cannot be undone.
+                    </AlertDialogDescription>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => setInterviewCount(interviewCount - 1)}>Remove</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               )}
               <Button variant="secondary" size="sm" type="button" onClick={() => interviewCount < 5 ? setInterviewCount(interviewCount + 1) : null}>
                 Add Interview
@@ -304,8 +321,12 @@ export default function ApplicationForm({
                     id={`interviewDate_${index}`}
                     name={`interviewDate_${index}`}
                     label="Interview Date"
-                    value={""}
-                    error=""
+                    value={data?.interviews?.[index]?.interviewDate || state?.values?.interviews?.[index]?.interviewDate || ""}
+                    error={
+                      state?.errors?.interviews
+                        ? state.errors?.interviews?.[index]?.interviewDate?.join(", ")
+                        : ""
+                    }
                     placeholder="Select the interview date"
                     timeField={true}
                   />
@@ -313,24 +334,36 @@ export default function ApplicationForm({
                     id={`interviewLocation_${index}`}
                     name={`interviewLocation_${index}`}
                     label="Interview Location"
-                    value={""}
-                    error=""
+                    value={data?.interviews?.[index]?.interviewLocation || state?.values?.interviews?.[index]?.interviewLocation || ""}
+                    error={
+                      state?.errors?.interviews
+                        ? state.errors?.interviews?.[index]?.interviewLocation?.join(", ")
+                        : ""
+                    }
                     placeholder="Enter the interview location"
                   />
                   <InputField
                     id={`interviewerName_${index}`}
                     name={`interviewerName_${index}`}
                     label="Interviewer Name"
-                    value={""}
-                    error=""
+                    value={data?.interviews?.[index]?.interviewerName || state?.values?.interviews?.[index]?.interviewerName || ""}
+                    error={
+                      state?.errors?.interviews
+                        ? state.errors?.interviews?.[index]?.interviewerName?.join(", ")
+                        : ""
+                    }
                     placeholder="Enter the interviewer name"
                   />
                   <InputField
                     id={`interviewerContact_${index}`}
                     name={`interviewerContact_${index}`}
                     label="Interviewer Contact"
-                    value={""}
-                    error=""
+                    value={data?.interviews?.[index]?.interviewerContact || state?.values?.interviews?.[index]?.interviewerContact || ""}
+                    error={
+                      state?.errors?.interviews
+                        ? state.errors?.interviews?.[index]?.interviewerContact?.join(", ")
+                        : ""
+                    }
                     placeholder="Enter the interviewer contact"
                   />
                 </div>

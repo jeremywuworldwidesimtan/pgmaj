@@ -16,31 +16,49 @@ export async function getSchedule(
     const applications = await prisma.jobApplication.findMany({
       where: {
         userId: userId,
-        latestInterviewScheduledDate: { not: null },
         softDeleted: false,
       },
       select: {
         id: true,
-        latestInterviewScheduledDate: true,
         position: true,
         company: true,
+        interviews: {
+          where: {
+            softDeleted: false,
+          },
+          orderBy: {
+            interviewDate: "desc",
+          },
+          select: {
+            interviewIdx: true,
+            interviewDate: true,
+            interviewLocation: true,
+          },
+        },
       },
     });
 
-    const schedule: CalendarSchedule[] = applications.map((item) => ({
-      id: item.id,
-      fullDate: item.latestInterviewScheduledDate || new Date(),
-      day: item.latestInterviewScheduledDate?.getDate().toString() || "",
-      event: {
-        time:
-          item.latestInterviewScheduledDate?.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }) || "",
-        title: `${item.position} at ${item.company}`,
-        link: `/dashboard/application/${item.id}`,
-      },
-    }));
+    console.log("Fetched applications for schedule:", applications);
+
+    const schedule: CalendarSchedule[] = []
+    for (const app of applications) {
+      for (const interview of app.interviews) {
+        if (interview.interviewDate) {
+          schedule.push({
+            id: app.id,
+            fullDate: interview.interviewDate,
+            day: interview.interviewDate.getDate().toString(),
+            event: {
+              title: `${app.position} at ${app.company} (${interview.interviewIdx + 1})`,
+              time: interview.interviewDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              link: `/dashboard/application/${app.id}`,
+              location: interview.interviewLocation,
+            }
+          });
+        }
+      }
+    }
+
     return schedule;
   } catch (error) {
     console.error("Error fetching schedule:", error);

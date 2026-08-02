@@ -23,6 +23,11 @@ export default function MobileSchedule({ schedule }: { schedule: CalendarSchedul
                             <p className="text-sm text-muted-foreground">
                                 {parseDate(s.fullDate, "british", "long", "dot")} at {s.event.time}
                             </p>
+                            {s.event.location && (
+                                <p className="text-sm text-muted-foreground">
+                                    {s.event.location}
+                                </p>
+                            )}
                         </Card>
                     </Link>
                 ))}

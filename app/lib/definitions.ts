@@ -110,6 +110,11 @@ export const JobStatusUpdateSchema = z.object({
   latestUpdate: z.date().nullable(),
   latestInterviewScheduledDate: z.date().nullable(),
   jobId: z.string().trim().min(1, { error: "Job ID is required." }),
+  interviewIdx: z.number().int().nullable(),
+  interviewDate: z.date({ error: "Please enter a valid date." }).nullable(),
+  interviewLocation: z.string().trim().min(1, { error: "Interview location is required." }).nullable(),
+  interviewerName: z.string().trim().nullable(),
+  interviewerContact: z.string().trim().nullable(),
 });
 
 export const ProfileEditFormSchema = z.object({
@@ -138,7 +143,7 @@ export const ScheduleInterviewFormStateSchema = z.object({
 export const InterviewSchema = z.object({
   jobId: z.string().trim().min(1, { error: "Job ID is required." }),
   interviewIdx: z.number().int().min(0, { error: "Interview index must be a non-negative integer." }),
-  interviewId: z.string().trim(),
+  interviewId: z.string().trim().nullable(),
   interviewDate: z.date({ error: "Please enter a valid date." }),
   interviewLocation: z.string().trim().min(1, { error: "Interview location is required." }),
   interviewerName: z.string().trim().nullable(),
@@ -271,6 +276,12 @@ export type JobStatusUpdateState =
         latestUpdate?: string[];
         latestInterviewScheduledDate?: string[];
         jobId?: string[];
+        interviewIdx?: string[];
+        interviewId?: string[];
+        interviewDate?: string[];
+        interviewLocation?: string[];
+        interviewerName?: string[];
+        interviewerContact?: string[];
       };
       message?: string;
       values?: {
@@ -278,6 +289,12 @@ export type JobStatusUpdateState =
         latestUpdate: Date | null;
         latestInterviewScheduledDate: Date | null;
         jobId: string;
+        interviewIdx: number | null;
+        interviewId: string | null;
+        interviewDate: Date | null;
+        interviewLocation: string | null;
+        interviewerName: string | null;
+        interviewerContact: string | null;
       };
     }
   | undefined;
@@ -350,7 +367,7 @@ export type InterviewFormState =
       message?: string;
       values?: {
         jobId: string;
-        interviewId: string;
+        interviewId: string | null;
         interviewDate: Date;
         interviewLocation: string;
         interviewerName: string | null;
