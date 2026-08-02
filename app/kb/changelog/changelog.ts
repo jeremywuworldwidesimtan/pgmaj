@@ -47,5 +47,14 @@ export const changelog = [
         "Fixed sidebar not closing on mobile.",
         "Added proper titles for the pages.",
     ],
+  },
+  {
+    version: "Beta 0.4.0",
+    date: "2026-08-03",
+    changes: [
+        "Added scheduler calendar grid for PC and schedule cards for mobile.",
+        "Added interview scheduling functionality.",
+        "Added time information for interview dates.",
+    ],
   }
 ];
