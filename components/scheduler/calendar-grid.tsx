@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const sampleSchedule = [
   {
@@ -43,13 +44,13 @@ export type CalendarSchedule = {
 export type CalendarGridProps = {
   month: number; // 0-11
   year: number; // 4-digit year
-  schedule?: CalendarSchedule[];
+  schedule: CalendarSchedule[];
 };
 
 export default function CalendarGrid({
   month,
   year,
-  schedule = sampleSchedule,
+  schedule,
 }: CalendarGridProps) {
   const [firstDayOfWeek, setFirstDayOfWeek] = useState(
     new Date(year, month, 1).getDay(),
@@ -166,7 +167,7 @@ export default function CalendarGrid({
                 <div key={i} className="text-sm">
                   <Link
                     href={s.event.link}
-                    className="text-blue-500 hover:underline"
+                    className={cn(s.fullDate < new Date() ? "text-muted-foreground line-through" : "text-blue-500 hover:underline")}
                   >
                     {s.event.time} - {s.event.title}
                   </Link>

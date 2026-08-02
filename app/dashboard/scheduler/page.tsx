@@ -5,7 +5,8 @@ import {
 } from "@/app/actions/scheduler";
 import { verifySession } from "@/app/lib/dal";
 import CalendarGrid from "@/components/scheduler/calendar-grid";
-import ScheduleForm from "@/components/scheduler/schedule-form";
+import ScheduleForm from "@/components/forms/schedule-form";
+import MobileSchedule from "@/components/scheduler/mobile-schedule";
 
 export default async function SchedulerPage() {
   const session = await verifySession();
@@ -26,11 +27,16 @@ export default async function SchedulerPage() {
 
       <hr className="my-2" />
 
-      <div className="w-full md:w-auto flex-1">
+      <div className="hidden lg:block lg:w-full lg:flex-1">
         <CalendarGrid
           month={new Date().getMonth()}
           year={new Date().getFullYear()}
-          schedule={userSchedule}
+          schedule={userSchedule || []}
+        />
+      </div>
+      <div className="w-full block lg:hidden flex-1">
+        <MobileSchedule
+          schedule={userSchedule || []}
         />
       </div>
     </>
