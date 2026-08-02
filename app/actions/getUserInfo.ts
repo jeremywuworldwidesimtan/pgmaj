@@ -40,6 +40,7 @@ export const getFullUserInfo = async (userId: string) => {
         preferredCurrency: true,
         userDetails: {
           select: {
+            bio: true,
             contact_number: true,
             addr_line1: true,
             addr_line2: true,
@@ -47,6 +48,9 @@ export const getFullUserInfo = async (userId: string) => {
             state: true,
             country: true,
             zip_code: true,
+            personal_website_url: true,
+            linkedin_url: true,
+            portfolio_url: true,
           },
         }, // Include userDetails in the result
       },

@@ -114,6 +114,7 @@ export const JobStatusUpdateSchema = z.object({
 
 export const ProfileEditFormSchema = z.object({
   id: z.string().trim().min(1, { error: "User ID is required." }),
+  bio: z.string().trim().nullable(),
   firstName: z.string().trim().nullable(),
   lastName: z.string().trim().nullable(),
   contact_number: z.string().trim().nullable(),
@@ -124,6 +125,9 @@ export const ProfileEditFormSchema = z.object({
   country: z.string().trim().nullable(),
   zip_code: z.string().trim().nullable(),
   preferredCurrency: z.string().max(3, { error: "Preferred currency must be at most 3 characters." }).min(1, { error: "Preferred currency is required." }).nullable(),
+  personal_url: z.string().regex(/^https?:\/\/[^\s$.?#].[^\s]*$/i, { error: "Please enter a valid URL." }).trim().nullable(),
+  linkedin_url: z.string().regex(/^https?:\/\/[^\s$.?#].[^\s]*$/i, { error: "Please enter a valid URL." }).trim().nullable(),
+  portfolio_url: z.string().regex(/^https?:\/\/[^\s$.?#].[^\s]*$/i, { error: "Please enter a valid URL." }).trim().nullable(),
 });
 
 export const ScheduleInterviewFormStateSchema = z.object({
@@ -251,6 +255,7 @@ export type ProfileEditFormState =
   | {
       errors?: {
         id?: string[];
+        bio?: string[];
         firstName?: string[];
         lastName?: string[];
         contact_number?: string[];
@@ -261,10 +266,14 @@ export type ProfileEditFormState =
         country?: string[];
         zip_code?: string[];
         preferredCurrency?: string[];
+        personal_url?: string[];
+        linkedin_url?: string[];
+        portfolio_url?: string[];
       };
       message?: string;
       values?: {
         id: string;
+        bio: string | null;
         firstName: string | null;
         lastName: string | null;
         contact_number: string | null;
@@ -275,6 +284,9 @@ export type ProfileEditFormState =
         country: string | null;
         zip_code: string | null;
         preferredCurrency: string | null;
+        personal_url: string | null;
+        linkedin_url: string | null;
+        portfolio_url: string | null;
       };
     }
   | undefined;

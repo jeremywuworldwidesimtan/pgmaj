@@ -11,6 +11,7 @@ import {
 } from "../ui/field";
 import { ProfileEditFormState } from "@/app/lib/definitions";
 import { updateProfile } from "@/app/actions/profile";
+import TextareaField from "../fields/textarea-field";
 
 export type ProfileEditFormProps = {
   initialValues?: {
@@ -21,6 +22,7 @@ export type ProfileEditFormProps = {
     lastName: string | null;
     preferredCurrency: string | null;
     userDetails: {
+      bio: string | null;
       state: string | null;
       contact_number: string | null;
       addr_line1: string | null;
@@ -28,6 +30,9 @@ export type ProfileEditFormProps = {
       city: string | null;
       country: string | null;
       zip_code: string | null;
+      personal_website_url: string | null;
+      linkedin_url: string | null;
+      portfolio_url: string | null;
     } | null;
   } | null;
 };
@@ -97,6 +102,16 @@ export default function ProfileEditForm({
                   : ""
               }
               description="Your preferred currency."
+            />
+            <TextareaField
+              id="bio"
+              name="bio"
+              label="Bio"
+              value={initialValues?.userDetails?.bio ?? ""}
+              error={
+                state?.errors?.bio ? state.errors.bio.join(", ") : ""
+              }
+              description="A short bio about yourself."
             />
         </FieldGroup>
       </FieldSet>
@@ -195,6 +210,54 @@ export default function ProfileEditForm({
                 : ""
             }
             description="Your country."
+          />
+        </FieldGroup>
+      </FieldSet>
+      <FieldSet className="mt-6">
+        <FieldLegend>Website & Links Information</FieldLegend>
+        <FieldDescription>
+          Personal website and social media links for personal reference. This
+          information is not shared publicly.
+        </FieldDescription>
+        <FieldGroup>
+          <InputField
+            id="personal_url"
+            name="personal_url"
+            label="Personal Website"
+            type="url"
+            value={initialValues?.userDetails?.personal_website_url ?? ""}
+            error={
+              state?.errors?.personal_url
+                ? state.errors.personal_url.join(", ")
+                : ""
+            }
+            description="Your personal website (optional)."
+          />
+          <InputField
+            id="linkedin_url"
+            name="linkedin_url"
+            label="LinkedIn Profile"
+            type="url"
+            value={initialValues?.userDetails?.linkedin_url ?? ""}
+            error={
+              state?.errors?.linkedin_url
+                ? state.errors.linkedin_url.join(", ")
+                : ""
+            }
+            description="Your LinkedIn profile (optional)."
+          />
+          <InputField
+            id="portfolio_url"
+            name="portfolio_url"
+            label="Portfolio"
+            type="url"
+            value={initialValues?.userDetails?.portfolio_url ?? ""}
+            error={
+              state?.errors?.portfolio_url
+                ? state.errors.portfolio_url.join(", ")
+                : ""
+            }
+            description="Your portfolio website (optional)."
           />
         </FieldGroup>
       </FieldSet>

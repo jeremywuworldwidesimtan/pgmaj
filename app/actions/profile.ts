@@ -12,8 +12,10 @@ export async function updateProfile(
   state: ProfileEditFormState,
   formData: FormData,
 ): Promise<ProfileEditFormState> {
+  console.log("updateProfile called with formData:", Object.fromEntries(formData.entries()));
   const validatedFields = ProfileEditFormSchema.safeParse({
     id: formData.get("id"),
+    bio: formData.get("bio"),
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
     contact_number: formData.get("contact_number"),
@@ -24,6 +26,9 @@ export async function updateProfile(
     country: formData.get("country"),
     zip_code: formData.get("zip_code"),
     preferredCurrency: formData.get("preferredCurrency"),
+    personal_url: formData.get("personal_url") || null,
+    linkedin_url: formData.get("linkedin_url") || null,
+    portfolio_url: formData.get("portfolio_url") || null,
   });
 
   if (!validatedFields.success) {
@@ -35,6 +40,7 @@ export async function updateProfile(
 
   const {
     id,
+    bio,
     firstName,
     lastName,
     contact_number,
@@ -45,6 +51,9 @@ export async function updateProfile(
     country,
     zip_code,
     preferredCurrency,
+    personal_url,
+    linkedin_url,
+    portfolio_url,
   } = validatedFields.data;
 
   // Update the user in the database
@@ -56,6 +65,7 @@ export async function updateProfile(
       preferredCurrency,
       userDetails: {
         update: {
+          bio: bio,
           contact_number: contact_number,
           addr_line1: addr_line1,
           addr_line2: addr_line2,
@@ -63,6 +73,9 @@ export async function updateProfile(
           state: st,
           country: country,
           zip_code: zip_code,
+          personal_website_url: personal_url,
+          linkedin_url: linkedin_url,
+          portfolio_url: portfolio_url,
         },
       },
     },
