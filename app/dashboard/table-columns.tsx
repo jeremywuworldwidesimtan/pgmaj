@@ -156,11 +156,17 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
         ? new Date(row.getValue("latestInterviewScheduledDate"))
         : null;
       return (
-        <p>
-          {interviewDate
-            ? parseDate(interviewDate, "british", "short", "dot")
-            : "N/A"}
-        </p>
+        <div className="flex flex-col">
+          <span>
+            {interviewDate
+              ? parseDate(interviewDate, "british", "short", "dot")
+              : "N/A"}
+          </span>
+          {/* Get the time value */}
+          <span className="text-xs text-muted-foreground">
+            {interviewDate ? interviewDate.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }) : ""}
+          </span>
+        </div>
       );
     },
   },

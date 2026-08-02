@@ -1,4 +1,11 @@
-import { Briefcase, CalendarDays, ClipboardCheck, Edit, History, Info } from "lucide-react";
+import {
+  Briefcase,
+  CalendarDays,
+  ClipboardCheck,
+  Edit,
+  History,
+  Info,
+} from "lucide-react";
 
 export const navMain = [
   {
@@ -11,21 +18,21 @@ export const navMain = [
       },
     ],
   },
-  // {
-  //   title: "Interviews",
-  //   items: [
-  //     {
-  //       title: "Scheduler",
-  //       url: "/dashboard/interview/scheduler",
-  //       icon: CalendarDays,
-  //     },
-  //     {
-  //       title: "Interview Prep",
-  //       url: "/dashboard/interview/prep",
-  //       icon: ClipboardCheck,
-  //     },
-  //   ],
-  // },
+  {
+    title: "Interviews",
+    items: [
+      {
+        title: "Scheduler",
+        url: "/dashboard/scheduler",
+        icon: CalendarDays,
+      },
+      // {
+      //   title: "Interview Prep",
+      //   url: "/dashboard/interview/prep",
+      //   icon: ClipboardCheck,
+      // },
+    ],
+  },
   // {
   //   title: "Resume",
   //   items: [
@@ -37,7 +44,7 @@ export const navMain = [
   //     {
   //       title: "Resume Information",
   //       url: "/dashboard/resume/information",
-  //       icon: Info, 
+  //       icon: Info,
   //     },
   //     {
   //       title: "Resume Designer",

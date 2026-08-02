@@ -121,6 +121,7 @@ export default function UpdateStatusButton({
                           : ""
                       }
                       placeholder="Select the interview date"
+                      timeField={true}
                     />
                     {/* <Button variant="outline" size="sm" onClick={() => {
                     setInterviewDate(new Date().toISOString().split("T")[0]);

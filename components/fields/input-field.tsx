@@ -18,6 +18,7 @@ interface InputFieldProps {
   error?: string;
   disabled?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
 }
 
 export default function InputField({
@@ -32,6 +33,7 @@ export default function InputField({
   error,
   disabled,
   onChange,
+  className,
 }: InputFieldProps) {
   return (
     <Field data-invalid={Boolean(error)}>
@@ -46,6 +48,7 @@ export default function InputField({
         aria-invalid={Boolean(error)}
         disabled={disabled}
         onChange={onChange}
+        className={className}
         {...(type === "number" ? { step: "any" } : {})}
       />
       {description && <FieldDescription>{description}</FieldDescription>}

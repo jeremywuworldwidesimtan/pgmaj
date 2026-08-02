@@ -1,5 +1,10 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Application Not Found",
+  description: "The requested job application could not be found.",
+};
+
 export default function JobNotFound() {
   return (
     <>
