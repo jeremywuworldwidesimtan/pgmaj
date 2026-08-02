@@ -55,6 +55,16 @@ async function getJobDesc(id: string) {
   return response;
 }
 
+async function getInterviews(id: string) {
+  // Fetch data from your API here.
+  const response = await prisma.interview.findMany({
+    where: {
+      jobId: id,
+    },
+  });
+  return response;
+}
+
 export default async function ApplicationDetailsPage({
   params,
 }: {
@@ -63,6 +73,7 @@ export default async function ApplicationDetailsPage({
   const { id } = await params;
   const data = await getData(id);
   const jobDesc = await getJobDesc(id);
+  const interviews = await getInterviews(id);
   const session = await verifySession();
   const user = await getUser(session.userId);
   const preferredCurrency = user?.preferredCurrency || "$"; // Default to "$" if not set
@@ -159,6 +170,18 @@ export default async function ApplicationDetailsPage({
                 </p>
               </div>
             </div>
+            {interviews.length > 0 && (
+              <div>
+                <p className="font-medium">Interviews:</p>
+                <div>
+                  {interviews.map((interview) => (
+                    <p key={interview.id}>
+                      {parseDate(interview.interviewDate, "british", "short", "dot")} at {interview.interviewLocation} {interview.interviewerName && `(with ${interview.interviewerName})`}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
             <div>
               {data.minPay && data.maxPay ? (
                 <p>

@@ -133,6 +133,7 @@ model Interview {
   id          String   @id @default(uuid())
   jobId       String
   job         JobApplication @relation(fields: [jobId], references: [id])
+  interviewIdx Int
   interviewDate DateTime
   interviewLocation String
   interviewerName String?

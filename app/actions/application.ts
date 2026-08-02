@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import {
   ApplicationFormSchema,
   ApplicationFormState,
+  InterviewSchema,
   JobDescriptionComponentSchema,
   JobDescriptionComponentState,
   JobNotesComponentSchema,
@@ -40,9 +41,21 @@ type JobApplicationPayload = {
   notes?: string | null;
 };
 
+type interviewPayload = {
+  jobId: string;
+  interviewIdx: number;
+  interviewId: string;
+  interviewDate: Date;
+  interviewLocation: string;
+  interviewerName: string | null;
+  interviewerContact: string | null;
+  notes: string | null;
+};
+
 async function updatejobApplication(
   jobId: string,
   data: JobApplicationPayload,
+  interviews: interviewPayload[]
 ) {
   // Separate the job description from the payload
   const { jobDescription, ...updateData } = data || {};
@@ -52,6 +65,42 @@ async function updatejobApplication(
   await prisma.jobApplication.update({
     where: { id: jobId },
     data: updateData,
+  });
+
+  for (const interview of interviews) {
+    await prisma.interview.upsert({
+      where: { id: interview.interviewId || "" },
+      update: {
+        interviewDate: interview.interviewDate,
+        interviewLocation: interview.interviewLocation,
+        interviewerName: interview.interviewerName,
+        interviewerContact: interview.interviewerContact,
+        notes: interview.notes,
+      },
+      create: {
+        jobId: interview.jobId,
+        interviewIdx: interview.interviewIdx,
+        interviewDate: interview.interviewDate,
+        interviewLocation: interview.interviewLocation,
+        interviewerName: interview.interviewerName,
+        interviewerContact: interview.interviewerContact,
+        notes: interview.notes,
+      },
+    });
+  }
+
+  // soft delete any interviews that are not in the payload
+  const interviewIds = interviews.map((interview) => interview.interviewId);
+  await prisma.interview.updateMany({
+    where: {
+      jobId,
+      id: {
+        notIn: interviewIds,
+      },
+    },
+    data: {
+      softDeleted: true,
+    },
   });
 
   await prisma.jobDescription.update({
@@ -176,7 +225,7 @@ export async function updateJobStatus(
   redirect("/dashboard/application/" + jobId);
 }
 
-async function createjobApplication(data: JobApplicationPayload) {
+async function createjobApplication(data: JobApplicationPayload, interviews: interviewPayload[]) {
   const session = await verifySession();
   const userId = await getUser(session.userId);
   // Separate the job description from the payload
@@ -193,6 +242,16 @@ async function createjobApplication(data: JobApplicationPayload) {
       },
     },
   });
+
+  // Create the interviews
+  for (const interview of interviews) {
+    await prisma.interview.create({
+      data: {
+        ...interview,
+        jobId: createdJobApplication.id,
+      },
+    });
+  }
 
   await prisma.jobDescription.create({
     data: {
@@ -221,6 +280,44 @@ export async function submitApplicationForm(
   _state: ApplicationFormState,
   formData: FormData,
 ): Promise<ApplicationFormState> {
+  console.log("submitApplicationForm called with formData:", Object.fromEntries(formData.entries()));
+
+  // Compile all the interview information into a single array
+  const interviews: {
+    jobId: string;
+    interviewIdx: number;
+    interviewId: string | null;
+    interviewDate: Date | null;
+    interviewLocation: string | null;
+    interviewerName: string | null;
+    interviewerContact: string | null;
+    notes: null;
+  }[] = [];
+
+  const interviewCount = Number(formData.get("interviewCount")) || 0;
+
+  for (let i = 0; i < interviewCount; i++) {
+    const interviewDate = formData.get(`interviewDate_${i}`);
+    const interviewLocation = formData.get(`interviewLocation_${i}`);
+    const interviewerName = formData.get(`interviewerName_${i}`);
+    const interviewerContact = formData.get(`interviewerContact_${i}`);
+    const interviewId = formData.get(`interviewID_${i}`); // Get the interview ID if it exists
+    if (interviewDate || interviewLocation || interviewerName || interviewerContact) {
+      interviews.push({
+        jobId: formData.get("jobId") as string,
+        interviewIdx: i,
+        interviewId: interviewId ? (interviewId as string) : null,
+        interviewDate: interviewDate ? new Date(interviewDate as string) : null,
+        interviewLocation: interviewLocation ? (interviewLocation as string) : null,
+        interviewerName: interviewerName ? (interviewerName as string) : null,
+        interviewerContact: interviewerContact ? (interviewerContact as string) : null,
+        notes: null,
+      });
+    }
+  }
+
+  console.log("Compiled Interviews:", interviews);
+
   const validatedFields = ApplicationFormSchema.safeParse({
     company: formData.get("company"),
     position: formData.get("position"),
@@ -245,9 +342,31 @@ export async function submitApplicationForm(
     notes: formData.get("notes"),
   });
 
-  if (!validatedFields.success) {
+  let interviewValidation = true;
+  const validatedInterviews = [];
+
+  for (const interview of interviews) {
+    const validatedInterview = InterviewSchema.safeParse({
+      jobId: interview.jobId,
+      interviewIdx: interview.interviewIdx,
+      interviewId: interview.interviewId,
+      interviewDate: interview.interviewDate ? new Date(interview.interviewDate) : null,
+      interviewLocation: interview.interviewLocation || "",
+      interviewerName: interview.interviewerName || null,
+      interviewerContact: interview.interviewerContact || null,
+      notes: null,
+    });
+    if (!validatedInterview.success) {
+      interviewValidation = false;
+      break;
+    } else {
+      validatedInterviews.push(validatedInterview.data);
+    }
+  }
+
+  if (!validatedFields.success || !interviewValidation) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors: validatedFields?.error?.flatten().fieldErrors ?? {},
       values: {
         company: formData.get("company") as string,
         position: formData.get("position") as string,
@@ -270,6 +389,16 @@ export async function submitApplicationForm(
         jobDescription: formData.get("jobDescription") as string | null,
         referenceLink: formData.get("referenceLink") as string | null,
         notes: formData.get("notes") as string | null,
+        interviews: interviews.map((interview) => ({
+          jobId: interview.jobId as string,
+          interviewIdx: interview.interviewIdx as number,
+          interviewId: interview.interviewId as string,
+          interviewDate: interview.interviewDate as Date,
+          interviewLocation: interview.interviewLocation as string,
+          interviewerName: interview.interviewerName as string | null,
+          interviewerContact: interview.interviewerContact as string | null,
+          notes: interview.notes as string | null,
+        })),
       },
     };
   }
@@ -282,6 +411,7 @@ export async function submitApplicationForm(
   }
 
   console.log("Payload to be submitted:", payload);
+  console.log("Payload to be submitted:", validatedInterviews);
 
   if (typeof jobId === "string" && jobId.length > 0) {
     if (!(await prisma.jobApplication.findUnique({ where: { id: jobId } }))) {
@@ -290,9 +420,9 @@ export async function submitApplicationForm(
       };
     }
 
-    await updatejobApplication(jobId, payload);
+    await updatejobApplication(jobId, payload, validatedInterviews);
   } else {
-    await createjobApplication(payload);
+    await createjobApplication(payload, validatedInterviews);
   }
 
   revalidatePath("/dashboard");

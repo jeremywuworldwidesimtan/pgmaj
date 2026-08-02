@@ -135,6 +135,17 @@ export const ScheduleInterviewFormStateSchema = z.object({
   latestInterviewScheduledDate: z.string().trim().min(1, { error: "Please enter a valid date." }),
 });
 
+export const InterviewSchema = z.object({
+  jobId: z.string().trim().min(1, { error: "Job ID is required." }),
+  interviewIdx: z.number().int().min(0, { error: "Interview index must be a non-negative integer." }),
+  interviewId: z.string().trim(),
+  interviewDate: z.date({ error: "Please enter a valid date." }),
+  interviewLocation: z.string().trim().min(1, { error: "Interview location is required." }),
+  interviewerName: z.string().trim().nullable(),
+  interviewerContact: z.string().trim().nullable(),
+  notes: z.string().trim().nullable(),
+});
+
 export type SignupFormState =
   | {
       errors?: {
@@ -183,6 +194,16 @@ export type ApplicationFormState =
         jobDescription?: string[];
         referenceLink?: string[];
         notes?: string[];
+        interviews?: {
+          jobId?: string[];
+          interviewIdx?: string[];
+          interviewId?: string[];
+          interviewDate?: string[];
+          interviewLocation?: string[];
+          interviewerName?: string[];
+          interviewerContact?: string[];
+          notes?: string[];
+        }[];
       };
       message?: string;
       values?: {
@@ -201,9 +222,19 @@ export type ApplicationFormState =
         jobDescription: string | null;
         referenceLink: string | null;
         notes: string | null;
+        interviews: {
+          jobId: string;
+          interviewIdx: number;
+          interviewId: string | null;
+          interviewDate: Date;
+          interviewLocation: string;
+          interviewerName: string | null;
+          interviewerContact: string | null;
+          notes: string | null;
+        }[];
       };
     }
-  | undefined;
+    | undefined;
 
 export type JobDescriptionComponentState =
   | {
@@ -301,6 +332,30 @@ export type ScheduleInterviewFormState =
       values?: {
         jobId: string;
         latestInterviewScheduledDate: Date;
+      };
+    }
+  | undefined;
+
+export type InterviewFormState =
+  | {
+      errors?: {
+        jobId?: string[];
+        interviewId?: string[];
+        interviewDate?: string[];
+        interviewLocation?: string[];
+        interviewerName?: string[];
+        interviewerContact?: string[];
+        notes?: string[];
+      };
+      message?: string;
+      values?: {
+        jobId: string;
+        interviewId: string;
+        interviewDate: Date;
+        interviewLocation: string;
+        interviewerName: string | null;
+        interviewerContact: string | null;
+        notes: string | null;
       };
     }
   | undefined;

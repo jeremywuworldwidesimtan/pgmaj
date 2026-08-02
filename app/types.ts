@@ -48,24 +48,37 @@ export type JobModePrisma = "Remote" | "OnSite" | "Hybrid";
 export type PayFrequencyPrisma = "Hourly" | "Weekly" | "Monthly" | "Yearly";
 
 export type JobApplicationPrisma = {
- id: string;
- company: string;
- position: string;
- location: string;
- jobType: JobTypePrisma;
- jobMode: JobModePrisma;
- minPay: number | null;
- maxPay: number | null;
- payFrequency: PayFrequencyPrisma | null;
- status: StatusPrisma;
- appliedDate: Date | null;
- latestUpdate: Date | null;
- latestInterviewScheduledDate: Date | null;
- referenceLink: string | null;
- notes: string | null;
- userId: string;
- preferredCurrency: string | null;
- createdAt: Date;
- updatedAt: Date;
- softDeleted: boolean;
-}
+  id: string;
+  company: string;
+  position: string;
+  location: string;
+  jobType: JobTypePrisma;
+  jobMode: JobModePrisma;
+  minPay: number | null;
+  maxPay: number | null;
+  payFrequency: PayFrequencyPrisma | null;
+  status: StatusPrisma;
+  appliedDate: Date | null;
+  latestUpdate: Date | null;
+  latestInterviewScheduledDate: Date | null;
+  referenceLink: string | null;
+  notes: string | null;
+  userId: string;
+  preferredCurrency: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  softDeleted: boolean;
+};
+
+export type Interview = {
+  id: string;
+  jobId: string;
+  interviewDate: Date;
+  interviewLocation: string;
+  interviewerName?: string;
+  interviewerContact?: string;
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  softDeleted: boolean;
+};

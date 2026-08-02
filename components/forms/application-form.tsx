@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "../ui/button";
 import InputField from "../fields/input-field";
 import {
@@ -44,6 +44,16 @@ export type ApplicationFormProps = {
     updatedAt: Date;
     softDeleted: boolean;
     jobDescription?: string | null;
+    interviewCount?: number;
+    interviews?: {
+      jobId: string;
+      interviewIdx: number;
+      interviewId: string | null;
+      interviewDate: Date;
+      interviewLocation: string;
+      interviewerName: string | null;
+      interviewerContact: string | null;
+    }[];
   };
 };
 
@@ -52,6 +62,7 @@ const initialState: ApplicationFormState = undefined;
 export default function ApplicationForm({
   formData: data,
 }: ApplicationFormProps) {
+  const [interviewCount, setInterviewCount] = useState(data?.interviewCount || 0);
   const [state, formAction, pending] = useActionState(
     submitApplicationForm,
     initialState,
@@ -260,6 +271,72 @@ export default function ApplicationForm({
               placeholder="Select the interview date"
               timeField={true}
             />
+          </FieldGroup>
+        </FieldSet>
+        <FieldSeparator />
+        <FieldSet>
+          <div className="flex justify-between items-center">
+            <div>
+              <FieldLegend>Interviews</FieldLegend>
+              <FieldDescription>
+                Information about the scheduled interviews for the job application.
+              </FieldDescription>
+            </div>
+            <div className="flex gap-2">
+              {interviewCount > 0 && (
+                <Button variant="destructive" size="sm" type="button" onClick={() => setInterviewCount(interviewCount - 1)}>
+                  Remove Interview
+                </Button>
+              )}
+              <Button variant="secondary" size="sm" type="button" onClick={() => interviewCount < 5 ? setInterviewCount(interviewCount + 1) : null}>
+                Add Interview
+              </Button>
+            </div>
+          </div>
+          <FieldGroup className="grid grid-cols-1 gap-4">
+            <input type="hidden" name="interviewCount" value={interviewCount} />
+            {Array.from({ length: interviewCount }).map((_, index) => (
+              <div key={index}>
+                <p className="font-medium">Interview Round {index + 1}</p>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
+                  <input type="hidden" name={`interviewIdx_${index}`} value={data?.interviews?.[index]?.interviewIdx || ""} />
+                  <DateField
+                    id={`interviewDate_${index}`}
+                    name={`interviewDate_${index}`}
+                    label="Interview Date"
+                    value={""}
+                    error=""
+                    placeholder="Select the interview date"
+                    timeField={true}
+                  />
+                  <InputField
+                    id={`interviewLocation_${index}`}
+                    name={`interviewLocation_${index}`}
+                    label="Interview Location"
+                    value={""}
+                    error=""
+                    placeholder="Enter the interview location"
+                  />
+                  <InputField
+                    id={`interviewerName_${index}`}
+                    name={`interviewerName_${index}`}
+                    label="Interviewer Name"
+                    value={""}
+                    error=""
+                    placeholder="Enter the interviewer name"
+                  />
+                  <InputField
+                    id={`interviewerContact_${index}`}
+                    name={`interviewerContact_${index}`}
+                    label="Interviewer Contact"
+                    value={""}
+                    error=""
+                    placeholder="Enter the interviewer contact"
+                  />
+                </div>
+              </div>
+            ))}
+
           </FieldGroup>
         </FieldSet>
         <FieldSeparator />
