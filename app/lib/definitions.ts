@@ -137,7 +137,11 @@ export const ProfileEditFormSchema = z.object({
 
 export const ScheduleInterviewFormStateSchema = z.object({
   jobId: z.string().trim().min(1, { error: "Job ID is required." }),
-  latestInterviewScheduledDate: z.string().trim().min(1, { error: "Please enter a valid date." }),
+  interviewIdx: z.number().int().nullable(),
+  interviewDate: z.date({ error: "Please enter a valid date." }).nullable(),
+  interviewLocation: z.string().trim().min(1, { error: "Interview location is required." }).nullable(),
+  interviewerName: z.string().trim().nullable(),
+  interviewerContact: z.string().trim().nullable(),
 });
 
 export const InterviewSchema = z.object({
@@ -343,12 +347,22 @@ export type ScheduleInterviewFormState =
   | {
       errors?: {
         jobId?: string[];
-        latestInterviewScheduledDate?: string[];
+        interviewIdx?: string[];
+        interviewId?: string[];
+        interviewDate?: string[];
+        interviewLocation?: string[];
+        interviewerName?: string[];
+        interviewerContact?: string[];
       };
       message?: string;
       values?: {
         jobId: string;
-        latestInterviewScheduledDate: Date;
+        interviewIdx: number;
+        interviewId: string | null;
+        interviewDate: Date;
+        interviewLocation: string;
+        interviewerName: string | null;
+        interviewerContact: string | null;
       };
     }
   | undefined;

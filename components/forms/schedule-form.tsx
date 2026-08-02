@@ -1,13 +1,15 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import DateField from "../fields/date-field";
 import SelectField from "../fields/select-field";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { ScheduleInterviewFormState } from "@/app/lib/definitions";
 import { scheduleInterview } from "@/app/actions/scheduler";
+import InputField from "../fields/input-field";
+import { FieldGroup } from "../ui/field";
 
-export type UnscheduledApplications = {
+export type userApplications = {
   id: string;
   position: string;
   company: string;
@@ -16,14 +18,18 @@ export type UnscheduledApplications = {
 const initialState: ScheduleInterviewFormState = undefined;
 
 export default function ScheduleForm({
-  unscheduledApplications,
+  userApplications,
 }: {
-  unscheduledApplications: UnscheduledApplications;
+  userApplications: userApplications;
 }) {
-  const unscheduledOptions = unscheduledApplications.map((app) => ({
+  const unscheduledOptions = userApplications.map((app) => ({
     value: app.id,
     label: `${app.position} at ${app.company}`,
   }));
+
+  const [selectedApplication, setSelectedApplication] = useState<string | null>(
+    null,
+  );
 
   const [state, action, pending] = useActionState(
     scheduleInterview,
@@ -39,32 +45,60 @@ export default function ScheduleForm({
         <h2 className="text-lg font-bold">Schedule Interview</h2>
         <form action={action} className="flex flex-col gap-2">
           <SelectField
-            id="unscheduledApplications"
-            name="unscheduledApplications"
+            id="jobId"
+            name="jobId"
             label="Select Application"
             placeholder="Select an application"
             selectItems={unscheduledOptions}
-            value={""}
+            value={selectedApplication ?? ""}
+            onChange={(value) => setSelectedApplication(value)}
             error={state?.errors?.jobId ? state.errors.jobId.join(", ") : ""}
             required
           />
-          <DateField
-            id="scheduleDate"
-            name="scheduleDate"
-            label="Select Date and Time"
-            placeholder="Select a date"
-            timeField={true}
-            value={""}
-            error={
-              state?.errors?.latestInterviewScheduledDate
-                ? state.errors.latestInterviewScheduledDate.join(", ")
-                : ""
-            }
-            required
-          />
-          <Button type="submit" disabled={pending}>
-            {pending ? "Scheduling..." : "Schedule"}
-          </Button>
+          {selectedApplication && (
+            <>
+              <FieldGroup className="grid grid-cols-1 gap-4 mt-2">
+                <input type="hidden" name={`interviewIdx`} value={""} />
+                <DateField
+                  id={`interviewDate`}
+                  name={`interviewDate`}
+                  label="Interview Date"
+                  value={""}
+                  error={""}
+                  placeholder="Select the interview date"
+                  timeField={true}
+                />
+                <InputField
+                  id={`interviewLocation`}
+                  name={`interviewLocation`}
+                  label="Interview Location"
+                  value={""}
+                  error={""}
+                  placeholder="Enter the interview location"
+                />
+                <InputField
+                  id={`interviewerName`}
+                  name={`interviewerName`}
+                  label="Interviewer Name"
+                  value={""}
+                  error={""}
+                  placeholder="Enter the interviewer name"
+                />
+                <InputField
+                  id={`interviewerContact`}
+                  name={`interviewerContact`}
+                  label="Interviewer Contact"
+                  value={""}
+                  error={""}
+                  placeholder="Enter the interviewer contact"
+                />
+              </FieldGroup>
+
+              <Button type="submit" disabled={pending}>
+                {pending ? "Scheduling..." : "Schedule"}
+              </Button>
+            </>
+          )}
         </form>
       </DialogContent>
     </Dialog>

@@ -40,7 +40,7 @@ export async function getSchedule(
 
     console.log("Fetched applications for schedule:", applications);
 
-    const schedule: CalendarSchedule[] = []
+    const schedule: CalendarSchedule[] = [];
     for (const app of applications) {
       for (const interview of app.interviews) {
         if (interview.interviewDate) {
@@ -50,10 +50,13 @@ export async function getSchedule(
             day: interview.interviewDate.getDate().toString(),
             event: {
               title: `${app.position} at ${app.company} (${interview.interviewIdx + 1})`,
-              time: interview.interviewDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+              time: interview.interviewDate.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
               link: `/dashboard/application/${app.id}`,
               location: interview.interviewLocation,
-            }
+            },
           });
         }
       }
@@ -66,12 +69,11 @@ export async function getSchedule(
   }
 }
 
-export async function getUnscheduledApplications(userId: string) {
+export async function getApplications(userId: string) {
   try {
     const applications = await prisma.jobApplication.findMany({
       where: {
         userId: userId,
-        latestInterviewScheduledDate: null,
         softDeleted: false,
       },
       select: {
@@ -82,7 +84,7 @@ export async function getUnscheduledApplications(userId: string) {
     });
     return applications;
   } catch (error) {
-    console.error("Error fetching unscheduled applications:", error);
+    console.error("Error fetching applications:", error);
     return [];
   }
 }
@@ -93,9 +95,28 @@ export async function scheduleInterview(
 ): Promise<ScheduleInterviewFormState> {
   console.log("FormData:", Object.fromEntries(formData.entries()));
 
+  const highestIdx = await prisma.interview.aggregate({
+    where: {
+      jobId: formData.get("jobId") as string,
+      softDeleted: false,
+    },
+    _max: {
+      interviewIdx: true,
+    },
+  });
+
   const validatedFields = ScheduleInterviewFormStateSchema.safeParse({
-    jobId: formData.get("unscheduledApplications"),
-    latestInterviewScheduledDate: formData.get("scheduleDate"),
+    jobId: formData.get("jobId"),
+    interviewIdx: highestIdx._max.interviewIdx
+      ? highestIdx._max.interviewIdx + 1
+      : 0,
+    interviewId: formData.get("interviewId") || null,
+    interviewDate: formData.get("interviewDate")
+      ? new Date(formData.get("interviewDate") as string)
+      : null,
+    interviewLocation: formData.get("interviewLocation"),
+    interviewerName: formData.get("interviewerName") || null,
+    interviewerContact: formData.get("interviewerContact") || null,
   });
 
   console.log("Received:", validatedFields);
@@ -106,15 +127,31 @@ export async function scheduleInterview(
     };
   }
 
-  const { jobId, latestInterviewScheduledDate } = validatedFields.data;
-  const JobInterviewScheduledDate = new Date(latestInterviewScheduledDate);
+  const {
+    jobId,
+    interviewIdx,
+    interviewDate,
+    interviewLocation,
+    interviewerName,
+    interviewerContact,
+  } = validatedFields.data;
 
   await prisma.jobApplication.update({
     where: { id: jobId },
     data: {
       status: "Shortlisted",
       latestUpdate: new Date(),
-      latestInterviewScheduledDate: JobInterviewScheduledDate,
+    },
+  });
+
+  await prisma.interview.create({
+    data: {
+      jobId,
+      interviewIdx: interviewIdx || 0,
+      interviewDate: interviewDate || new Date(),
+      interviewLocation: interviewLocation || "",
+      interviewerName: interviewerName || null,
+      interviewerContact: interviewerContact || null,
     },
   });
 

@@ -1,7 +1,7 @@
 import { getUser } from "@/app/actions/getUserInfo";
 import {
   getSchedule,
-  getUnscheduledApplications,
+  getApplications,
 } from "@/app/actions/scheduler";
 import { verifySession } from "@/app/lib/dal";
 import CalendarGrid from "@/components/scheduler/calendar-grid";
@@ -12,7 +12,7 @@ export default async function SchedulerPage() {
   const session = await verifySession();
   const user = await getUser(session.userId);
   const userSchedule = await getSchedule(user?.id ? user.id : "");
-  const unscheduledApplications = await getUnscheduledApplications(user?.id ? user.id : "");
+  const userApplications = await getApplications(user?.id ? user.id : "");
   return (
     <>
       <div className="flex flex-col md:flex-row w-full items-center justify-between gap-2">
@@ -22,7 +22,7 @@ export default async function SchedulerPage() {
             Here you can schedule your interviews and manage your availability.
           </p>
         </div>
-        <ScheduleForm unscheduledApplications={unscheduledApplications} />
+        <ScheduleForm userApplications={userApplications} />
       </div>
 
       <hr className="my-2" />
