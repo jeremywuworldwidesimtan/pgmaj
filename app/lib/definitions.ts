@@ -5,6 +5,7 @@ import {
   PayFrequencyPrisma,
   StatusPrisma,
 } from "../types";
+import { CalendarSchedule } from "@/components/scheduler/calendar-grid";
 
 export const SignupFormSchema = z.object({
   username: z
@@ -123,6 +124,11 @@ export const ProfileEditFormSchema = z.object({
   country: z.string().trim().nullable(),
   zip_code: z.string().trim().nullable(),
   preferredCurrency: z.string().max(3, { error: "Preferred currency must be at most 3 characters." }).min(1, { error: "Preferred currency is required." }).nullable(),
+});
+
+export const ScheduleInterviewFormStateSchema = z.object({
+  jobId: z.string().trim().min(1, { error: "Job ID is required." }),
+  latestInterviewScheduledDate: z.string().trim().min(1, { error: "Please enter a valid date." }),
 });
 
 export type SignupFormState =
@@ -269,6 +275,20 @@ export type ProfileEditFormState =
         country: string | null;
         zip_code: string | null;
         preferredCurrency: string | null;
+      };
+    }
+  | undefined;
+
+export type ScheduleInterviewFormState =
+  | {
+      errors?: {
+        jobId?: string[];
+        latestInterviewScheduledDate?: string[];
+      };
+      message?: string;
+      values?: {
+        jobId: string;
+        latestInterviewScheduledDate: Date;
       };
     }
   | undefined;

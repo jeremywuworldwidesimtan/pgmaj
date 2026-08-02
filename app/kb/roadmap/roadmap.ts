@@ -1,6 +1,6 @@
 export const roadmap = [
   {
-    version: "Beta 0.4",
+    version: "Beta 0.5",
     features: [
       "Resume information storage including education, experience, skills and certifications.",
       "Linked your In.",

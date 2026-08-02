@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   });
   return {
-    title: `${applicationInfo?.position} at ${applicationInfo?.company} - Application Details`,
+    title: applicationInfo?.position && applicationInfo?.company ? `${applicationInfo?.position} at ${applicationInfo?.company} - Application Details` : "Job not found",
     description: "View your application details",
   };
 }
@@ -115,14 +115,14 @@ export default async function ApplicationDetailsPage({
         </Link>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2 mt-4">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4">
               <p>
                 <strong>Job Type:</strong> {formatType(data.jobType)}
               </p>
               <p>
                 <strong>Job Mode:</strong> {formatType(data.jobMode)}
               </p>
-              <p>
+              <p className="lg:col-span-2">
                 <strong>Status:</strong>{" "}
                 <span className={colorStatus(data.status)}>
                   {formatType(data.status)}
@@ -130,7 +130,7 @@ export default async function ApplicationDetailsPage({
               </p>
             </div>
             <div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4">
                 <p>
                   <strong>Applied:</strong>{" "}
                   {data.appliedDate
@@ -143,15 +143,18 @@ export default async function ApplicationDetailsPage({
                     ? parseDate(data.latestUpdate, "british", "short", "dot")
                     : "N/A"}
                 </p>
-                <p>
+                <p className="lg:col-span-2">
                   <strong>Interview:</strong>{" "}
                   {data.latestInterviewScheduledDate
-                    ? parseDate(
+                    ? `${parseDate(
                         data.latestInterviewScheduledDate,
                         "british",
                         "short",
                         "dot",
-                      )
+                      )} ${data.latestInterviewScheduledDate.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}`
                     : "N/A"}
                 </p>
               </div>

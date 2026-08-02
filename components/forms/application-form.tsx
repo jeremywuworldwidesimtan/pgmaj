@@ -258,6 +258,7 @@ export default function ApplicationForm({
                   : ""
               }
               placeholder="Select the interview date"
+              timeField={true}
             />
           </FieldGroup>
         </FieldSet>

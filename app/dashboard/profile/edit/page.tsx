@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default async function ProfileEditPage() {
-    const session = await verifySession();
-      // Fetch user-specific data from your database or data source
-      const user = await getFullUserInfo(session.userId);
+  const session = await verifySession();
+  // Fetch user-specific data from your database or data source
+  const user = await getFullUserInfo(session.userId);
   return (
     <>
       <div className="flex justify-between">
