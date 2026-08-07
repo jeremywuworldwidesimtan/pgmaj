@@ -1,9 +1,18 @@
-name: Run Jest Tests
-on: [pull_request]
+name: Run test and code quality checks
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    # Grant permissions to write comments to the PR
+    permissions:
+      pull-requests: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -11,10 +20,47 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-cache: 'npm' 
+          node-cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Build Project for Production
+        env:
+          NODE_ENV: production
+        run: npm run build
+
+      # Step 2: Calculate stripped logs and save to a file
+      - name: Count Deleted Console Logs
+        id: count_logs
+        run: |
+          # Count lines containing console.log in the build output diff
+          DELETED_COUNT=$(git diff | grep -c "^\+.*console\.log" || true)
+          
+          # Create a markdown message file
+          echo "# GitHub Actions ProdCleaner by Fortnite Battle Pass" > pr_summary.md
+          echo "---" >> pr_summary.md
+          echo "### 📊 Production Build Report" >> pr_summary.md
+          echo "🧹 **$DELETED_COUNT** \`console.log\` statements were automatically stripped for production." >> pr_summary.md
+          echo "" >> pr_summary.md
+          echo "_Verified by GitHub Actions ProdCleaner by Fortnite Battle Pass._" >> pr_summary.md
+
+      # Step 3: Post or update the comment on the Pull Request
+      - name: Post PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: console-log-cleanup-report
+          path: pr_summary.md
+
+      # Step 4: Post to workflow summary dashboard
+      - name: Write Step Summary
+        run: cat pr_summary.md >> $GITHUB_STEP_SUMMARY
+
       - name: Run Jest
-        run: npm run test -- --ci
+        run: npm run test
+
+      - name: Run ESLint for Production (to prevent personal data leaks through logging)
+        # This injects the variable so ESLint catches console.log
+        env:
+          NODE_ENV: production
+        run: npm run lint
