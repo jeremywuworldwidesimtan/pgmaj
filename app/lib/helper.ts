@@ -167,6 +167,7 @@ export function shortenWebURL(url: string): string {
 }
 
 export function getDateDifference(startDate: Date, endDate: Date): string {
+  // Use dayjs to calculate the difference in years and months (inclusive of final month)
   const start = dayjs(startDate);
   const end = dayjs(endDate);
 
@@ -174,5 +175,5 @@ export function getDateDifference(startDate: Date, endDate: Date): string {
   // Subtraction step gets the remaining months after removing full years
   const remainingMonths = end.subtract(totalYears, 'year').diff(start, 'month');
 
-  return `${totalYears} yr, ${remainingMonths} mos`;
+  return `${totalYears} yr, ${remainingMonths + 1} mos`;
 }
