@@ -1,4 +1,5 @@
 import { StatusPrisma } from "../types";
+import dayjs from "dayjs";
 
 export function formatType(type: string): string {
   switch (type) {
@@ -163,4 +164,15 @@ export function shortenWebURL(url: string): string {
   } catch (error) {
     return url;
   }
+}
+
+export function getDateDifference(startDate: Date, endDate: Date): string {
+  const start = dayjs(startDate);
+  const end = dayjs(endDate);
+
+  const totalYears = end.diff(start, 'year');
+  // Subtraction step gets the remaining months after removing full years
+  const remainingMonths = end.subtract(totalYears, 'year').diff(start, 'month');
+
+  return `${totalYears} yr, ${remainingMonths} mos`;
 }

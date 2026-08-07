@@ -13,7 +13,7 @@ export default function MobileSchedule({ schedule }: { schedule: CalendarSchedul
         <>
             <h2 className="text-lg font-bold">Upcoming schedule</h2>
             <div className="grid grid-cols-1 gap-4 mt-2">
-                {schedule.map((s) => (
+                {schedule.length > 0 ? schedule.map((s) => (
                     <Link key={s.id} href={s.event.link}>
                         <Card key={s.id} className="w-full p-4 gap-1">
                             <p className="text-sm text-muted-foreground">
@@ -30,7 +30,7 @@ export default function MobileSchedule({ schedule }: { schedule: CalendarSchedul
                             )}
                         </Card>
                     </Link>
-                ))}
+                )) : <p className="text-sm text-muted-foreground">No upcoming interviews.</p>}
             </div>
         </>
     )

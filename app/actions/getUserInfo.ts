@@ -8,7 +8,7 @@ export type FullUserInfo = {
   lastName: string | null;
   preferredCurrency: string | null;
   userDetails: {
-    alt_email: string | null;
+    altEmail: string | null;
     bio: string | null;
     contact_number: string | null;
     addr_line1: string | null;
@@ -63,7 +63,7 @@ export const getFullUserInfo = async (userId: string): Promise<FullUserInfo | nu
         preferredCurrency: true,
         userDetails: {
           select: {
-            alt_email: true,
+            altEmail: true,
             bio: true,
             contact_number: true,
             addr_line1: true,

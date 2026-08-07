@@ -165,7 +165,7 @@ model ResumeDetails {
   id          String   @id @default(uuid())
   resumeId    String   @unique
   resume      Resume   @relation(fields: [resumeId], references: [id])
-  role         String?
+  role        String?
   bio         String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

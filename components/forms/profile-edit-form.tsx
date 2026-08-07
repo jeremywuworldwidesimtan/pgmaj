@@ -21,7 +21,7 @@ export type ProfileEditFormProps = {
     lastName: string | null;
     preferredCurrency: string | null;
     userDetails: {
-      alt_email: string | null;
+      altEmail: string | null;
       bio: string | null;
       state: string | null;
       contact_number: string | null;
@@ -135,14 +135,14 @@ export default function ProfileEditForm({
             description="Your contact number."
           />
           <InputField
-            id="alt_email"
-            name="alt_email"
+            id="altEmail"
+            name="altEmail"
             label="Alternate Email"
             type="email"
-            value={initialValues?.userDetails?.alt_email ?? ""}
+            value={initialValues?.userDetails?.altEmail ?? ""}
             error={
-              state?.errors?.alt_email
-                ? state.errors.alt_email.join(", ")
+              state?.errors?.altEmail
+                ? state.errors.altEmail.join(", ")
                 : ""
             }
             description="Your alternate email address (if you prefer to use one other than the account email)."

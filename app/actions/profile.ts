@@ -18,7 +18,7 @@ export async function updateProfile(
 
   const validatedFields = ProfileEditFormSchema.safeParse({
     id: session.userId,
-    alt_email: formData.get("alt_email") || null,
+    altEmail: formData.get("altEmail") || null,
     bio: formData.get("bio"),
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -43,7 +43,7 @@ export async function updateProfile(
   }
 
   const {
-    alt_email,
+    altEmail,
     bio,
     firstName,
     lastName,
@@ -69,7 +69,7 @@ export async function updateProfile(
       preferredCurrency,
       userDetails: {
         update: {
-          alt_email: alt_email,
+          altEmail: altEmail,
           bio: bio,
           contact_number: contact_number,
           addr_line1: addr_line1,
