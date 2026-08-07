@@ -14,6 +14,25 @@ export function formatType(type: string): string {
   }
 }
 
+export function formatEdu(type: string): string {
+  switch (type) {
+    case "HighSchool":
+      return "High School";
+    case "Diploma":
+      return "Diploma";
+    case "Associate":
+      return "Associate Degree";
+    case "Bachelor":
+      return "Bachelor's Degree";
+    case "Master":
+      return "Master's Degree";
+    case "Doctorate":
+      return "Doctorate/PhD";
+    default:
+      return type;
+  }
+}
+
 type DateFormat = "american" | "british" | "iso";
 type DateSize = "short" | "medium" | "long";
 type DateSeparator = "slash" | "dash" | "dot";

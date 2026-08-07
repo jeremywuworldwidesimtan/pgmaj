@@ -226,6 +226,7 @@ model ResumeSkills {
   resume      Resume   @relation(fields: [resumeId], references: [id])
   skill       String
   proficiency ProficiencyLevel?
+  yearsOfExperience Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   softDeleted Boolean  @default(false)

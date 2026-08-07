@@ -6,12 +6,11 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
-import ResumeExperienceButton, {
-  ResumeExperienceProps,
-} from "./resume-experience-button";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import ExperienceDeleteButton from "./experience-delete";
+import { ResumeExperienceProps } from "@/app/types";
+import ResumeExperienceButton from "./resume-experience-button";
 
 export default function ExperienceCard({
   experience,

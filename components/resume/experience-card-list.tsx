@@ -1,4 +1,4 @@
-import { ResumeExperienceProps } from "./resume-experience-button";
+import { ResumeExperienceProps } from "@/app/types";
 import ExperienceCard from "./experience-card";
 
 export default function ExperienceCardList({

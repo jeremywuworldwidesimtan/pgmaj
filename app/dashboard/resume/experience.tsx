@@ -10,6 +10,7 @@ async function getResumeExperiences(userId: string) {
     where: { userId },
     select: {
       experiences: {
+        where: { softDeleted: false },
         select: {
           id: true,
           company: true,
@@ -21,6 +22,9 @@ async function getResumeExperiences(userId: string) {
           startDate: true,
           endDate: true,
           description: true,
+        },
+        orderBy: {
+          startDate: "desc",
         },
       },
     },
@@ -46,7 +50,10 @@ export default async function ResumeExperience() {
         </div>
 
         <div className="flex flex-col md:flex-row md:justify-between gap-2 mt-4">
-          <ExperienceCardList experiences={resumeExperiences?.experiences || []} preferredCurrency={user?.preferredCurrency || "$"} />
+          <ExperienceCardList
+            experiences={resumeExperiences?.experiences || []}
+            preferredCurrency={user?.preferredCurrency || "$"}
+          />
         </div>
       </Card>
     </>

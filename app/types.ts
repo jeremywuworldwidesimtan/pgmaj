@@ -47,6 +47,20 @@ export type JobTypePrisma =
 export type JobModePrisma = "Remote" | "OnSite" | "Hybrid";
 export type PayFrequencyPrisma = "Hourly" | "Weekly" | "Monthly" | "Yearly";
 
+export type DegreeType =
+  | "HighSchool"
+  | "Diploma"
+  | "Associate"
+  | "Bachelor"
+  | "Master"
+  | "Doctorate";
+
+export type ProficiencyLevel =
+  | "Beginner"
+  | "Intermediate"
+  | "Advanced"
+  | "Expert";
+
 export type JobApplicationPrisma = {
   id: string;
   company: string;
@@ -82,4 +96,54 @@ export type Interview = {
   createdAt: Date;
   updatedAt: Date;
   softDeleted: boolean;
+};
+
+export type ResumeExperienceProps = {
+  id: string;
+  company: string;
+  position: string;
+  location: string;
+  jobType: JobTypePrisma;
+  jobMode: JobModePrisma;
+  lastSalary?: number | null;
+  startDate: Date;
+  endDate?: Date | null;
+  description?: string | null;
+};
+
+export type ResumeEducationProps = {
+  id: string;
+  institution: string;
+  degree: DegreeType;
+  fieldOfStudy: string;
+  gpa?: number | null;
+  startDate: Date;
+  endDate?: Date | null;
+  description?: string | null;
+};
+
+export type ResumeProjectProps = {
+  id: string;
+  name: string;
+  description?: string | null;
+  link?: string | null;
+  startDate: Date;
+  endDate?: Date | null;
+};
+
+export type ResumeSkillProps = {
+  id: string;
+  name: string;
+  proficiency: ProficiencyLevel;
+  yearsOfExperience?: number | null;
+};
+
+export type ResumeCertificationProps = {
+  id: string;
+  name: string;
+  issuingOrganization: string;
+  issueDate: Date;
+  expirationDate?: Date | null;
+  credentialId?: string | null;
+  credentialUrl?: string | null;
 };

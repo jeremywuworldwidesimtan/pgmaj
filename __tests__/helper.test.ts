@@ -1,6 +1,6 @@
 // Test helper functions
 
-import { formatType, parseDate, colorStatus, shortenWebURL, getDateDifference } from "@/app/lib/helper";
+import { formatType, parseDate, colorStatus, shortenWebURL, getDateDifference, formatEdu } from "@/app/lib/helper";
 
 describe("formatType test", () => {
     test("formatType should format job types correctly", () => {
@@ -12,6 +12,27 @@ describe("formatType test", () => {
         expect(formatType("Full_Time")).toBe("Full_Time");
         expect(formatType("remote")).not.toBe("Remote");
         expect(formatType("Part_Time")).not.toBe("Part-Time");
+    });
+});
+
+describe("formatEdu test", () => {
+    test("formatEdu should format education types correctly", () => {
+        expect(formatEdu("HighSchool")).toBe("High School");
+        expect(formatEdu("High-School")).not.toBe("High School");
+        expect(formatEdu("Diploma")).toBe("Diploma");
+        expect(formatEdu("Associate")).toBe("Associate Degree");
+        expect(formatEdu("Associate")).not.toBe("Associate");
+        expect(formatEdu("Bachelor")).toBe("Bachelor's Degree");
+        expect(formatEdu("Bachelor")).not.toBe("Bachelor's");
+        expect(formatEdu("Bachelor")).not.toBe("Bachelor");
+        expect(formatEdu("Bachelor")).not.toBe("Bachelor Degree");
+        expect(formatEdu("Master")).toBe("Master's Degree");
+        expect(formatEdu("Master")).not.toBe("Master's");
+        expect(formatEdu("Master")).not.toBe("Master");
+        expect(formatEdu("Master")).not.toBe("Master Degree");
+        expect(formatEdu("Doctorate")).toBe("Doctorate/PhD");
+        expect(formatEdu("Doctorate")).not.toBe("Doctorate");
+        expect(formatEdu("Other")).toBe("Other");
     });
 });
 

@@ -14,6 +14,7 @@ async function getResumeDetails(userId: string) {
       resume: {
         select: {
           details: {
+            where: { softDeleted: false },
             select: {
               id: true,
               role: true,

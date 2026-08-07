@@ -6,11 +6,11 @@ import {
   FieldSeparator,
   FieldSet,
 } from "../ui/field";
-import { ResumeExperienceProps } from "../resume/resume-experience-button";
 import DateField from "../fields/date-field";
 import InputField from "../fields/input-field";
 import SelectField from "../fields/select-field";
 import TextareaField from "../fields/textarea-field";
+import { ResumeExperienceProps } from "@/app/types";
 
 export type ResumeExperienceFormProps = {
   state?: ResumeExperienceState;

@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { JobTypePrisma, JobModePrisma } from "../types";
+import { JobTypePrisma, JobModePrisma, DegreeType } from "../types";
 
 export const ResumeDetailsSchema = z.object({
   id: z.string().nullable(),
@@ -27,6 +27,24 @@ export const ResumeExperienceSchema = z.object({
     { error: "Please select a job mode." },
   ),
   lastSalary: z.number({ error: "Last salary must be a number." }).nullable(),
+  startDate: z.date({ error: "Please enter a valid date." }),
+  endDate: z.date().nullable(),
+  description: z.string().trim().nullable(),
+});
+
+export const ResumeEducationSchema = z.object({
+  id: z.string().nullable(),
+  institution: z.string().trim().min(1, { error: "Institution name is required." }),
+  degree: z.custom<DegreeType>(
+    (value) =>
+      typeof value === "string" &&
+      ["HighSchool", "Diploma", "Associate", "Bachelor", "Master", "Doctorate"].includes(
+        value,
+      ),
+    { error: "Please select a degree." },
+  ),
+  fieldOfStudy: z.string().trim().min(1, { error: "Field of study is required." }),
+  gpa: z.number({ error: "GPA must be a number." }).nullable(),
   startDate: z.date({ error: "Please enter a valid date." }),
   endDate: z.date().nullable(),
   description: z.string().trim().nullable(),
@@ -71,6 +89,32 @@ export type ResumeExperienceState =
         jobType: JobTypePrisma;
         jobMode: JobModePrisma;
         lastSalary?: number | null;
+        startDate: Date;
+        endDate?: Date | null;
+        description?: string | null;
+      };
+    }
+  | undefined;
+
+export type ResumeEducationState =
+  | {
+      errors?: {
+        id?: string;
+        institution?: string;
+        degree?: string;
+        fieldOfStudy?: string;
+        gpa?: string;
+        startDate?: string;
+        endDate?: string;
+        description?: string;
+      };
+      message?: string;
+      values?: {
+        id: string;
+        institution: string;
+        degree: DegreeType;
+        fieldOfStudy: string;
+        gpa?: number | null;
         startDate: Date;
         endDate?: Date | null;
         description?: string | null;
