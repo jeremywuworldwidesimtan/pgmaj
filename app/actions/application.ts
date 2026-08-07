@@ -21,7 +21,6 @@ import {
   PayFrequencyPrisma,
 } from "../types";
 import { verifySession } from "../lib/dal";
-import { getUser } from "./getUserInfo";
 
 type JobApplicationPayload = {
   company: string;
@@ -261,8 +260,8 @@ export async function updateJobStatus(
 }
 
 async function createjobApplication(data: JobApplicationPayload, interviews: interviewPayload[]) {
+  // use session-based ID
   const session = await verifySession();
-  const userId = await getUser(session.userId);
   // Separate the job description from the payload
   const { jobDescription, ...updateData } = data || {};
 
@@ -272,7 +271,7 @@ async function createjobApplication(data: JobApplicationPayload, interviews: int
       ...updateData,
       user: {
         connect: {
-          id: userId?.id,
+          id: session.userId,
         },
       },
     },

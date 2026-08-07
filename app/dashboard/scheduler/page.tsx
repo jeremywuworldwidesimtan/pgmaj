@@ -1,18 +1,14 @@
-import { getUser } from "@/app/actions/getUserInfo";
 import {
   getSchedule,
   getApplications,
 } from "@/app/actions/scheduler";
-import { verifySession } from "@/app/lib/dal";
 import CalendarGrid from "@/components/scheduler/calendar-grid";
 import ScheduleForm from "@/components/forms/schedule-form";
 import MobileSchedule from "@/components/scheduler/mobile-schedule";
 
 export default async function SchedulerPage() {
-  const session = await verifySession();
-  const user = await getUser(session.userId);
-  const userSchedule = await getSchedule(user?.id ? user.id : "");
-  const userApplications = await getApplications(user?.id ? user.id : "");
+  const userSchedule = await getSchedule();
+  const userApplications = await getApplications();
   return (
     <>
       <div className="flex flex-col md:flex-row w-full items-center justify-between gap-2">

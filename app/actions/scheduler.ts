@@ -8,14 +8,15 @@ import {
   ScheduleInterviewFormStateSchema,
 } from "../lib/definitions";
 import { revalidatePath } from "next/cache";
+import { verifySession } from "../lib/dal";
 
-export async function getSchedule(
-  userId: string,
-): Promise<CalendarSchedule[] | undefined> {
+export async function getSchedule(): Promise<CalendarSchedule[] | undefined> {
+  // use session-based ID
+  const session = await verifySession();
   try {
     const applications = await prisma.jobApplication.findMany({
       where: {
-        userId: userId,
+        userId: session.userId,
         softDeleted: false,
       },
       select: {
@@ -69,11 +70,12 @@ export async function getSchedule(
   }
 }
 
-export async function getApplications(userId: string) {
+export async function getApplications() {
+  const session = await verifySession();
   try {
     const applications = await prisma.jobApplication.findMany({
       where: {
-        userId: userId,
+        userId: session.userId,
         softDeleted: false,
       },
       select: {
