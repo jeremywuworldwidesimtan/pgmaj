@@ -95,7 +95,19 @@ export async function scheduleInterview(
   state: ScheduleInterviewFormState | undefined,
   formData: FormData,
 ): Promise<ScheduleInterviewFormState> {
-  console.log("FormData:", Object.fromEntries(formData.entries()));
+  // Validate that the user owns the job application before updating
+  const jobApplicationUserId = await prisma.jobApplication.findUnique({
+    where: { id: formData.get("jobId") as string },
+    select: { userId: true },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!jobApplicationUserId || jobApplicationUserId.userId !== userId) {
+    return {
+      message: "You do not have permission to update this job application.",
+    };
+  }
 
   const highestIdx = await prisma.interview.aggregate({
     where: {

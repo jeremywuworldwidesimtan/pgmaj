@@ -52,6 +52,7 @@ type interviewPayload = {
 };
 
 async function updatejobApplication(
+  userId: string,
   jobId: string,
   data: JobApplicationPayload,
   interviews: interviewPayload[]
@@ -59,8 +60,17 @@ async function updatejobApplication(
   // Separate the job description from the payload
   const { jobDescription, ...updateData } = data || {};
 
-  // Update the job application without the job description
+  // Validate that the user owns the job application before updating
+  const jobApplicationUserId = await prisma.jobApplication.findUnique({
+    where: { id: jobId },
+    select: { userId: true },
+  });
 
+  if (!jobApplicationUserId || jobApplicationUserId.userId !== userId) {
+    return false; // User does not own this job application
+  }
+
+  // Update the job application without the job description
   await prisma.jobApplication.update({
     where: { id: jobId },
     data: updateData,
@@ -99,18 +109,33 @@ async function updatejobApplication(
     where: { jobId },
     data: { description: jobDescription },
   });
+
+  return true;
 }
 
 export async function updateJobDescription(
   state: JobDescriptionComponentState | undefined,
   formData: FormData,
 ): Promise<JobDescriptionComponentState> {
+
+  // Validate that the user owns the job application before updating
+  const jobApplicationUserId = await prisma.jobApplication.findUnique({
+    where: { id: formData.get("jobId") as string },
+    select: { userId: true },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!jobApplicationUserId || jobApplicationUserId.userId !== userId) {
+    return {
+      message: "You do not have permission to update this job application.",
+    };
+  }
+
   const validatedFields = JobDescriptionComponentSchema.safeParse({
     jobDescription: formData.get("jobDescription"),
     jobId: formData.get("jobId"),
   });
-
-  console.log("Received JD:", validatedFields.data?.jobDescription);
 
   if (!validatedFields.success) {
     return {
@@ -132,12 +157,24 @@ export async function updateJobNotes(
   state: JobNotesComponentState | undefined,
   formData: FormData,
 ): Promise<JobNotesComponentState> {
+  // Validate that the user owns the job application before updating
+  const jobApplicationUserId = await prisma.jobApplication.findUnique({
+    where: { id: formData.get("jobId") as string },
+    select: { userId: true },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!jobApplicationUserId || jobApplicationUserId.userId !== userId) {
+    return {
+      message: "You do not have permission to update this job application.",
+    };
+  }
+
   const validatedFields = JobNotesComponentSchema.safeParse({
     notes: formData.get("notes"),
     jobId: formData.get("jobId"),
   });
-
-  console.log("Received Notes:", validatedFields.data?.notes);
 
   if (!validatedFields.success) {
     return {
@@ -159,7 +196,19 @@ export async function updateJobStatus(
   state: JobStatusUpdateState | undefined,
   formData: FormData,
 ): Promise<JobStatusUpdateState> {
-  console.log("Form Data:", Object.fromEntries(formData.entries()));
+  // Validate that the user owns the job application before updating
+  const jobApplicationUserId = await prisma.jobApplication.findUnique({
+    where: { id: formData.get("jobId") as string },
+    select: { userId: true },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!jobApplicationUserId || jobApplicationUserId.userId !== userId) {
+    return {
+      message: "You do not have permission to update this job application.",
+    };
+  }
 
   const highestIdx = await prisma.interview.aggregate({
     where: {
@@ -190,10 +239,6 @@ export async function updateJobStatus(
     interviewerName: formData.get("interviewerName") || null,
     interviewerContact: formData.get("interviewerContact") || null,
   });
-
-  
-
-  console.log("Received Status Update:", validatedFields.data);
 
   if (!validatedFields.success) {
     return {
@@ -296,6 +341,19 @@ async function createjobApplication(data: JobApplicationPayload, interviews: int
 }
 
 export async function deletejobApplication(jobId: string) {
+  // Validate that the user owns the job application before updating
+  const jobApplicationUserId = await prisma.jobApplication.findUnique({
+    where: { id: jobId },
+    select: { userId: true },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+
+  if (!jobApplicationUserId || jobApplicationUserId.userId !== userId) {
+    throw new Error("You do not have permission to delete this job application.");
+  }
+
   await prisma.jobApplication.update({
     where: { id: jobId },
     data: { softDeleted: true },
@@ -314,7 +372,7 @@ export async function submitApplicationForm(
   _state: ApplicationFormState,
   formData: FormData,
 ): Promise<ApplicationFormState> {
-  console.log("submitApplicationForm called with formData:", Object.fromEntries(formData.entries()));
+  const session = await verifySession();
 
   // Compile all the interview information into a single array
   const interviews: {
@@ -459,7 +517,12 @@ export async function submitApplicationForm(
       };
     }
 
-    await updatejobApplication(jobId, payload, validatedInterviews);
+    const updateApplicationStatus = await updatejobApplication(session.userId, jobId, payload, validatedInterviews);
+    if (!updateApplicationStatus) {
+      return {
+        message: "You do not have permission to update this job application.",
+      };
+    }
   } else {
     await createjobApplication(payload, validatedInterviews);
   }

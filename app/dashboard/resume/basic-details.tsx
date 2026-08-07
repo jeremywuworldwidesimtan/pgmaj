@@ -15,6 +15,7 @@ async function getResumeDetails(userId: string) {
         select: {
           details: {
             select: {
+              id: true,
               role: true,
               bio: true,
             },
@@ -136,6 +137,7 @@ export default async function BasicDetails() {
                 </p>
               </div>
               <EditResumeDetailsButton
+                id={resumeDetails?.resume?.details?.id}
                 role={resumeDetails?.resume?.details?.role}
                 bio={resumeDetails?.resume?.details?.bio}
               />

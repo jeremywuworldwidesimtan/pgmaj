@@ -95,6 +95,26 @@ export async function submitResumeExperience(
     description: formData.get("description"),
   });
 
+  if (validatedFields?.data?.id) {
+    // Validate that the user owns the resume before updating
+    const resume = await prisma.resume.findUnique({
+      where: {
+        id: await prisma.resumeExperience
+          .findUnique({ where: { id: validatedFields.data.id } })
+          .then((exp) => exp?.resumeId),
+      },
+      select: { userId: true },
+    });
+
+    const session = await verifySession();
+    const userId = session.userId;
+    if (!resume || resume.userId !== userId) {
+      return {
+        message: "You do not have permission to update this resume.",
+      };
+    }
+  }
+
   if (!validatedFields.success) {
     const errors = validatedFields.error.flatten().fieldErrors;
     return {
@@ -122,7 +142,7 @@ export async function submitResumeExperience(
         endDate: formData.get("endDate")
           ? new Date(formData.get("endDate") as string)
           : null,
-        description: formData.get("jobDescription") as string,
+        description: formData.get("description") as string,
       },
     };
   }
@@ -179,10 +199,27 @@ export async function submitResumeExperience(
 }
 
 export const deleteExperience = async (experienceId: string) => {
+  // Validate that the user owns the resume before updating
+  const resume = await prisma.resume.findUnique({
+    where: {
+      id: await prisma.resumeExperience
+        .findUnique({ where: { id: experienceId } })
+        .then((exp) => exp?.resumeId),
+    },
+    select: { userId: true },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!resume || resume.userId !== userId) {
+    return {
+      message: "You do not have permission to update this resume.",
+    };
+  }
   await prisma.resumeExperience.update({
     where: { id: experienceId },
     data: {
-        softDeleted: true,
+      softDeleted: true,
     },
   });
 

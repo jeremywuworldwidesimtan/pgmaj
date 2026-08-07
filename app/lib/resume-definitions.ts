@@ -2,6 +2,7 @@ import * as z from "zod";
 import { JobTypePrisma, JobModePrisma } from "../types";
 
 export const ResumeDetailsSchema = z.object({
+  id: z.string().nullable(),
   role: z.string().nullable(),
   bio: z.string().nullable(),
 });
@@ -34,11 +35,13 @@ export const ResumeExperienceSchema = z.object({
 export type ResumeDetailsState =
   | {
       errors?: {
+        id?: string;
         role?: string;
         bio?: string;
       };
       message?: string;
       values?: {
+        id: string | null;
         role: string | null;
         bio: string | null;
       };

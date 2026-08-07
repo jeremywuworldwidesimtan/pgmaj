@@ -18,6 +18,7 @@ import { ResumeDetailsState } from "@/app/lib/resume-definitions";
 import { updateResumeDetails } from "@/app/actions/resume";
 
 export type EditResumeDetailsButtonProps = {
+  id?: string | null | undefined;
   role?: string | null | undefined;
   bio?: string | null | undefined;
 };
@@ -25,6 +26,7 @@ export type EditResumeDetailsButtonProps = {
 const initialState: ResumeDetailsState = undefined;
 
 export default function EditResumeDetailsButton({
+  id,
   role,
   bio,
 }: EditResumeDetailsButtonProps) {
@@ -43,6 +45,7 @@ export default function EditResumeDetailsButton({
             <DialogTitle>Edit Resume Details</DialogTitle>
           </DialogHeader>
           <FieldGroup className="flex flex-col gap-4 mt-2">
+            <input type="hidden" name="id" value={state?.values?.id || id || ""} />
             <InputField
               id="role"
               name="role"
