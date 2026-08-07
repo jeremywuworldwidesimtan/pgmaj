@@ -1,5 +1,5 @@
 "use client";
-import { formatEdu, formatType, getDateDifference, parseDate } from "@/app/lib/helper";
+import { formatEdu, getDateDifference, parseDate } from "@/app/lib/helper";
 import { Card } from "../ui/card";
 import {
   Collapsible,

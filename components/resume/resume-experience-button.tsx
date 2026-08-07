@@ -47,7 +47,8 @@ export default function ResumeExperienceButton({
       <DialogTrigger asChild>
         <Button>{mode === "add" ? "Add" : "Edit"} Experience</Button>
       </DialogTrigger>
-      <DialogContent className="lg:min-w-3xl">
+      {/* Make the dialog start at the top and scrollable on mobile */}
+      <DialogContent className="top-0 translate-y-0 sm:top-[50%] sm:translate-y-[-50%] max-h-screen sm:max-h-[85vh] overflow-y-auto w-full sm:max-w-lg lg:min-w-3xl"> 
         <form action={action}>
           <DialogHeader>
             <DialogTitle>

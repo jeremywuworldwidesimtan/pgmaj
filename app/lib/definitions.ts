@@ -68,9 +68,11 @@ export const ApplicationFormSchema = z.object({
   latestInterviewScheduledDate: z.date().nullable(),
   minPay: z
     .number({ error: "Minimum pay must be a number." })
+    .gte(0, { error: "Minimum pay must be at least 0." })
     .optional(),
   maxPay: z
     .number({ error: "Maximum pay must be a number." })
+    .gte(0, { error: "Maximum pay must be at least 0." })
     .optional(),
   payFrequency: z.custom<PayFrequencyPrisma>(
     (value) =>

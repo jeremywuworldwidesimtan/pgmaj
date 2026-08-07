@@ -133,9 +133,9 @@ export type ResumeProjectProps = {
 
 export type ResumeSkillProps = {
   id: string;
-  name: string;
+  skill: string;
   proficiency: ProficiencyLevel;
-  yearsOfExperience?: number | null;
+  yearsOfExperience: number;
 };
 
 export type ResumeCertificationProps = {

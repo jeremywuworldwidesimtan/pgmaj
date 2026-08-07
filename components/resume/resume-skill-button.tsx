@@ -11,48 +11,44 @@ import {
   DialogClose,
   Dialog,
 } from "../ui/dialog";
-import { ResumeEducationState } from "@/app/lib/resume-definitions";
-import { submitResumeEducation } from "@/app/actions/resume";
-import { DegreeType } from "@/app/types";
-import ResumeEducationForm from "../forms/resume-education-form";
+import { ResumeSkillState } from "@/app/lib/resume-definitions";
+import { submitResumeSkill } from "@/app/actions/resume";
+import { ProficiencyLevel } from "@/app/types";
+import ResumeSkillForm from "../forms/resume-skill-form";
 
-export type ResumeEducationButtonProps = {
+export type ResumeSkillButtonProps = {
   mode?: "add" | "edit";
   formData?: {
     id: string;
-    institution: string;
-    degree: DegreeType;
-    fieldOfStudy: string;
-    gpa?: number | null;
-    startDate: Date;
-    endDate?: Date | null;
-    description?: string | null;
+    skill: string;
+    proficiency: ProficiencyLevel;
+    yearsOfExperience: number;
   };
 };
 
-const initialState: ResumeEducationState = undefined;
+const initialState: ResumeSkillState = undefined;
 
-export default function ResumeEducationButton({
+export default function ResumeSkillButton({
   mode = "add",
   formData,
-}: ResumeEducationButtonProps) {
+}: ResumeSkillButtonProps) {
   const [state, action, pending] = useActionState(
-    submitResumeEducation,
+    submitResumeSkill,
     initialState,
   );
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>{mode === "add" ? "Add" : "Edit"} Education</Button>
+        <Button>{mode === "add" ? "Add" : "Edit"} Skill</Button>
       </DialogTrigger>
-      <DialogContent className="top-0 translate-y-0 sm:top-[50%] sm:translate-y-[-50%] max-h-screen sm:max-h-[85vh] overflow-y-auto w-full sm:max-w-lg lg:min-w-3xl">
+      <DialogContent className="lg:min-w-3xl">
         <form action={action}>
           <DialogHeader>
             <DialogTitle>
-              {mode === "add" ? "Add" : "Edit"} Education
+              {mode === "add" ? "Add" : "Edit"} Skill
             </DialogTitle>
           </DialogHeader>
-          <ResumeEducationForm
+          <ResumeSkillForm
             state={state}
             data={mode === "edit" ? formData || state?.values : undefined}
           />
@@ -66,8 +62,8 @@ export default function ResumeEducationButton({
               {pending
                 ? "Saving..."
                 : mode === "add"
-                  ? "Add Resume Education"
-                  : "Edit Resume Education"}
+                  ? "Add Resume Skill"
+                  : "Edit Resume Skill"}
             </Button>
           </DialogFooter>
         </form>

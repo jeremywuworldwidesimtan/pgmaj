@@ -57,7 +57,7 @@ export default async function BasicDetails() {
                 <Button>Edit Profile Details</Button>
               </Link>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 text-sm">
               <p>Email: {user?.email}</p>
               {user?.userDetails?.altEmail && (
                 <p>Alternate Email: {user?.userDetails?.altEmail}</p>
@@ -143,7 +143,7 @@ export default async function BasicDetails() {
                 bio={resumeDetails?.resume?.details?.bio}
               />
             </div>
-            <div className="mt-2">
+            <div className="mt-2 text-sm">
               <p>Role: {resumeDetails?.resume?.details?.role || "N/A"}</p>
               <p>Resume Bio</p>
               <div className="mt-2 p-4 border rounded-md">

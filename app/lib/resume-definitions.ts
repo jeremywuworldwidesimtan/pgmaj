@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { JobTypePrisma, JobModePrisma, DegreeType } from "../types";
+import { JobTypePrisma, JobModePrisma, DegreeType, ProficiencyLevel } from "../types";
 
 export const ResumeDetailsSchema = z.object({
   id: z.string().nullable(),
@@ -26,7 +26,7 @@ export const ResumeExperienceSchema = z.object({
       ["Remote", "OnSite", "Hybrid"].includes(value),
     { error: "Please select a job mode." },
   ),
-  lastSalary: z.number({ error: "Last salary must be a number." }).nullable(),
+  lastSalary: z.number({ error: "Last salary must be a number." }).gte(0, { error: "Last salary must be at least 0." }).nullable(),
   startDate: z.date({ error: "Please enter a valid date." }),
   endDate: z.date().nullable(),
   description: z.string().trim().nullable(),
@@ -44,10 +44,22 @@ export const ResumeEducationSchema = z.object({
     { error: "Please select a degree." },
   ),
   fieldOfStudy: z.string().trim().min(1, { error: "Field of study is required." }),
-  gpa: z.number({ error: "GPA must be a number." }).nullable(),
+  gpa: z.number({ error: "GPA must be a number." }).gte(0, { error: "GPA must be at least 0." }).lte(4, { error: "GPA cannot be more than 4." }).nullable(),
   startDate: z.date({ error: "Please enter a valid date." }),
   endDate: z.date().nullable(),
   description: z.string().trim().nullable(),
+});
+
+export const ResumeSkillSchema = z.object({
+  id: z.string().nullable(),
+  skill: z.string().trim().min(1, { error: "Skill name is required." }),
+  proficiency: z.custom<ProficiencyLevel>(
+    (value) =>
+      typeof value === "string" &&
+      ["Beginner", "Intermediate", "Advanced", "Expert"].includes(value),
+    { error: "Please select a proficiency level." },
+  ),
+  yearsOfExperience: z.number({ error: "Years of experience must be a number." }).gte(0, { error: "Years of experience must be at least 0." }),
 });
 
 export type ResumeDetailsState =
@@ -118,6 +130,24 @@ export type ResumeEducationState =
         startDate: Date;
         endDate?: Date | null;
         description?: string | null;
+      };
+    }
+  | undefined;
+
+export type ResumeSkillState =
+  | {
+      errors?: {
+        id?: string;
+        skill?: string;
+        proficiency?: string;
+        yearsOfExperience?: string;
+      };
+      message?: string;
+      values?: {
+        id: string;
+        skill: string;
+        proficiency: ProficiencyLevel;
+        yearsOfExperience: number;
       };
     }
   | undefined;
