@@ -27,11 +27,11 @@ export const navMain = [
         url: "/dashboard/scheduler",
         icon: CalendarDays,
       },
-      {
-        title: "Interview Prep",
-        url: "/dashboard/prep",
-        icon: ClipboardCheck,
-      },
+      // {
+      //   title: "Interview Prep",
+      //   url: "/dashboard/prep",
+      //   icon: ClipboardCheck,
+      // },
     ],
   },
   {

@@ -56,5 +56,12 @@ export const changelog = [
         "Added interview scheduling functionality.",
         "Added time information for interview dates.",
     ],
+  },
+  {
+    version: "Beta 0.5.0",
+    date: "2026-08-03",
+    changes: [
+        "Rework interview date system and scheduling to accommodate multiple interview rounds.",
+    ],
   }
 ];

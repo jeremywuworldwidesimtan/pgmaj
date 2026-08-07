@@ -234,7 +234,7 @@ export default function ApplicationForm({
           <FieldDescription>
             Information about the important dates for the job application.
           </FieldDescription>
-          <FieldGroup className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DateField
               id="appliedDate"
               name="appliedDate"
@@ -258,19 +258,6 @@ export default function ApplicationForm({
                   : ""
               }
               placeholder="Select the latest updated date"
-            />
-            <DateField
-              id="latestInterviewScheduledDate"
-              name="latestInterviewScheduledDate"
-              label="Interview Date"
-              value={data?.latestInterviewScheduledDate || state?.values?.latestInterviewScheduledDate || ""}
-              error={
-                state?.errors?.latestInterviewScheduledDate
-                  ? state.errors.latestInterviewScheduledDate.join(", ")
-                  : ""
-              }
-              placeholder="Select the interview date"
-              timeField={true}
             />
           </FieldGroup>
         </FieldSet>
