@@ -10,11 +10,10 @@ export const roadmap = [
   {
     version: "medium-term",
     features: [
-      "Master resume builder.",
+      "Import and parse resume.",
       "Rich text/markdown support for job description and notes.",
       "Interview prep.",
       "Proper dashboard.",
-      "Scheduler.",
       "API integration with selected job platforms.",
     ],
   },

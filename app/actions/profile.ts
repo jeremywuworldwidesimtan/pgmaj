@@ -7,14 +7,18 @@ import {
 } from "../lib/definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { verifySession } from "../lib/dal";
 
 export async function updateProfile(
   state: ProfileEditFormState,
   formData: FormData,
 ): Promise<ProfileEditFormState> {
-  console.log("updateProfile called with formData:", Object.fromEntries(formData.entries()));
+  // Use session-based ID
+  const session = await verifySession();
+
   const validatedFields = ProfileEditFormSchema.safeParse({
-    id: formData.get("id"),
+    id: session.userId,
+    alt_email: formData.get("alt_email") || null,
     bio: formData.get("bio"),
     firstName: formData.get("firstName"),
     lastName: formData.get("lastName"),
@@ -39,7 +43,7 @@ export async function updateProfile(
   }
 
   const {
-    id,
+    alt_email,
     bio,
     firstName,
     lastName,
@@ -58,13 +62,14 @@ export async function updateProfile(
 
   // Update the user in the database
   await prisma.user.update({
-    where: { id },
+    where: { id: session.userId },
     data: {
       firstName,
       lastName,
       preferredCurrency,
       userDetails: {
         update: {
+          alt_email: alt_email,
           bio: bio,
           contact_number: contact_number,
           addr_line1: addr_line1,

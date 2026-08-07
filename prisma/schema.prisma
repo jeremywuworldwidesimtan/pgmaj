@@ -78,6 +78,7 @@ model User {
 model UserDetails {
   userId    String   @id @unique
   user      User     @relation(fields: [userId], references: [id])
+  altEmail  String?
   bio       String?
   contact_number String?
   addr_line1 String?

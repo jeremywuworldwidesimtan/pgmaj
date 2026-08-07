@@ -119,6 +119,7 @@ export const JobStatusUpdateSchema = z.object({
 
 export const ProfileEditFormSchema = z.object({
   id: z.string().trim().min(1, { error: "User ID is required." }),
+  alt_email: z.email({ error: "Please enter a valid email." }).trim().nullable(),
   bio: z.string().trim().nullable(),
   firstName: z.string().trim().nullable(),
   lastName: z.string().trim().nullable(),
@@ -307,6 +308,7 @@ export type ProfileEditFormState =
   | {
       errors?: {
         id?: string[];
+        alt_email?: string[];
         bio?: string[];
         firstName?: string[];
         lastName?: string[];
@@ -325,6 +327,7 @@ export type ProfileEditFormState =
       message?: string;
       values?: {
         id: string;
+        alt_email: string | null;
         bio: string | null;
         firstName: string | null;
         lastName: string | null;

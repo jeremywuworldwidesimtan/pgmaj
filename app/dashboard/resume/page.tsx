@@ -1,7 +1,16 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import BasicDetails from "./basic-details";
+import ResumeExperience from "./experience";
+import ResumeEducation from "./education";
+import ResumeProjects from "./projects";
+import ResumeCertifications from "./certifications";
+import ResumeSkills from "./skills";
+import { getFullUserInfo } from "@/app/actions/getUserInfo";
+import { verifySession } from "@/app/lib/dal";
 
-export default function ResumeDashboard() {
+export default async function ResumeDashboard() {
+  const session = await verifySession();
+  const user = await getFullUserInfo(session.userId);
   return (
     <>
       <div>
@@ -22,22 +31,22 @@ export default function ResumeDashboard() {
         </TabsList>
         <div className="px-2">
             <TabsContent value="basicDetails">
-              <BasicDetails />
+              <BasicDetails user={user} />
             </TabsContent>
             <TabsContent value="experience">
-              Make changes to your experience here.
+              <ResumeExperience />
             </TabsContent>
             <TabsContent value="education">
-              Make changes to your education here.
+              <ResumeEducation />
             </TabsContent>
             <TabsContent value="projects">
-              Make changes to your projects here.
+              <ResumeProjects />
             </TabsContent>
             <TabsContent value="skills">
-              Make changes to your skills here.
+              <ResumeSkills />
             </TabsContent>
             <TabsContent value="certifications">
-              Make changes to your certifications here.
+              <ResumeCertifications />
             </TabsContent>
         </div>
       </Tabs>

@@ -15,13 +15,13 @@ import TextareaField from "../fields/textarea-field";
 
 export type ProfileEditFormProps = {
   initialValues?: {
-    id: string;
     email: string;
     username: string;
     firstName: string | null;
     lastName: string | null;
     preferredCurrency: string | null;
     userDetails: {
+      alt_email: string | null;
       bio: string | null;
       state: string | null;
       contact_number: string | null;
@@ -45,7 +45,6 @@ export default function ProfileEditForm({
   const [state, action, pending] = useActionState(updateProfile, initialState);
   return (
     <form action={action} className="flex flex-col lg:w-3xl">
-      <input type="hidden" name="id" value={initialValues?.id ?? ""} />
       <FieldSet>
         <FieldGroup className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <InputField
@@ -134,6 +133,19 @@ export default function ProfileEditForm({
                 : ""
             }
             description="Your contact number."
+          />
+          <InputField
+            id="alt_email"
+            name="alt_email"
+            label="Alternate Email"
+            type="email"
+            value={initialValues?.userDetails?.alt_email ?? ""}
+            error={
+              state?.errors?.alt_email
+                ? state.errors.alt_email.join(", ")
+                : ""
+            }
+            description="Your alternate email address (if you prefer to use one other than the account email)."
           />
         </FieldGroup>
         <FieldGroup className="grid grid-cols-1 gap-4 md:grid-cols-2">

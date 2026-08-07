@@ -7,6 +7,7 @@ export default function InterviewPrep() {
           Here you can prepare for your upcoming interviews by reviewing common
           questions, practicing your answers, and accessing helpful resources.
         </p>
+        <h2 className="text-xl font-semibold mt-4">Under Construction</h2>
       </div>
     </>
   );

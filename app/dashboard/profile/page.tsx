@@ -37,6 +37,9 @@ export default async function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
           <div className="flex flex-col gap-2">
             <p>Email: {user?.email}</p>
+            {user?.userDetails?.alt_email && (
+              <p>Alternate Email: {user?.userDetails?.alt_email}</p>
+            )}
             <p>Preferred Currency: {user?.preferredCurrency || "$"}</p>
             {user?.userDetails?.contact_number && (
               <p>
