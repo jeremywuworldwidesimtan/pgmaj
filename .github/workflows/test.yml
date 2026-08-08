@@ -23,20 +23,15 @@ jobs:
           node-cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
-
-      - name: Generate Prisma Client
-        run: npx prisma generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npm ci     
 
       - name: Build Project for Production
         env:
           NODE_ENV: production
-        run: npm run build-gh
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npm run build
 
-      # Step 2: Calculate stripped logs and save to a file
       - name: Count Deleted Console Logs
         id: count_logs
         run: |
@@ -51,14 +46,12 @@ jobs:
           echo "" >> pr_summary.md
           echo "_Verified by GitHub Actions ProdCleaner by Fortnite Battle Pass._" >> pr_summary.md
 
-      # Step 3: Post or update the comment on the Pull Request
       - name: Post PR Comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: console-log-cleanup-report
           path: pr_summary.md
 
-      # Step 4: Post to workflow summary dashboard
       - name: Write Step Summary
         run: cat pr_summary.md >> $GITHUB_STEP_SUMMARY
 
