@@ -16,7 +16,7 @@ const sampleSchedule = [
     id: "1",
     fullDate: new Date(2024, 5, 1),
     day: "1",
-    event: { time: "20:00", title: "Test1", link: "/dashboard/application/1" },
+    event: { time: "20:00", title: "Test1", link: "/dashboard/application/1", location: "Location 1" },
   },
   {
     id: "2",
@@ -26,6 +26,7 @@ const sampleSchedule = [
       time: "15:00",
       title: "cherissa",
       link: "/dashboard/application/2",
+      location: "Location 2",
     },
   },
 ];
@@ -38,6 +39,7 @@ export type CalendarSchedule = {
     time: string;
     title: string;
     link: string;
+    location?: string;
   };
 };
 
@@ -164,12 +166,12 @@ export default function CalendarGrid({
             {scheduleState
               .filter((s) => parseInt(s.day) === index + 1)
               .map((s, i) => (
-                <div key={i} className="text-sm">
+                <div key={i} className="text-xs">
                   <Link
                     href={s.event.link}
                     className={cn(s.fullDate < new Date() ? "text-muted-foreground line-through" : "text-blue-500 hover:underline")}
                   >
-                    {s.event.time} - {s.event.title}
+                    {s.event.time} - {s.event.title} {s.event.location && `at ${s.event.location}`}
                   </Link>
                 </div>
               ))}

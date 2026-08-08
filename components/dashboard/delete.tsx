@@ -17,6 +17,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function DeleteButton({ jobId }: { jobId: string }) {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const mobile = useIsMobile();
 
   return (
@@ -34,9 +35,16 @@ export default function DeleteButton({ jobId }: { jobId: string }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => deletejobApplication(jobId)}>
+          <AlertDialogAction onClick={async () => {
+            try {
+              await deletejobApplication(jobId);
+            } catch (error) {
+              setError("An error occurred while deleting the application.");
+            }
+          }}>
             Continue
           </AlertDialogAction>
+          {error && <p className="text-destructive mt-2">{error}</p>}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

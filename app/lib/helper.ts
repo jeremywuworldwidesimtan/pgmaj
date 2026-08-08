@@ -1,4 +1,5 @@
 import { StatusPrisma } from "../types";
+import dayjs from "dayjs";
 
 export function formatType(type: string): string {
   switch (type) {
@@ -8,6 +9,25 @@ export function formatType(type: string): string {
       return "Part-Time";
     case "OnSite":
       return "On-Site";
+    default:
+      return type;
+  }
+}
+
+export function formatEdu(type: string): string {
+  switch (type) {
+    case "HighSchool":
+      return "High School";
+    case "Diploma":
+      return "Diploma";
+    case "Associate":
+      return "Associate Degree";
+    case "Bachelor":
+      return "Bachelor's Degree";
+    case "Master":
+      return "Master's Degree";
+    case "Doctorate":
+      return "Doctorate/PhD";
     default:
       return type;
   }
@@ -163,4 +183,16 @@ export function shortenWebURL(url: string): string {
   } catch (error) {
     return url;
   }
+}
+
+export function getDateDifference(startDate: Date, endDate: Date): string {
+  // Use dayjs to calculate the difference in years and months (inclusive of final month)
+  const start = dayjs(startDate);
+  const end = dayjs(endDate);
+
+  const totalYears = end.diff(start, 'year');
+  // Subtraction step gets the remaining months after removing full years
+  const remainingMonths = end.subtract(totalYears, 'year').diff(start, 'month');
+
+  return `${totalYears} yr, ${remainingMonths + 1} mos`;
 }

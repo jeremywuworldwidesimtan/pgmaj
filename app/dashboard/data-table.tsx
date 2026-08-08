@@ -251,11 +251,6 @@ export function DataTable<TData, TValue>({
             {table.getCoreRowModel().rows.length} results.
           </p>
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">
-            Hover over the colored status to view date details.
-          </p>
-        </div>
         <div className="flex items-center justify-between space-x-4 py-2">
           <p>
             Page {table.getState().pagination.pageIndex + 1} of{" "}

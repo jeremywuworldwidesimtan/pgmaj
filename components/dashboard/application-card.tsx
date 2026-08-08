@@ -1,6 +1,6 @@
 import { JobApplicationPrisma } from "@/app/types";
 import { Card } from "../ui/card";
-import { colorStatus, formatType } from "@/app/lib/helper";
+import { colorStatus, formatType, parseDate } from "@/app/lib/helper";
 
 export default function ApplicationCard({
   application,
@@ -26,6 +26,11 @@ export default function ApplicationCard({
             ? `${application.preferredCurrency ?? "$"}${application.minPay.toLocaleString()}`
             : "N/A"} {application.payFrequency}
       </p>
+      {application.interviews && application.interviews.length > 0 && (
+        <p className="text-sm">
+          Next interview {parseDate(application.interviews[0].interviewDate || new Date(), "british", "long", "dot")} at {application.interviews[0].interviewLocation} {application.interviews[0].interviewerName && `(with ${application.interviews[0].interviewerName})`}
+        </p>
+      )}
     </Card>
   );
 }

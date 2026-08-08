@@ -11,16 +11,18 @@ import {
 } from "../ui/field";
 import { ProfileEditFormState } from "@/app/lib/definitions";
 import { updateProfile } from "@/app/actions/profile";
+import TextareaField from "../fields/textarea-field";
 
 export type ProfileEditFormProps = {
   initialValues?: {
-    id: string;
     email: string;
     username: string;
     firstName: string | null;
     lastName: string | null;
     preferredCurrency: string | null;
     userDetails: {
+      altEmail: string | null;
+      bio: string | null;
       state: string | null;
       contact_number: string | null;
       addr_line1: string | null;
@@ -28,6 +30,9 @@ export type ProfileEditFormProps = {
       city: string | null;
       country: string | null;
       zip_code: string | null;
+      personal_website_url: string | null;
+      linkedin_url: string | null;
+      portfolio_url: string | null;
     } | null;
   } | null;
 };
@@ -40,7 +45,6 @@ export default function ProfileEditForm({
   const [state, action, pending] = useActionState(updateProfile, initialState);
   return (
     <form action={action} className="flex flex-col lg:w-3xl">
-      <input type="hidden" name="id" value={initialValues?.id ?? ""} />
       <FieldSet>
         <FieldGroup className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <InputField
@@ -58,7 +62,7 @@ export default function ProfileEditForm({
             label="Email"
             type="email"
             value={initialValues?.email ?? ""}
-            description="Your email address. This cannot be changed."
+            description="Your account email address. This cannot be changed."
             disabled
           />
           <InputField
@@ -98,6 +102,16 @@ export default function ProfileEditForm({
               }
               description="Your preferred currency."
             />
+            <TextareaField
+              id="bio"
+              name="bio"
+              label="Bio"
+              value={initialValues?.userDetails?.bio ?? ""}
+              error={
+                state?.errors?.bio ? state.errors.bio.join(", ") : ""
+              }
+              description="A short bio about yourself."
+            />
         </FieldGroup>
       </FieldSet>
       <FieldSet className="mt-6">
@@ -119,6 +133,19 @@ export default function ProfileEditForm({
                 : ""
             }
             description="Your contact number."
+          />
+          <InputField
+            id="altEmail"
+            name="altEmail"
+            label="Alternate Email"
+            type="email"
+            value={initialValues?.userDetails?.altEmail ?? ""}
+            error={
+              state?.errors?.altEmail
+                ? state.errors.altEmail.join(", ")
+                : ""
+            }
+            description="Your alternate email address (if you prefer to use one other than the account email)."
           />
         </FieldGroup>
         <FieldGroup className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -195,6 +222,54 @@ export default function ProfileEditForm({
                 : ""
             }
             description="Your country."
+          />
+        </FieldGroup>
+      </FieldSet>
+      <FieldSet className="mt-6">
+        <FieldLegend>Website & Links Information</FieldLegend>
+        <FieldDescription>
+          Personal website and social media links for personal reference. This
+          information is not shared publicly.
+        </FieldDescription>
+        <FieldGroup>
+          <InputField
+            id="personal_url"
+            name="personal_url"
+            label="Personal Website"
+            type="url"
+            value={initialValues?.userDetails?.personal_website_url ?? ""}
+            error={
+              state?.errors?.personal_url
+                ? state.errors.personal_url.join(", ")
+                : ""
+            }
+            description="Your personal website (optional)."
+          />
+          <InputField
+            id="linkedin_url"
+            name="linkedin_url"
+            label="LinkedIn Profile"
+            type="url"
+            value={initialValues?.userDetails?.linkedin_url ?? ""}
+            error={
+              state?.errors?.linkedin_url
+                ? state.errors.linkedin_url.join(", ")
+                : ""
+            }
+            description="Your LinkedIn profile (optional)."
+          />
+          <InputField
+            id="portfolio_url"
+            name="portfolio_url"
+            label="Portfolio"
+            type="url"
+            value={initialValues?.userDetails?.portfolio_url ?? ""}
+            error={
+              state?.errors?.portfolio_url
+                ? state.errors.portfolio_url.join(", ")
+                : ""
+            }
+            description="Your portfolio website (optional)."
           />
         </FieldGroup>
       </FieldSet>

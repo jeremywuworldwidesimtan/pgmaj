@@ -1,0 +1,796 @@
+"use server";
+
+import prisma from "@/lib/prisma";
+import { verifySession } from "../lib/dal";
+import {
+  ResumeCertificationSchema,
+  ResumeCertificationState,
+  ResumeDetailsSchema,
+  ResumeDetailsState,
+  ResumeEducationSchema,
+  ResumeEducationState,
+  ResumeExperienceSchema,
+  ResumeExperienceState,
+  ResumeProjectSchema,
+  ResumeProjectState,
+  ResumeSkillSchema,
+  ResumeSkillState,
+} from "../lib/resume-definitions";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { JobTypePrisma, JobModePrisma, DegreeType, ProficiencyLevel } from "../types";
+
+// #region Resume Actions
+export async function updateResumeDetails(
+  _state: ResumeDetailsState,
+  formData: FormData,
+): Promise<ResumeDetailsState> {
+  // get user id from session
+  const session = await verifySession();
+
+  const validatedFields = ResumeDetailsSchema.safeParse({
+    role: formData.get("role"),
+    bio: formData.get("bio"),
+  });
+
+  if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten().fieldErrors;
+    return {
+      errors: {
+        role: errors.role?.[0],
+        bio: errors.bio?.[0],
+      },
+    };
+  }
+
+  const { role, bio } = validatedFields.data;
+
+  // Prisma's upsert nested inside an update will create the details if missing or update them if they exist
+  await prisma.resume.upsert({
+    where: { userId: session.userId },
+    update: {
+      details: {
+        upsert: {
+          create: {
+            role,
+            bio,
+          },
+          update: {
+            role,
+            bio,
+          },
+        },
+      },
+    },
+    create: {
+      userId: session.userId,
+      details: {
+        create: {
+          role,
+          bio,
+        },
+      },
+    },
+  });
+
+  revalidatePath("/dashboard/resume");
+  redirect("/dashboard/resume");
+}
+// #endregion
+
+// #region Experience Actions
+export async function submitResumeExperience(
+  _state: ResumeExperienceState,
+  formData: FormData,
+): Promise<ResumeExperienceState> {
+  // get user id from session
+  const session = await verifySession();
+
+  const validatedFields = ResumeExperienceSchema.safeParse({
+    id: formData.get("id") || null,
+    company: formData.get("company"),
+    position: formData.get("position"),
+    location: formData.get("location"),
+    jobType: formData.get("jobType"),
+    jobMode: formData.get("jobMode"),
+    lastSalary: Number(formData.get("lastSalary")),
+    startDate: formData.get("startDate")
+      ? new Date(formData.get("startDate") as string)
+      : null,
+    endDate: formData.get("endDate")
+      ? new Date(formData.get("endDate") as string)
+      : null,
+    description: formData.get("description"),
+  });
+
+  if (validatedFields?.data?.id) {
+    // Validate that the user owns the resume before updating
+    const experience = await prisma.resumeExperience.findUnique({
+      where: {
+        id: validatedFields.data.id,
+      },
+      select: {
+        resume: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    const session = await verifySession();
+    const userId = session.userId;
+    if (!experience || experience.resume.userId !== userId) {
+      console.log("Resume not found or user does not own the resume.");
+      return {
+        message: "You do not have permission to update this resume.",
+      };
+    }
+  }
+
+  if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten().fieldErrors;
+    return {
+      errors: {
+        id: errors.id?.[0],
+        company: errors.company?.[0],
+        position: errors.position?.[0],
+        location: errors.location?.[0],
+        jobType: errors.jobType?.[0],
+        jobMode: errors.jobMode?.[0],
+        lastSalary: errors.lastSalary?.[0],
+        startDate: errors.startDate?.[0],
+        endDate: errors.endDate?.[0],
+        description: errors.description?.[0],
+      },
+      values: {
+        id: formData.get("id") as string,
+        company: formData.get("company") as string,
+        position: formData.get("position") as string,
+        location: formData.get("location") as string,
+        jobType: formData.get("jobType") as JobTypePrisma,
+        jobMode: formData.get("jobMode") as JobModePrisma,
+        lastSalary: Number(formData.get("lastSalary")),
+        startDate: new Date(formData.get("startDate") as string),
+        endDate: formData.get("endDate")
+          ? new Date(formData.get("endDate") as string)
+          : null,
+        description: formData.get("description") as string,
+      },
+    };
+  }
+
+  const {
+    id,
+    company,
+    position,
+    location,
+    jobType,
+    jobMode,
+    lastSalary,
+    startDate,
+    endDate,
+    description,
+  } = validatedFields.data;
+
+  // Prisma's upsert nested inside an update will create the experience if missing or update them if they exist
+  await prisma.resume.update({
+    where: { userId: session.userId },
+    data: {
+      experiences: {
+        upsert: {
+          where: { id: id || "" },
+          create: {
+            company,
+            position,
+            location,
+            jobType,
+            jobMode,
+            lastSalary,
+            startDate,
+            endDate,
+            description,
+          },
+          update: {
+            company,
+            position,
+            location,
+            jobType,
+            jobMode,
+            lastSalary,
+            startDate,
+            endDate,
+            description,
+          },
+        },
+      },
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=experience");
+  redirect("/dashboard/resume?tab=experience");
+}
+
+export const deleteExperience = async (experienceId: string) => {
+  // Validate that the user owns the resume before updating
+  const experience = await prisma.resumeExperience.findUnique({
+    where: {
+      id: experienceId,
+    },
+    select: {
+      resume: {
+        select: { userId: true },
+      },
+    },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!experience || experience.resume.userId !== userId) {
+    console.log("Resume not found or user does not own the resume.");
+    return {
+      message: "You do not have permission to delete this experience.",
+    };
+  }
+  await prisma.resumeExperience.update({
+    where: { id: experienceId },
+    data: {
+      softDeleted: true,
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=experience");
+  redirect("/dashboard/resume?tab=experience");
+};
+// #endregion
+
+// #region Education Actions
+export async function submitResumeEducation(
+  _state: ResumeEducationState,
+  formData: FormData,
+): Promise<ResumeEducationState> {
+  // get user id from session
+  const session = await verifySession();
+
+  const validatedFields = ResumeEducationSchema.safeParse({
+    id: formData.get("id") || null,
+    institution: formData.get("institution"),
+    degree: formData.get("degree") as DegreeType,
+    fieldOfStudy: formData.get("fieldOfStudy"),
+    gpa: formData.get("gpa") ? Number(formData.get("gpa")) : null,
+    startDate: new Date(formData.get("startDate") as string),
+    endDate: formData.get("endDate")
+      ? new Date(formData.get("endDate") as string)
+      : null,
+    description: formData.get("description"),
+  });
+
+  if (validatedFields?.data?.id) {
+    // Validate that the user owns the resume before updating
+    const education = await prisma.resumeEducation.findUnique({
+      where: {
+        id: validatedFields.data.id,
+      },
+      select: {
+        resume: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    const session = await verifySession();
+    const userId = session.userId;
+    if (!education || education.resume.userId !== userId) {
+      console.log("Resume not found or user does not own the resume.");
+      return {
+        message: "You do not have permission to update this resume.",
+      };
+    }
+  }
+
+  if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten().fieldErrors;
+    return {
+      errors: {
+        id: errors.id?.[0],
+        institution: errors.institution?.[0],
+        degree: errors.degree?.[0],
+        fieldOfStudy: errors.fieldOfStudy?.[0],
+        startDate: errors.startDate?.[0],
+        endDate: errors.endDate?.[0],
+        description: errors.description?.[0],
+      },
+      values: {
+        id: formData.get("id") as string,
+        institution: formData.get("institution") as string,
+        degree: formData.get("degree") as DegreeType,
+        fieldOfStudy: formData.get("fieldOfStudy") as string,
+        gpa: formData.get("gpa") ? Number(formData.get("gpa")) : null,
+        startDate: new Date(formData.get("startDate") as string),
+        endDate: formData.get("endDate")
+          ? new Date(formData.get("endDate") as string)
+          : null,
+        description: formData.get("description") as string,
+      },
+    };
+  }
+
+  const {
+    id,
+    institution,
+    degree,
+    fieldOfStudy,
+    gpa,
+    startDate,
+    endDate,
+    description,
+  } = validatedFields.data;
+
+  // Prisma's upsert nested inside an update will create the experience if missing or update them if they exist
+  await prisma.resume.update({
+    where: { userId: session.userId },
+    data: {
+      educations: {
+        upsert: {
+          where: { id: id || "" },
+          create: {
+            institution,
+            degree,
+            fieldOfStudy,
+            gpa,
+            startDate,
+            endDate,
+            description,
+          },
+          update: {
+            institution,
+            degree,
+            fieldOfStudy,
+            gpa,
+            startDate,
+            endDate,
+            description,
+          },
+        },
+      },
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=education");
+  redirect("/dashboard/resume?tab=education");
+}
+
+export const deleteEducation = async (educationId: string) => {
+  // Validate that the user owns the resume before updating
+  const education = await prisma.resumeEducation.findUnique({
+    where: {
+      id: educationId,
+    },
+    select: {
+      resume: {
+        select: { userId: true },
+      },
+    },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!education || education.resume.userId !== userId) {
+    console.log("Resume not found or user does not own the resume.");
+    return {
+      message: "You do not have permission to delete this education.",
+    };
+  }
+  await prisma.resumeEducation.update({
+    where: { id: educationId },
+    data: {
+      softDeleted: true,
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=education");
+  redirect("/dashboard/resume?tab=education");
+};
+// #endregion
+
+// #region Projects Actions
+export async function submitResumeProject(
+  _state: ResumeProjectState,
+  formData: FormData,
+): Promise<ResumeProjectState> {
+  // get user id from session
+  const session = await verifySession();
+
+  const validatedFields = ResumeProjectSchema.safeParse({
+    id: formData.get("id") || null,
+    name: formData.get("name"),
+    link: formData.get("link") || null,
+    startDate: new Date(formData.get("startDate") as string),
+    endDate: formData.get("endDate")
+      ? new Date(formData.get("endDate") as string)
+      : null,
+    description: formData.get("description") || null,
+  });
+
+  if (validatedFields?.data?.id) {
+    // Validate that the user owns the resume before updating
+    const project = await prisma.resumeProjects.findUnique({
+      where: {
+        id: validatedFields.data.id,
+      },
+      select: {
+        resume: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    const session = await verifySession();
+    const userId = session.userId;
+    if (!project || project.resume.userId !== userId) {
+      console.log("Resume not found or user does not own the resume.");
+      return {
+        message: "You do not have permission to update this resume.",
+      };
+    }
+  }
+
+  if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten().fieldErrors;
+    return {
+      errors: {
+        id: errors.id?.[0],
+        name: errors.name?.[0],
+        link: errors.link?.[0],
+        startDate: errors.startDate?.[0],
+        endDate: errors.endDate?.[0],
+        description: errors.description?.[0],
+      },
+      values: {
+        id: formData.get("id") as string,
+        name: formData.get("name") as string,
+        link: formData.get("link") as string || null,
+        startDate: new Date(formData.get("startDate") as string),
+        endDate: formData.get("endDate")
+          ? new Date(formData.get("endDate") as string)
+          : null,
+        description: formData.get("description") as string || null,
+      },
+    };
+  }
+
+  const {
+    id,
+    name,
+    link,
+    startDate,
+    endDate,
+    description,
+  } = validatedFields.data;
+
+  // Prisma's upsert nested inside an update will create the experience if missing or update them if they exist
+  await prisma.resume.update({
+    where: { userId: session.userId },
+    data: {
+      projects: {
+        upsert: {
+          where: { id: id || "" },
+          create: {
+            name,
+            link,
+            startDate,
+            endDate,
+            description,
+          },
+          update: {
+            name,
+            link,
+            startDate,
+            endDate,
+            description,
+          },
+        },
+      },
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=projects");
+  redirect("/dashboard/resume?tab=projects");
+}
+
+export const deleteProject = async (projectId: string) => {
+  // Validate that the user owns the resume before updating
+  const project = await prisma.resumeProjects.findUnique({
+    where: {
+      id: projectId,
+    },
+    select: {
+      resume: {
+        select: { userId: true },
+      },
+    },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!project || project.resume.userId !== userId) {
+    console.log("Resume not found or user does not own the resume.");
+    return {
+      message: "You do not have permission to delete this project.",
+    };
+  }
+  await prisma.resumeProjects.update({
+    where: { id: projectId },
+    data: {
+      softDeleted: true,
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=projects");
+  redirect("/dashboard/resume?tab=projects");
+};
+// #endregion
+
+// #region Skills Actions
+export async function submitResumeSkill(
+  _state: ResumeSkillState,
+  formData: FormData,
+): Promise<ResumeSkillState> {
+  // get user id from session
+  const session = await verifySession();
+
+  const validatedFields = ResumeSkillSchema.safeParse({
+    id: formData.get("id") || null,
+    skill: formData.get("skill"),
+    proficiency: formData.get("proficiency") as ProficiencyLevel,
+    yearsOfExperience: Number(formData.get("yearsOfExperience"))
+  });
+
+  if (validatedFields?.data?.id) {
+    // Validate that the user owns the resume before updating
+    const skill = await prisma.resumeSkills.findUnique({
+      where: {
+        id: validatedFields.data.id,
+      },
+      select: {
+        resume: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    const session = await verifySession();
+    const userId = session.userId;
+    if (!skill || skill.resume.userId !== userId) {
+      console.log("Resume not found or user does not own the resume.");
+      return {
+        message: "You do not have permission to update this resume.",
+      };
+    }
+  }
+
+  if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten().fieldErrors;
+    return {
+      errors: {
+        id: errors.id?.[0],
+        skill: errors.skill?.[0],
+        proficiency: errors.proficiency?.[0],
+        yearsOfExperience: errors.yearsOfExperience?.[0],
+      },
+      values: {
+        id: formData.get("id") as string,
+        skill: formData.get("name") as string,
+        proficiency: formData.get("proficiency") as ProficiencyLevel,
+        yearsOfExperience: Number(formData.get("yearsOfExperience")),
+      },
+    };
+  }
+
+  const {
+    id,
+    skill,
+    proficiency,
+    yearsOfExperience,
+  } = validatedFields.data;
+
+  // Prisma's upsert nested inside an update will create the experience if missing or update them if they exist
+  await prisma.resume.update({
+    where: { userId: session.userId },
+    data: {
+      skills: {
+        upsert: {
+          where: { id: id || "" },
+          create: {
+            skill,
+            proficiency: proficiency as ProficiencyLevel,
+            yearsOfExperience,
+          },
+          update: {
+            skill,
+            proficiency: proficiency as ProficiencyLevel,
+            yearsOfExperience,
+          },
+        },
+      },
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=skills");
+  redirect("/dashboard/resume?tab=skills");
+}
+
+export const deleteSkill = async (skillId: string) => {
+  // Validate that the user owns the resume before updating
+  const skill = await prisma.resumeSkills.findUnique({
+    where: {
+      id: skillId,
+    },
+    select: {
+      resume: {
+        select: { userId: true },
+      },
+    },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!skill || skill.resume.userId !== userId) {
+    console.log("Resume not found or user does not own the resume.");
+    return {
+      message: "You do not have permission to delete this skill.",
+    };
+  }
+  await prisma.resumeSkills.update({
+    where: { id: skillId },
+    data: {
+      softDeleted: true,
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=skills");
+  redirect("/dashboard/resume?tab=skills");
+};
+// #endregion
+
+// #region Certification Actions
+export async function submitResumeCertification(
+  _state: ResumeCertificationState,
+  formData: FormData,
+): Promise<ResumeCertificationState> {
+  // get user id from session
+  const session = await verifySession();
+
+  const validatedFields = ResumeCertificationSchema.safeParse({
+    id: formData.get("id") || null,
+    name: formData.get("name"),
+    issuingOrganization: formData.get("issuingOrganization"),
+    issueDate: new Date(formData.get("issueDate") as string),
+    expirationDate: formData.get("expirationDate")
+      ? new Date(formData.get("expirationDate") as string)
+      : null,
+    credentialId: formData.get("credentialId") || null,
+    credentialUrl: formData.get("credentialUrl") || null,
+    });
+
+  if (validatedFields?.data?.id) {
+    // Validate that the user owns the resume before updating
+    const certification = await prisma.resumeCertifications.findUnique({
+      where: {
+        id: validatedFields.data.id,
+      },
+      select: {
+        resume: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    const session = await verifySession();
+    const userId = session.userId;
+    if (!certification || certification.resume.userId !== userId) {
+      console.log("Resume not found or user does not own the resume.");
+      return {
+        message: "You do not have permission to update this resume.",
+      };
+    }
+  }
+
+  if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten().fieldErrors;
+    return {
+      errors: {
+        id: errors.id?.[0],
+        name: errors.name?.[0],
+        issuingOrganization: errors.issuingOrganization?.[0],
+        issueDate: errors.issueDate?.[0],
+        expirationDate: errors.expirationDate?.[0],
+        credentialId: errors.credentialId?.[0],
+        credentialUrl: errors.credentialUrl?.[0],
+      },
+      values: {
+        id: formData.get("id") as string,
+        name: formData.get("name") as string,
+        issuingOrganization: formData.get("issuingOrganization") as string,
+        issueDate: new Date(formData.get("issueDate") as string),
+        expirationDate: formData.get("expirationDate")
+          ? new Date(formData.get("expirationDate") as string)
+          : null,
+        credentialId: formData.get("credentialId") as string || null,
+        credentialUrl: formData.get("credentialUrl") as string || null,
+      },
+    };
+  }
+
+  const {
+    id,
+    name,
+    issuingOrganization,
+    issueDate,
+    expirationDate,
+    credentialId,
+    credentialUrl,
+  } = validatedFields.data;
+
+  // Prisma's upsert nested inside an update will create the experience if missing or update them if they exist
+  await prisma.resume.update({
+    where: { userId: session.userId },
+    data: {
+      certifications: {
+        upsert: {
+          where: { id: id || "" },
+          create: {
+            name,
+            issuingOrganization,
+            issueDate,
+            expirationDate,
+            credentialId,
+            credentialUrl,
+          },
+          update: {
+            name,
+            issuingOrganization,
+            issueDate,
+            expirationDate,
+            credentialId,
+            credentialUrl,
+          },
+        },
+      },
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=certifications");
+  redirect("/dashboard/resume?tab=certifications");
+}
+
+export const deleteCertification = async (certificationId: string) => {
+  // Validate that the user owns the resume before updating
+  const certification = await prisma.resumeCertifications.findUnique({
+    where: {
+      id: certificationId,
+    },
+    select: {
+      resume: {
+        select: { userId: true },
+      },
+    },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!certification || certification.resume.userId !== userId) {
+    console.log("Resume not found or user does not own the resume.");
+    return {
+      message: "You do not have permission to delete this certification.",
+    };
+  }
+  await prisma.resumeCertifications.update({
+    where: { id: certificationId },
+    data: {
+      softDeleted: true,
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=certifications");
+  redirect("/dashboard/resume?tab=certifications");
+};
+// #endregion

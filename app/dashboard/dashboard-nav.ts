@@ -5,6 +5,7 @@ import {
   Edit,
   History,
   Info,
+  FileText,
 } from "lucide-react";
 
 export const navMain = [
@@ -28,29 +29,24 @@ export const navMain = [
       },
       // {
       //   title: "Interview Prep",
-      //   url: "/dashboard/interview/prep",
+      //   url: "/dashboard/prep",
       //   icon: ClipboardCheck,
       // },
     ],
   },
-  // {
-  //   title: "Resume",
-  //   items: [
-  //     {
-  //       title: "Experience",
-  //       url: "/dashboard/resume/experience",
-  //       icon: History,
-  //     },
-  //     {
-  //       title: "Resume Information",
-  //       url: "/dashboard/resume/information",
-  //       icon: Info,
-  //     },
-  //     {
-  //       title: "Resume Designer",
-  //       url: "/dashboard/resume/designer",
-  //       icon: Edit,
-  //     },
-  //   ],
-  // }
+  {
+    title: "Resume",
+    items: [
+      {
+        title: "Resume Dashboard",
+        url: "/dashboard/resume",
+        icon: FileText,
+      },
+      // {
+      //   title: "Resume Designer",
+      //   url: "/dashboard/resume/designer",
+      //   icon: Edit,
+      // },
+    ],
+  }
 ];

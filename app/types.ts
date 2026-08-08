@@ -47,25 +47,103 @@ export type JobTypePrisma =
 export type JobModePrisma = "Remote" | "OnSite" | "Hybrid";
 export type PayFrequencyPrisma = "Hourly" | "Weekly" | "Monthly" | "Yearly";
 
+export type DegreeType =
+  | "HighSchool"
+  | "Diploma"
+  | "Associate"
+  | "Bachelor"
+  | "Master"
+  | "Doctorate";
+
+export type ProficiencyLevel =
+  | "Beginner"
+  | "Intermediate"
+  | "Advanced"
+  | "Expert";
+
 export type JobApplicationPrisma = {
- id: string;
- company: string;
- position: string;
- location: string;
- jobType: JobTypePrisma;
- jobMode: JobModePrisma;
- minPay: number | null;
- maxPay: number | null;
- payFrequency: PayFrequencyPrisma | null;
- status: StatusPrisma;
- appliedDate: Date | null;
- latestUpdate: Date | null;
- latestInterviewScheduledDate: Date | null;
- referenceLink: string | null;
- notes: string | null;
- userId: string;
- preferredCurrency: string | null;
- createdAt: Date;
- updatedAt: Date;
- softDeleted: boolean;
-}
+  id: string;
+  company: string;
+  position: string;
+  location: string;
+  jobType: JobTypePrisma;
+  jobMode: JobModePrisma;
+  minPay: number | null;
+  maxPay: number | null;
+  payFrequency: PayFrequencyPrisma | null;
+  status: StatusPrisma;
+  appliedDate: Date | null;
+  latestUpdate: Date | null;
+  latestInterviewScheduledDate: Date | null;
+  referenceLink: string | null;
+  notes: string | null;
+  userId: string;
+  preferredCurrency: string | null;
+  interviews?: Partial<Interview>[] | null;
+  createdAt: Date;
+  updatedAt: Date;
+  softDeleted: boolean;
+};
+
+export type Interview = {
+  id: string;
+  jobId: string;
+  interviewDate: Date;
+  interviewLocation: string;
+  interviewerName?: string;
+  interviewerContact?: string;
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  softDeleted: boolean;
+};
+
+export type ResumeExperienceProps = {
+  id: string;
+  company: string;
+  position: string;
+  location: string;
+  jobType: JobTypePrisma;
+  jobMode: JobModePrisma;
+  lastSalary?: number | null;
+  startDate: Date;
+  endDate?: Date | null;
+  description?: string | null;
+};
+
+export type ResumeEducationProps = {
+  id: string;
+  institution: string;
+  degree: DegreeType;
+  fieldOfStudy: string;
+  gpa?: number | null;
+  startDate: Date;
+  endDate?: Date | null;
+  description?: string | null;
+};
+
+export type ResumeProjectProps = {
+  id: string;
+  name: string;
+  description?: string | null;
+  link?: string | null;
+  startDate: Date;
+  endDate?: Date | null;
+};
+
+export type ResumeSkillProps = {
+  id: string;
+  skill: string;
+  proficiency: ProficiencyLevel;
+  yearsOfExperience: number;
+};
+
+export type ResumeCertificationProps = {
+  id: string;
+  name: string;
+  issuingOrganization: string;
+  issueDate: Date;
+  expirationDate?: Date | null;
+  credentialId?: string | null;
+  credentialUrl?: string | null;
+};

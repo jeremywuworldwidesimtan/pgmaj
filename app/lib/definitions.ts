@@ -5,7 +5,6 @@ import {
   PayFrequencyPrisma,
   StatusPrisma,
 } from "../types";
-import { CalendarSchedule } from "@/components/scheduler/calendar-grid";
 
 export const SignupFormSchema = z.object({
   username: z
@@ -69,9 +68,11 @@ export const ApplicationFormSchema = z.object({
   latestInterviewScheduledDate: z.date().nullable(),
   minPay: z
     .number({ error: "Minimum pay must be a number." })
+    .gte(0, { error: "Minimum pay must be at least 0." })
     .optional(),
   maxPay: z
     .number({ error: "Maximum pay must be a number." })
+    .gte(0, { error: "Maximum pay must be at least 0." })
     .optional(),
   payFrequency: z.custom<PayFrequencyPrisma>(
     (value) =>
@@ -85,6 +86,9 @@ export const ApplicationFormSchema = z.object({
     .trim()
     .nullable(),
   notes: z.string().trim().nullable(),
+}).refine((data) => !data.latestUpdate || data.latestUpdate >= data.appliedDate, {
+  message: "Latest update must be after the applied date",
+  path: ["latestUpdate"], // This attaches the error directly to the latestUpdate field
 });
 
 export const JobDescriptionComponentSchema = z.object({
@@ -110,10 +114,17 @@ export const JobStatusUpdateSchema = z.object({
   latestUpdate: z.date().nullable(),
   latestInterviewScheduledDate: z.date().nullable(),
   jobId: z.string().trim().min(1, { error: "Job ID is required." }),
+  interviewIdx: z.number().int().nullable(),
+  interviewDate: z.date({ error: "Please enter a valid date." }).nullable(),
+  interviewLocation: z.string().trim().min(1, { error: "Interview location is required." }).nullable(),
+  interviewerName: z.string().trim().nullable(),
+  interviewerContact: z.string().trim().nullable(),
 });
 
 export const ProfileEditFormSchema = z.object({
   id: z.string().trim().min(1, { error: "User ID is required." }),
+  altEmail: z.email({ error: "Please enter a valid email." }).trim().nullable(),
+  bio: z.string().trim().nullable(),
   firstName: z.string().trim().nullable(),
   lastName: z.string().trim().nullable(),
   contact_number: z.string().trim().nullable(),
@@ -124,11 +135,29 @@ export const ProfileEditFormSchema = z.object({
   country: z.string().trim().nullable(),
   zip_code: z.string().trim().nullable(),
   preferredCurrency: z.string().max(3, { error: "Preferred currency must be at most 3 characters." }).min(1, { error: "Preferred currency is required." }).nullable(),
+  personal_url: z.string().regex(/^https?:\/\/[^\s$.?#].[^\s]*$/i, { error: "Please enter a valid URL." }).trim().nullable(),
+  linkedin_url: z.string().regex(/^https?:\/\/[^\s$.?#].[^\s]*$/i, { error: "Please enter a valid URL." }).trim().nullable(),
+  portfolio_url: z.string().regex(/^https?:\/\/[^\s$.?#].[^\s]*$/i, { error: "Please enter a valid URL." }).trim().nullable(),
 });
 
 export const ScheduleInterviewFormStateSchema = z.object({
   jobId: z.string().trim().min(1, { error: "Job ID is required." }),
-  latestInterviewScheduledDate: z.string().trim().min(1, { error: "Please enter a valid date." }),
+  interviewIdx: z.number().int().nullable(),
+  interviewDate: z.date({ error: "Please enter a valid date." }).nullable(),
+  interviewLocation: z.string().trim().min(1, { error: "Interview location is required." }).nullable(),
+  interviewerName: z.string().trim().nullable(),
+  interviewerContact: z.string().trim().nullable(),
+});
+
+export const InterviewSchema = z.object({
+  jobId: z.string().trim().min(1, { error: "Job ID is required." }),
+  interviewIdx: z.number().int().min(0, { error: "Interview index must be a non-negative integer." }),
+  interviewId: z.string().trim().nullable(),
+  interviewDate: z.date({ error: "Please enter a valid date." }),
+  interviewLocation: z.string().trim().min(1, { error: "Interview location is required." }),
+  interviewerName: z.string().trim().nullable(),
+  interviewerContact: z.string().trim().nullable(),
+  notes: z.string().trim().nullable(),
 });
 
 export type SignupFormState =
@@ -179,6 +208,16 @@ export type ApplicationFormState =
         jobDescription?: string[];
         referenceLink?: string[];
         notes?: string[];
+        interviews?: {
+          jobId?: string[];
+          interviewIdx?: string[];
+          interviewId?: string[];
+          interviewDate?: string[];
+          interviewLocation?: string[];
+          interviewerName?: string[];
+          interviewerContact?: string[];
+          notes?: string[];
+        }[];
       };
       message?: string;
       values?: {
@@ -197,9 +236,19 @@ export type ApplicationFormState =
         jobDescription: string | null;
         referenceLink: string | null;
         notes: string | null;
+        interviews: {
+          jobId: string;
+          interviewIdx: number;
+          interviewId: string | null;
+          interviewDate: Date;
+          interviewLocation: string;
+          interviewerName: string | null;
+          interviewerContact: string | null;
+          notes: string | null;
+        }[];
       };
     }
-  | undefined;
+    | undefined;
 
 export type JobDescriptionComponentState =
   | {
@@ -236,6 +285,12 @@ export type JobStatusUpdateState =
         latestUpdate?: string[];
         latestInterviewScheduledDate?: string[];
         jobId?: string[];
+        interviewIdx?: string[];
+        interviewId?: string[];
+        interviewDate?: string[];
+        interviewLocation?: string[];
+        interviewerName?: string[];
+        interviewerContact?: string[];
       };
       message?: string;
       values?: {
@@ -243,6 +298,12 @@ export type JobStatusUpdateState =
         latestUpdate: Date | null;
         latestInterviewScheduledDate: Date | null;
         jobId: string;
+        interviewIdx: number | null;
+        interviewId: string | null;
+        interviewDate: Date | null;
+        interviewLocation: string | null;
+        interviewerName: string | null;
+        interviewerContact: string | null;
       };
     }
   | undefined;
@@ -251,6 +312,8 @@ export type ProfileEditFormState =
   | {
       errors?: {
         id?: string[];
+        altEmail?: string[];
+        bio?: string[];
         firstName?: string[];
         lastName?: string[];
         contact_number?: string[];
@@ -261,10 +324,15 @@ export type ProfileEditFormState =
         country?: string[];
         zip_code?: string[];
         preferredCurrency?: string[];
+        personal_url?: string[];
+        linkedin_url?: string[];
+        portfolio_url?: string[];
       };
       message?: string;
       values?: {
         id: string;
+        altEmail: string | null;
+        bio: string | null;
         firstName: string | null;
         lastName: string | null;
         contact_number: string | null;
@@ -275,6 +343,9 @@ export type ProfileEditFormState =
         country: string | null;
         zip_code: string | null;
         preferredCurrency: string | null;
+        personal_url: string | null;
+        linkedin_url: string | null;
+        portfolio_url: string | null;
       };
     }
   | undefined;
@@ -283,12 +354,46 @@ export type ScheduleInterviewFormState =
   | {
       errors?: {
         jobId?: string[];
-        latestInterviewScheduledDate?: string[];
+        interviewIdx?: string[];
+        interviewId?: string[];
+        interviewDate?: string[];
+        interviewLocation?: string[];
+        interviewerName?: string[];
+        interviewerContact?: string[];
       };
       message?: string;
       values?: {
         jobId: string;
-        latestInterviewScheduledDate: Date;
+        interviewIdx: number;
+        interviewId: string | null;
+        interviewDate: Date;
+        interviewLocation: string;
+        interviewerName: string | null;
+        interviewerContact: string | null;
+      };
+    }
+  | undefined;
+
+export type InterviewFormState =
+  | {
+      errors?: {
+        jobId?: string[];
+        interviewId?: string[];
+        interviewDate?: string[];
+        interviewLocation?: string[];
+        interviewerName?: string[];
+        interviewerContact?: string[];
+        notes?: string[];
+      };
+      message?: string;
+      values?: {
+        jobId: string;
+        interviewId: string | null;
+        interviewDate: Date;
+        interviewLocation: string;
+        interviewerName: string | null;
+        interviewerContact: string | null;
+        notes: string | null;
       };
     }
   | undefined;

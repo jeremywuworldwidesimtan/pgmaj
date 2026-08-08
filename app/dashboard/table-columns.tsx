@@ -149,23 +149,23 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
     },
   },
   {
-    accessorKey: "latestInterviewScheduledDate",
-    header: "Interview Date",
+    accessorKey: "interviews",
+    header: "Latest Interview Date",
     cell: ({ row }) => {
-      const interviewDate = row.getValue("latestInterviewScheduledDate")
-        ? new Date(row.getValue("latestInterviewScheduledDate"))
+      const interviewDate = row.original.interviews?.[0]?.interviewDate
+        ? new Date(row.original.interviews[0].interviewDate)
         : null;
+      const interviewLocation = row.original.interviews?.[0]?.interviewLocation ?? "N/A";
       return (
         <div className="flex flex-col">
-          <span>
+          {interviewDate ? (<><span>
             {interviewDate
               ? parseDate(interviewDate, "british", "short", "dot")
               : "N/A"}
           </span>
-          {/* Get the time value */}
           <span className="text-xs text-muted-foreground">
-            {interviewDate ? interviewDate.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }) : ""}
-          </span>
+            {interviewDate ? interviewDate.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }) : ""} {interviewLocation && `at ${interviewLocation}`}
+          </span></>) : (<span>N/A</span>)}
         </div>
       );
     },

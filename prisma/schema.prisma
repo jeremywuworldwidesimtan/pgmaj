@@ -41,6 +41,22 @@ enum Role {
   Admin
 }
 
+enum DegreeType {
+  HighSchool
+  Diploma
+  Associate
+  Bachelor
+  Master
+  Doctorate
+}
+
+enum ProficiencyLevel {
+  Beginner
+  Intermediate
+  Advanced
+  Expert
+}
+
 model User {
   id              String   @id @default(uuid())
   email           String   @unique
@@ -53,6 +69,7 @@ model User {
   jobApplications JobApplication[]
   preferredCurrency String?  @default("$")
   userDetails     UserDetails?
+  resume          Resume?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   softDeleted     Boolean  @default(false)
@@ -61,6 +78,8 @@ model User {
 model UserDetails {
   userId    String   @id @unique
   user      User     @relation(fields: [userId], references: [id])
+  altEmail  String?
+  bio       String?
   contact_number String?
   addr_line1 String?
   addr_line2 String?
@@ -68,6 +87,9 @@ model UserDetails {
   state      String?
   country    String?
   zip_code   String?
+  personal_website_url String?
+  linkedin_url String?
+  portfolio_url String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   softDeleted Boolean @default(false)
@@ -87,6 +109,7 @@ model JobApplication {
   appliedDate                  DateTime?
   latestUpdate                 DateTime?
   latestInterviewScheduledDate DateTime?
+  interviews                   Interview[]
   jobDescription               JobDescription?
   referenceLink                String?
   notes                        String?
@@ -105,4 +128,121 @@ model JobDescription {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   softDeleted  Boolean   @default(false)
+}
+
+model Interview {
+  id          String   @id @default(uuid())
+  jobId       String
+  job         JobApplication @relation(fields: [jobId], references: [id])
+  interviewIdx Int
+  interviewDate DateTime
+  interviewLocation String
+  interviewerName String?
+  interviewerContact String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  softDeleted Boolean   @default(false)
+}
+
+model Resume {
+  id       String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  details ResumeDetails?
+  experiences ResumeExperience[]
+  educations ResumeEducation[]
+  projects ResumeProjects[]
+  skills ResumeSkills[]
+  certifications ResumeCertifications[]
+  fileReferenceLink String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  softDeleted Boolean @default(false)
+}
+
+model ResumeDetails {
+  id          String   @id @default(uuid())
+  resumeId    String   @unique
+  resume      Resume   @relation(fields: [resumeId], references: [id])
+  role        String?
+  bio         String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  softDeleted Boolean @default(false)
+}
+
+model ResumeExperience {
+  id          String   @id @default(uuid())
+  resumeId    String
+  resume      Resume   @relation(fields: [resumeId], references: [id])
+  company     String
+  position    String
+  location    String
+  jobType     JobType
+  jobMode     JobMode
+  lastSalary  Float?
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  softDeleted Boolean  @default(false)
+}
+
+model ResumeEducation {
+  id          String   @id @default(uuid())
+  resumeId    String
+  resume      Resume   @relation(fields: [resumeId], references: [id])
+  institution String
+  degree      DegreeType
+  fieldOfStudy String
+  gpa         Float?
+  startDate   DateTime
+  endDate     DateTime?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  softDeleted Boolean  @default(false)
+}
+
+model ResumeProjects {
+  id          String   @id @default(uuid())
+  resumeId    String
+  resume      Resume   @relation(fields: [resumeId], references: [id])
+  name        String
+  description String?
+  link        String?
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  softDeleted Boolean  @default(false)
+}
+
+model ResumeSkills {
+  id          String   @id @default(uuid())
+  resumeId    String
+  resume      Resume   @relation(fields: [resumeId], references: [id])
+  skill       String
+  proficiency ProficiencyLevel
+  yearsOfExperience Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  softDeleted Boolean  @default(false)
+}
+
+model ResumeCertifications {
+  id          String   @id @default(uuid())
+  resumeId    String
+  resume      Resume   @relation(fields: [resumeId], references: [id])
+  name        String
+  issuingOrganization String
+  issueDate   DateTime
+  expirationDate DateTime?
+  credentialId String?
+  credentialUrl String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  softDeleted Boolean  @default(false)
 }

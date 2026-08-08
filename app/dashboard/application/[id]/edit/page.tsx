@@ -29,10 +29,22 @@ async function getJobDesc(id: string) {
   return response;
 }
 
+async function getInterviews(id: string) {
+  // Fetch data from your API here.
+  const response = await prisma.interview.findMany({
+    where: {
+      jobId: id,
+      softDeleted: false,
+    },
+  });
+  return response;
+}
+
 export default async function EditApplication({ params }: { params: { id: string } }) {
   const { id } = await params;
   const data = await getFormData(id);
   const jobDesc = await getJobDesc(id);
+  const interviews = await getInterviews(id);
 
   if (!data || data.softDeleted) {
     notFound();
@@ -45,7 +57,7 @@ export default async function EditApplication({ params }: { params: { id: string
         <h1 className="text-3xl font-bold mt-2">Edit Application</h1>
 
         <div>
-            <ApplicationForm formData={{ ...data, jobDescription: jobDesc?.description || null }} />
+            <ApplicationForm formData={{ ...data, jobDescription: jobDesc?.description, interviewCount: interviews.length, interviews: interviews.map(interview => ({ interviewId: interview.id, ...interview })) || null }} />
         </div>
     </>
   )

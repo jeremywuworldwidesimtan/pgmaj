@@ -1,9 +1,15 @@
-name: Run Jest Tests
-on: [push, pull_request]
+name: Run test and code quality checks
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
-  test:
+  lint:
+    name: ESLint
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -11,10 +17,99 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-cache: 'npm' 
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Run production ESLint checks
+        env:
+          PRODUCTION_LINT: 'true'
+        run: npm run lint
+
+  test:
+    name: ODI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci     
+
+      - name: Build Project for Production
+        env:
+          NODE_ENV: production
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npm run build-gh
+
       - name: Run Jest
-        run: npm run test -- --ci
+        run: npm run test
+
+      - name: Run ESLint for Production (to prevent personal data leaks through logging)
+        # This injects the variable so ESLint catches console.log
+        env:
+          NODE_ENV: production
+        run: npm run lint
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+
+    # Grant permissions to write comments to the PR
+    permissions:
+      pull-requests: write
+
+    # Fork PRs do not receive repository secrets.
+    if: >
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project for production
+        env:
+          NODE_ENV: production
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npm run build-gh
+      
+      - name: Count Deleted Console Logs
+        id: count_logs
+        run: |
+          # Count lines containing console.log in the build output diff
+          DELETED_COUNT=$(git diff | grep -c "^\+.*console\.log" || true)
+          
+          # Create a markdown message file
+          echo "# GitHub Actions ProdCleaner by Fortnite Battle Pass" > pr_summary.md
+          echo "---" >> pr_summary.md
+          echo "### 📊 Production Build Report" >> pr_summary.md
+          echo "🧹 **$DELETED_COUNT** \`console.log\` statements were automatically stripped for production." >> pr_summary.md
+          echo "" >> pr_summary.md
+          echo "_Verified by GitHub Actions ProdCleaner by Fortnite Battle Pass._" >> pr_summary.md
+
+      - name: Post PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: console-log-cleanup-report
+          path: pr_summary.md

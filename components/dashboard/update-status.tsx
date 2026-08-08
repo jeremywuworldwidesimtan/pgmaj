@@ -18,6 +18,7 @@ import SelectField from "../fields/select-field";
 import { Checkbox } from "../ui/checkbox";
 import DateField from "../fields/date-field";
 import { JobStatusUpdateState } from "@/app/lib/definitions";
+import InputField from "../fields/input-field";
 
 export type UpdateStatusButtonProps = {
   jobId: string;
@@ -110,19 +111,42 @@ export default function UpdateStatusButton({
                   }}>
                     Use today&apos;s date
                   </Button> */}
-                    <DateField
-                      id="latestInterviewScheduledDate"
-                      name="latestInterviewScheduledDate"
-                      label="Interview Date"
-                      value={interviewDate || ""}
-                      error={
-                        state?.errors?.latestInterviewScheduledDate
-                          ? state.errors.latestInterviewScheduledDate.join(", ")
-                          : ""
-                      }
-                      placeholder="Select the interview date"
-                      timeField={true}
-                    />
+                    <div className="grid grid-cols-1 gap-4 mt-2">
+                      <input type="hidden" name={`interviewIdx`} value={""} />
+                      <DateField
+                        id={`interviewDate`}
+                        name={`interviewDate`}
+                        label="Interview Date"
+                        value={""}
+                        error={""}
+                        placeholder="Select the interview date"
+                        timeField={true}
+                      />
+                      <InputField
+                        id={`interviewLocation`}
+                        name={`interviewLocation`}
+                        label="Interview Location"
+                        value={""}
+                        error={""}
+                        placeholder="Enter the interview location"
+                      />
+                      <InputField
+                        id={`interviewerName`}
+                        name={`interviewerName`}
+                        label="Interviewer Name"
+                        value={""}
+                        error={""}
+                        placeholder="Enter the interviewer name"
+                      />
+                      <InputField
+                        id={`interviewerContact`}
+                        name={`interviewerContact`}
+                        label="Interviewer Contact"
+                        value={""}
+                        error={""}
+                        placeholder="Enter the interviewer contact"
+                      />
+                    </div>
                     {/* <Button variant="outline" size="sm" onClick={() => {
                     setInterviewDate(new Date().toISOString().split("T")[0]);
                   }}>
@@ -143,11 +167,7 @@ export default function UpdateStatusButton({
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              type="submit"
-              disabled={pending}
-              onClick={() => {}}
-            >
+            <Button type="submit" disabled={pending} onClick={() => {}}>
               {pending ? "Updating..." : "Update Status"}
             </Button>
           </DialogFooter>

@@ -1,8 +1,8 @@
 export const roadmap = [
   {
-    version: "Beta 0.5",
+    version: "Beta 0.6",
     features: [
-      "Resume information storage including education, experience, skills and certifications.",
+      "Import and parse PDF resume.",
       "Linked your In.",
       "Support for Roy's Roadside Guide."
     ],
@@ -10,11 +10,9 @@ export const roadmap = [
   {
     version: "medium-term",
     features: [
-      "Master resume builder.",
       "Rich text/markdown support for job description and notes.",
       "Interview prep.",
       "Proper dashboard.",
-      "Scheduler.",
       "API integration with selected job platforms.",
     ],
   },

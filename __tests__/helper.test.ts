@@ -1,6 +1,6 @@
 // Test helper functions
 
-import { formatType, parseDate, colorStatus, shortenWebURL } from "@/app/lib/helper";
+import { formatType, parseDate, colorStatus, shortenWebURL, getDateDifference, formatEdu } from "@/app/lib/helper";
 
 describe("formatType test", () => {
     test("formatType should format job types correctly", () => {
@@ -12,6 +12,27 @@ describe("formatType test", () => {
         expect(formatType("Full_Time")).toBe("Full_Time");
         expect(formatType("remote")).not.toBe("Remote");
         expect(formatType("Part_Time")).not.toBe("Part-Time");
+    });
+});
+
+describe("formatEdu test", () => {
+    test("formatEdu should format education types correctly", () => {
+        expect(formatEdu("HighSchool")).toBe("High School");
+        expect(formatEdu("High-School")).not.toBe("High School");
+        expect(formatEdu("Diploma")).toBe("Diploma");
+        expect(formatEdu("Associate")).toBe("Associate Degree");
+        expect(formatEdu("Associate")).not.toBe("Associate");
+        expect(formatEdu("Bachelor")).toBe("Bachelor's Degree");
+        expect(formatEdu("Bachelor")).not.toBe("Bachelor's");
+        expect(formatEdu("Bachelor")).not.toBe("Bachelor");
+        expect(formatEdu("Bachelor")).not.toBe("Bachelor Degree");
+        expect(formatEdu("Master")).toBe("Master's Degree");
+        expect(formatEdu("Master")).not.toBe("Master's");
+        expect(formatEdu("Master")).not.toBe("Master");
+        expect(formatEdu("Master")).not.toBe("Master Degree");
+        expect(formatEdu("Doctorate")).toBe("Doctorate/PhD");
+        expect(formatEdu("Doctorate")).not.toBe("Doctorate");
+        expect(formatEdu("Other")).toBe("Other");
     });
 });
 
@@ -155,5 +176,23 @@ describe("shortenWebURL test", () => {
         expect(shortenWebURL("https://g.co/bro2345796")).toBe("g.co");
         expect(shortenWebURL("https://youtu.be/dQw4w9WgXcQ")).not.toBe("youtu.be/dQw4w9WgXcQ");
         expect(shortenWebURL("https://youtu.be/dQw4w9WgXcQ")).not.toBe("https://youtu.be/");
+    });
+});
+
+describe("getDateDifference test", () => {
+    test("getDateDifference should return correct difference in years and months (inclusive of final month)", () => {
+        const startDate = new Date(2020, 0, 1); // January 1, 2020
+        const endDate = new Date(2023, 5, 15); // June 15, 2023
+        expect(getDateDifference(startDate, endDate)).toBe("3 yr, 6 mos");
+    });
+    test("getDateDifference should return correct difference in just months (inclusive of final month)", () => {
+        const startDate = new Date(2020, 0, 1); // January 1, 2020
+        const endDate = new Date(2020, 1, 15); // February 15, 2020
+        expect(getDateDifference(startDate, endDate)).toBe("0 yr, 2 mos");
+    });
+    test("getDateDifference should return correct difference in just months (inclusive of final month)", () => {
+        const startDate = new Date(2020, 0, 1); // January 1, 2020
+        const endDate = new Date(2020, 0, 22); // January 22, 2020
+        expect(getDateDifference(startDate, endDate)).toBe("0 yr, 1 mos");
     });
 });

@@ -55,6 +55,17 @@ async function getJobDesc(id: string) {
   return response;
 }
 
+async function getInterviews(id: string) {
+  // Fetch data from your API here.
+  const response = await prisma.interview.findMany({
+    where: {
+      jobId: id,
+      softDeleted: false,
+    },
+  });
+  return response;
+}
+
 export default async function ApplicationDetailsPage({
   params,
 }: {
@@ -63,6 +74,7 @@ export default async function ApplicationDetailsPage({
   const { id } = await params;
   const data = await getData(id);
   const jobDesc = await getJobDesc(id);
+  const interviews = await getInterviews(id);
   const session = await verifySession();
   const user = await getUser(session.userId);
   const preferredCurrency = user?.preferredCurrency || "$"; // Default to "$" if not set
@@ -115,14 +127,14 @@ export default async function ApplicationDetailsPage({
         </Link>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="flex flex-col gap-2 mt-4">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
               <p>
                 <strong>Job Type:</strong> {formatType(data.jobType)}
               </p>
               <p>
                 <strong>Job Mode:</strong> {formatType(data.jobMode)}
               </p>
-              <p className="lg:col-span-2">
+              <p>
                 <strong>Status:</strong>{" "}
                 <span className={colorStatus(data.status)}>
                   {formatType(data.status)}
@@ -130,7 +142,7 @@ export default async function ApplicationDetailsPage({
               </p>
             </div>
             <div>
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 lg:gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
                 <p>
                   <strong>Applied:</strong>{" "}
                   {data.appliedDate
@@ -143,22 +155,20 @@ export default async function ApplicationDetailsPage({
                     ? parseDate(data.latestUpdate, "british", "short", "dot")
                     : "N/A"}
                 </p>
-                <p className="lg:col-span-2">
-                  <strong>Interview:</strong>{" "}
-                  {data.latestInterviewScheduledDate
-                    ? `${parseDate(
-                        data.latestInterviewScheduledDate,
-                        "british",
-                        "short",
-                        "dot",
-                      )} ${data.latestInterviewScheduledDate.toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}`
-                    : "N/A"}
-                </p>
               </div>
             </div>
+            {interviews.length > 0 && (
+              <div>
+                <p><strong>Interviews:</strong></p>
+                <div>
+                  {interviews.map((interview) => (
+                    <p key={interview.id}>
+                      {parseDate(interview.interviewDate, "british", "short", "dot")} at {interview.interviewLocation} {interview.interviewerName && `(with ${interview.interviewerName})`}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
             <div>
               {data.minPay && data.maxPay ? (
                 <p>
