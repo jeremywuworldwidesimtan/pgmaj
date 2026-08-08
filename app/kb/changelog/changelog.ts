@@ -59,9 +59,14 @@ export const changelog = [
   },
   {
     version: "Beta 0.5.0",
-    date: "2026-08-03",
+    date: "2026-08-08",
     changes: [
         "Rework interview date system and scheduling to accommodate multiple interview rounds.",
+        "Added resume section for basic details, experience, education, projects, skills and certifications.",
+        "Fixed proxy issue for redirect.",
+        "Strengthen CRUD security by ensuring the session user can only perform write, update and delete operations on their own data.",
+        "Fixed date validation to prevent illogical dates.",
+        "Built CI/CD to remove console.log() statements in production code (massive privacy risk alleviated)."
     ],
   }
 ];
