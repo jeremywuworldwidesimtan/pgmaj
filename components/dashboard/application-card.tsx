@@ -26,9 +26,9 @@ export default function ApplicationCard({
             ? `${application.preferredCurrency ?? "$"}${application.minPay.toLocaleString()}`
             : "N/A"} {application.payFrequency}
       </p>
-      {application.latestInterview && (
+      {application.interviews && (
         <p className="text-sm">
-          Next interview {parseDate(application.latestInterview.interviewDate || new Date(), "british", "long", "dot")} at {application.latestInterview.interviewLocation} {application.latestInterview.interviewerName && `(with ${application.latestInterview.interviewerName})`}
+          Next interview {parseDate(application.interviews[0].interviewDate || new Date(), "british", "long", "dot")} at {application.interviews[0].interviewLocation} {application.interviews[0].interviewerName && `(with ${application.interviews[0].interviewerName})`}
         </p>
       )}
     </Card>
