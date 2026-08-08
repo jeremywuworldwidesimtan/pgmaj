@@ -9,7 +9,7 @@ import { scheduleInterview } from "@/app/actions/scheduler";
 import InputField from "../fields/input-field";
 import { FieldGroup } from "../ui/field";
 
-export type userApplications = {
+export type userApplicationProps = {
   id: string;
   position: string;
   company: string;
@@ -20,7 +20,7 @@ const initialState: ScheduleInterviewFormState = undefined;
 export default function ScheduleForm({
   userApplications,
 }: {
-  userApplications: userApplications;
+  userApplications: userApplicationProps;
 }) {
   const unscheduledOptions = userApplications.map((app) => ({
     value: app.id,
@@ -63,8 +63,8 @@ export default function ScheduleForm({
                   id={`interviewDate`}
                   name={`interviewDate`}
                   label="Interview Date"
-                  value={""}
-                  error={""}
+                  value={state?.values?.interviewDate || ""}
+                  error={state?.errors?.interviewDate ? state.errors.interviewDate.join(", ") : ""}
                   placeholder="Select the interview date"
                   timeField={true}
                 />
@@ -72,24 +72,24 @@ export default function ScheduleForm({
                   id={`interviewLocation`}
                   name={`interviewLocation`}
                   label="Interview Location"
-                  value={""}
-                  error={""}
+                  value={state?.values?.interviewLocation || ""}
+                  error={state?.errors?.interviewLocation ? state.errors.interviewLocation.join(", ") : ""}
                   placeholder="Enter the interview location"
                 />
                 <InputField
                   id={`interviewerName`}
                   name={`interviewerName`}
                   label="Interviewer Name"
-                  value={""}
-                  error={""}
+                  value={state?.values?.interviewerName || ""}
+                  error={state?.errors?.interviewerName ? state.errors.interviewerName.join(", ") : ""}
                   placeholder="Enter the interviewer name"
                 />
                 <InputField
                   id={`interviewerContact`}
                   name={`interviewerContact`}
                   label="Interviewer Contact"
-                  value={""}
-                  error={""}
+                  value={state?.values?.interviewerContact || ""}
+                  error={state?.errors?.interviewerContact ? state.errors.interviewerContact.join(", ") : ""}
                   placeholder="Enter the interviewer contact"
                 />
               </FieldGroup>

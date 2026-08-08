@@ -27,12 +27,9 @@ async function getData(): Promise<JobApplicationPrisma[]> {
     orderBy: {
       appliedDate: "desc",
     },
-  });
-  const latestInterviews = await Promise.all(
-    jobApplications.map((app) =>
-      prisma.interview.findFirst({
+    include: {
+      interviews: {
         where: {
-          jobId: app.id,
           softDeleted: false,
         },
         orderBy: {
@@ -44,12 +41,12 @@ async function getData(): Promise<JobApplicationPrisma[]> {
           interviewDate: true,
           interviewLocation: true,
         },
-      })
-    )
-  );
+        take: 1, // Only fetch the latest interview
+      },
+    },
+  });
   return jobApplications.map((app) => ({
     ...app,
-    latestInterview: latestInterviews.find(interview => interview?.jobId === app.id) || null,
     preferredCurrency, // Add the preferred currency to each application
   }));
 }
@@ -61,7 +58,9 @@ export default async function Dashboard() {
     <>
       <div className="flex flex-col md:flex-row w-full items-center justify-between gap-2">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold">Applications Dashboard</h1>
+          <h1 className="text-2xl md:text-3xl font-bold">
+            Applications Dashboard
+          </h1>
           <p className="text-sm text-muted-foreground">
             Here you can manage your job applications and track your progress.
           </p>

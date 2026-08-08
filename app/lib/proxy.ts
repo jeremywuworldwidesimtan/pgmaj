@@ -10,7 +10,7 @@ const publicRoutes = ['/kb', '/']
 export default async function proxy(req: NextRequest) {
   // 2. Check if the current route is protected or public
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route.replace('/*', '')))
+  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route.replace('*', '')))
   const isLogoutRoute = logoutRoutes.includes(path)
   const isPublicRoute = publicRoutes.includes(path)
  

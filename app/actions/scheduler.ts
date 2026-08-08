@@ -39,27 +39,23 @@ export async function getSchedule(): Promise<CalendarSchedule[] | undefined> {
       },
     });
 
-    console.log("Fetched applications for schedule:", applications);
-
     const schedule: CalendarSchedule[] = [];
     for (const app of applications) {
       for (const interview of app.interviews) {
-        if (interview.interviewDate) {
-          schedule.push({
-            id: app.id,
-            fullDate: interview.interviewDate,
-            day: interview.interviewDate.getDate().toString(),
-            event: {
-              title: `${app.position} at ${app.company} (${interview.interviewIdx + 1})`,
-              time: interview.interviewDate.toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              }),
-              link: `/dashboard/application/${app.id}`,
-              location: interview.interviewLocation,
-            },
-          });
-        }
+        schedule.push({
+          id: `${app.id}-${interview.interviewIdx}`,
+          fullDate: interview.interviewDate,
+          day: interview.interviewDate.getDate().toString(),
+          event: {
+            title: `${app.position} at ${app.company} (${app.interviews.length - app.interviews.indexOf(interview)})`,
+            time: interview.interviewDate.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            link: `/dashboard/application/${app.id}`,
+            location: interview.interviewLocation,
+          },
+        });
       }
     }
 

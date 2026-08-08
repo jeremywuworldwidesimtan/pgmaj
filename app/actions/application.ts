@@ -55,7 +55,7 @@ async function updatejobApplication(
   userId: string,
   jobId: string,
   data: JobApplicationPayload,
-  interviews: interviewPayload[]
+  interviews: interviewPayload[],
 ) {
   // Separate the job description from the payload
   const { jobDescription, ...updateData } = data || {};
@@ -74,13 +74,6 @@ async function updatejobApplication(
   await prisma.jobApplication.update({
     where: { id: jobId },
     data: updateData,
-  });
-
-  // to combat duplicates, we need to hard delete (flush) interviews first
-  await prisma.interview.deleteMany({
-    where: {
-      jobId,
-    },
   });
 
   for (const interview of interviews) {
@@ -117,7 +110,6 @@ export async function updateJobDescription(
   state: JobDescriptionComponentState | undefined,
   formData: FormData,
 ): Promise<JobDescriptionComponentState> {
-
   // Validate that the user owns the job application before updating
   const jobApplicationUserId = await prisma.jobApplication.findUnique({
     where: { id: formData.get("jobId") as string },
@@ -230,7 +222,9 @@ export async function updateJobStatus(
       ? new Date(formData.get("latestInterviewScheduledDate") as string)
       : null,
     jobId: formData.get("jobId"),
-    interviewIdx: highestIdx._max.interviewIdx ? highestIdx._max.interviewIdx + 1 : 0,
+    interviewIdx: highestIdx._max.interviewIdx
+      ? highestIdx._max.interviewIdx + 1
+      : 0,
     interviewId: formData.get("interviewId") || null,
     interviewDate: formData.get("interviewDate")
       ? new Date(formData.get("interviewDate") as string)
@@ -246,7 +240,11 @@ export async function updateJobStatus(
     select: { appliedDate: true },
   });
 
-  if (validatedFields?.data?.latestUpdate && appliedDate?.appliedDate && validatedFields.data.latestUpdate < appliedDate.appliedDate) {
+  if (
+    validatedFields?.data?.latestUpdate &&
+    appliedDate?.appliedDate &&
+    validatedFields.data.latestUpdate < appliedDate.appliedDate
+  ) {
     return {
       errors: {
         latestUpdate: ["Latest update must be after the applied date."],
@@ -255,7 +253,11 @@ export async function updateJobStatus(
     };
   }
 
-  if (validatedFields?.data?.interviewDate && appliedDate?.appliedDate && validatedFields.data.interviewDate < appliedDate.appliedDate) {
+  if (
+    validatedFields?.data?.interviewDate &&
+    appliedDate?.appliedDate &&
+    validatedFields.data.interviewDate < appliedDate.appliedDate
+  ) {
     return {
       errors: {
         interviewDate: ["Interview date must be after the applied date."],
@@ -268,7 +270,7 @@ export async function updateJobStatus(
     return {
       errors: validatedFields?.error?.flatten()?.fieldErrors || {},
       message: "Validation failed. Please check the form fields.",
-    }
+    };
   }
 
   const {
@@ -295,7 +297,7 @@ export async function updateJobStatus(
         where: { id: jobId },
         data: { status, latestUpdate },
       });
-    // if only interview date changed
+      // if only interview date changed
     } else if (!latestUpdate && interviewDate) {
       await prisma.interview.create({
         data: {
@@ -328,7 +330,10 @@ export async function updateJobStatus(
   redirect("/dashboard/application/" + jobId);
 }
 
-async function createjobApplication(data: JobApplicationPayload, interviews: interviewPayload[]) {
+async function createjobApplication(
+  data: JobApplicationPayload,
+  interviews: interviewPayload[],
+) {
   // use session-based ID
   const session = await verifySession();
   // Separate the job description from the payload
@@ -375,7 +380,9 @@ export async function deletejobApplication(jobId: string) {
   const userId = session.userId;
 
   if (!jobApplicationUserId || jobApplicationUserId.userId !== userId) {
-    throw new Error("You do not have permission to delete this job application.");
+    throw new Error(
+      "You do not have permission to delete this job application.",
+    );
   }
 
   await prisma.jobApplication.update({
@@ -415,25 +422,42 @@ export async function submitApplicationForm(
   for (let i = 0; i < interviewCount; i++) {
     const interviewDate = formData.get(`interviewDate_${i}`);
 
-    if (interviewDate && new Date(interviewDate as string) < new Date(formData.get("appliedDate") as string)) {
+    if (
+      interviewDate &&
+      new Date(interviewDate as string) <
+        new Date(formData.get("appliedDate") as string)
+    ) {
       return {
         message: `Interview date at index ${i} must be after the applied date.`,
-      }
+      };
     }
 
     const interviewLocation = formData.get(`interviewLocation_${i}`);
     const interviewerName = formData.get(`interviewerName_${i}`);
     const interviewerContact = formData.get(`interviewerContact_${i}`);
-    const interviewId = formData.get(`interviewID_${i}`); // Get the interview ID if it exists
-    if (interviewDate || interviewLocation || interviewerName || interviewerContact) {
+    const interviewIdxRaw = formData.get(`interviewIdx_${i}`);
+    const interviewId = formData.get(`interviewId_${i}`); // Get the interview ID if it exists
+    if (
+      interviewDate ||
+      interviewLocation ||
+      interviewerName ||
+      interviewerContact
+    ) {
       interviews.push({
         jobId: formData.get("jobId") as string,
-        interviewIdx: i,
+        interviewIdx:
+          interviewIdxRaw !== null && interviewIdxRaw !== ""
+            ? Number(interviewIdxRaw)
+            : i, // Use the provided index or default to the loop index
         interviewId: interviewId ? (interviewId as string) : null,
         interviewDate: interviewDate ? new Date(interviewDate as string) : null,
-        interviewLocation: interviewLocation ? (interviewLocation as string) : null,
+        interviewLocation: interviewLocation
+          ? (interviewLocation as string)
+          : null,
         interviewerName: interviewerName ? (interviewerName as string) : null,
-        interviewerContact: interviewerContact ? (interviewerContact as string) : null,
+        interviewerContact: interviewerContact
+          ? (interviewerContact as string)
+          : null,
         notes: null,
       });
     }
@@ -465,7 +489,7 @@ export async function submitApplicationForm(
     notes: formData.get("notes"),
   });
 
-  console.log("Application form schema validation passed")
+  console.log("Application form schema validation passed");
 
   let interviewValidation = true;
   const validatedInterviews = [];
@@ -475,7 +499,9 @@ export async function submitApplicationForm(
       jobId: interview.jobId,
       interviewIdx: interview.interviewIdx,
       interviewId: interview.interviewId,
-      interviewDate: interview.interviewDate ? new Date(interview.interviewDate) : null,
+      interviewDate: interview.interviewDate
+        ? new Date(interview.interviewDate)
+        : null,
       interviewLocation: interview.interviewLocation || "",
       interviewerName: interview.interviewerName || null,
       interviewerContact: interview.interviewerContact || null,
@@ -483,14 +509,18 @@ export async function submitApplicationForm(
     });
     if (!validatedInterview.success) {
       interviewValidation = false;
-      console.error("Interview schema validation failed for interview index", interview.interviewIdx, ":", validatedInterview.error.flatten().fieldErrors);
+      console.error(
+        "Interview schema validation failed for interview index",
+        interview.interviewIdx,
+        ":",
+        validatedInterview.error.flatten().fieldErrors,
+      );
       break;
     } else {
       validatedInterviews.push(validatedInterview.data);
-      console.log("Interview schema validation passed")
+      console.log("Interview schema validation passed");
     }
   }
-
 
   if (!validatedFields.success || !interviewValidation) {
     return {
@@ -508,7 +538,9 @@ export async function submitApplicationForm(
         latestUpdate: formData.get("latestUpdate")
           ? new Date(formData.get("latestUpdate") as string)
           : null,
-        latestInterviewScheduledDate: formData.get("latestInterviewScheduledDate")
+        latestInterviewScheduledDate: formData.get(
+          "latestInterviewScheduledDate",
+        )
           ? new Date(formData.get("latestInterviewScheduledDate") as string)
           : null,
         minPay: Number(formData.get("minPay")),
@@ -548,7 +580,12 @@ export async function submitApplicationForm(
       };
     }
 
-    const updateApplicationStatus = await updatejobApplication(session.userId, jobId, payload, validatedInterviews);
+    const updateApplicationStatus = await updatejobApplication(
+      session.userId,
+      jobId,
+      payload,
+      validatedInterviews,
+    );
     if (!updateApplicationStatus) {
       return {
         message: "You do not have permission to update this job application.",

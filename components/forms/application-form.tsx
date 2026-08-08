@@ -21,7 +21,17 @@ import {
 } from "@/app/types";
 import { submitApplicationForm } from "@/app/actions/application";
 import { type ApplicationFormState } from "@/app/lib/definitions";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 export type ApplicationFormProps = {
   formData?: {
@@ -63,7 +73,9 @@ const initialState: ApplicationFormState = undefined;
 export default function ApplicationForm({
   formData: data,
 }: ApplicationFormProps) {
-  const [interviewCount, setInterviewCount] = useState(data?.interviewCount || 0);
+  const [interviewCount, setInterviewCount] = useState(
+    data?.interviewCount || 0,
+  );
   const [state, formAction, pending] = useActionState(
     submitApplicationForm,
     initialState,
@@ -267,7 +279,8 @@ export default function ApplicationForm({
             <div>
               <FieldLegend>Interviews</FieldLegend>
               <FieldDescription>
-                Information about the scheduled interviews for the job application.
+                Information about the scheduled interviews for the job
+                application.
               </FieldDescription>
             </div>
             <div className="flex gap-2">
@@ -280,19 +293,36 @@ export default function ApplicationForm({
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Are you sure you want to remove the last interview?</AlertDialogTitle>
+                      <AlertDialogTitle>
+                        Are you sure you want to remove the last interview?
+                      </AlertDialogTitle>
                     </AlertDialogHeader>
                     <AlertDialogDescription>
-                      This action will remove the last interview from the form. If you have already saved this interview, it will also be removed from the database. This action cannot be undone.
+                      This action will remove the last interview from the form.
+                      If you have already saved this interview, it will also be
+                      removed from the database. This action cannot be undone.
                     </AlertDialogDescription>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => setInterviewCount(interviewCount - 1)}>Remove</AlertDialogAction>
+                      <AlertDialogAction
+                        onClick={() => setInterviewCount(interviewCount - 1)}
+                      >
+                        Remove
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
               )}
-              <Button variant="secondary" size="sm" type="button" onClick={() => interviewCount < 5 ? setInterviewCount(interviewCount + 1) : null}>
+              <Button
+                variant="secondary"
+                size="sm"
+                type="button"
+                onClick={() =>
+                  interviewCount < 5
+                    ? setInterviewCount(interviewCount + 1)
+                    : null
+                }
+              >
                 Add Interview
               </Button>
             </div>
@@ -303,15 +333,30 @@ export default function ApplicationForm({
               <div key={index}>
                 <p className="font-medium">Interview Round {index + 1}</p>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
-                  <input type="hidden" name={`interviewIdx_${index}`} value={data?.interviews?.[index]?.interviewIdx || ""} />
+                  <input
+                    type="hidden"
+                    name={`interviewIdx_${index}`}
+                    value={data?.interviews?.[index]?.interviewIdx ?? ""}
+                  />
+                  <input
+                    type="hidden"
+                    name={`interviewId_${index}`}
+                    value={data?.interviews?.[index]?.interviewId ?? ""}
+                  />
                   <DateField
                     id={`interviewDate_${index}`}
                     name={`interviewDate_${index}`}
                     label="Interview Date"
-                    value={data?.interviews?.[index]?.interviewDate || state?.values?.interviews?.[index]?.interviewDate || ""}
+                    value={
+                      data?.interviews?.[index]?.interviewDate ||
+                      state?.values?.interviews?.[index]?.interviewDate ||
+                      ""
+                    }
                     error={
                       state?.errors?.interviews
-                        ? state.errors?.interviews?.[index]?.interviewDate?.join(", ")
+                        ? state.errors?.interviews?.[
+                            index
+                          ]?.interviewDate?.join(", ")
                         : ""
                     }
                     placeholder="Select the interview date"
@@ -321,10 +366,16 @@ export default function ApplicationForm({
                     id={`interviewLocation_${index}`}
                     name={`interviewLocation_${index}`}
                     label="Interview Location"
-                    value={data?.interviews?.[index]?.interviewLocation || state?.values?.interviews?.[index]?.interviewLocation || ""}
+                    value={
+                      data?.interviews?.[index]?.interviewLocation ||
+                      state?.values?.interviews?.[index]?.interviewLocation ||
+                      ""
+                    }
                     error={
                       state?.errors?.interviews
-                        ? state.errors?.interviews?.[index]?.interviewLocation?.join(", ")
+                        ? state.errors?.interviews?.[
+                            index
+                          ]?.interviewLocation?.join(", ")
                         : ""
                     }
                     placeholder="Enter the interview location"
@@ -333,10 +384,16 @@ export default function ApplicationForm({
                     id={`interviewerName_${index}`}
                     name={`interviewerName_${index}`}
                     label="Interviewer Name"
-                    value={data?.interviews?.[index]?.interviewerName || state?.values?.interviews?.[index]?.interviewerName || ""}
+                    value={
+                      data?.interviews?.[index]?.interviewerName ||
+                      state?.values?.interviews?.[index]?.interviewerName ||
+                      ""
+                    }
                     error={
                       state?.errors?.interviews
-                        ? state.errors?.interviews?.[index]?.interviewerName?.join(", ")
+                        ? state.errors?.interviews?.[
+                            index
+                          ]?.interviewerName?.join(", ")
                         : ""
                     }
                     placeholder="Enter the interviewer name"
@@ -345,10 +402,16 @@ export default function ApplicationForm({
                     id={`interviewerContact_${index}`}
                     name={`interviewerContact_${index}`}
                     label="Interviewer Contact"
-                    value={data?.interviews?.[index]?.interviewerContact || state?.values?.interviews?.[index]?.interviewerContact || ""}
+                    value={
+                      data?.interviews?.[index]?.interviewerContact ||
+                      state?.values?.interviews?.[index]?.interviewerContact ||
+                      ""
+                    }
                     error={
                       state?.errors?.interviews
-                        ? state.errors?.interviews?.[index]?.interviewerContact?.join(", ")
+                        ? state.errors?.interviews?.[
+                            index
+                          ]?.interviewerContact?.join(", ")
                         : ""
                     }
                     placeholder="Enter the interviewer contact"
@@ -356,7 +419,6 @@ export default function ApplicationForm({
                 </div>
               </div>
             ))}
-
           </FieldGroup>
         </FieldSet>
         <FieldSeparator />
@@ -371,7 +433,9 @@ export default function ApplicationForm({
               id="jobDescription"
               name="jobDescription"
               label="Job Description"
-              value={data?.jobDescription || state?.values?.jobDescription || ""}
+              value={
+                data?.jobDescription || state?.values?.jobDescription || ""
+              }
               error={
                 state?.errors?.jobDescription
                   ? state.errors.jobDescription.join(", ")
@@ -379,24 +443,28 @@ export default function ApplicationForm({
               }
               placeholder="Enter the job description"
             />
-          <FieldGroup>
-            <InputField
-              id="referenceLink"
-              name="referenceLink"
-              label="Reference Link"
-              value={data?.referenceLink || state?.values?.referenceLink || "https://www."}
-              error={
-                state?.errors?.referenceLink
-                  ? state.errors.referenceLink.join(", ")
-                  : ""
-              }
-              placeholder="Enter the reference link"
-              required
-            />
-            {/* <Button>
+            <FieldGroup>
+              <InputField
+                id="referenceLink"
+                name="referenceLink"
+                label="Reference Link"
+                value={
+                  data?.referenceLink ||
+                  state?.values?.referenceLink ||
+                  "https://www."
+                }
+                error={
+                  state?.errors?.referenceLink
+                    ? state.errors.referenceLink.join(", ")
+                    : ""
+                }
+                placeholder="Enter the reference link"
+                required
+              />
+              {/* <Button>
               Paste from clipboard
             </Button> */}
-          </FieldGroup>
+            </FieldGroup>
             <TextareaField
               id="notes"
               name="notes"
@@ -407,11 +475,7 @@ export default function ApplicationForm({
             />
           </FieldGroup>
         </FieldSet>
-        <Button
-          type="submit"
-          disabled={pending}
-          className="w-full md:w-auto"
-        >
+        <Button type="submit" disabled={pending} className="w-full md:w-auto">
           {pending ? "Saving..." : "Save"}
         </Button>
       </form>

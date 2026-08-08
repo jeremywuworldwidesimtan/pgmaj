@@ -39,7 +39,6 @@ export default function DeleteButton({ jobId }: { jobId: string }) {
             try {
               await deletejobApplication(jobId);
             } catch (error) {
-              console.error(error);
               setError("An error occurred while deleting the application.");
             }
           }}>

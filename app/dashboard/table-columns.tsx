@@ -149,13 +149,13 @@ export const columns: ColumnDef<JobApplicationPrisma>[] = [
     },
   },
   {
-    accessorKey: "interviewDate",
+    accessorKey: "interviews",
     header: "Latest Interview Date",
     cell: ({ row }) => {
-      const interviewDate = row.original.latestInterview?.interviewDate
-        ? new Date(row.original.latestInterview.interviewDate)
+      const interviewDate = row.original.interviews?.[0]?.interviewDate
+        ? new Date(row.original.interviews[0].interviewDate)
         : null;
-      const interviewLocation = row.original.latestInterview?.interviewLocation ?? "N/A";
+      const interviewLocation = row.original.interviews?.[0]?.interviewLocation ?? "N/A";
       return (
         <div className="flex flex-col">
           {interviewDate ? (<><span>
