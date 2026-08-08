@@ -80,6 +80,19 @@ export const ResumeSkillSchema = z.object({
   yearsOfExperience: z.number({ error: "Years of experience must be a number." }).gte(0, { error: "Years of experience must be at least 0." }),
 });
 
+export const ResumeCertificationSchema = z.object({
+  id: z.string().nullable(),
+  name: z.string().trim().min(1, { error: "Certification name is required." }),
+  issuingOrganization: z.string().trim().min(1, { error: "Issuing organization is required." }),
+  issueDate: z.date({ error: "Please enter a valid issue date." }),
+  expirationDate: z.date().nullable(),
+  credentialId: z.string().trim().nullable(),
+  credentialUrl: z.url({ error: "Please enter a valid URL." }).trim().nullable(),
+}).refine((data) => !data.expirationDate || data.expirationDate > data.issueDate, {
+  message: "Expiration date must be after the issue date",
+  path: ["expirationDate"], // This attaches the error directly to the expirationDate field
+});
+
 export type ResumeDetailsState =
   | {
       errors?: {
@@ -192,3 +205,26 @@ export type ResumeSkillState =
     }
   | undefined;
 
+export type ResumeCertificationState =
+  | {
+      errors?: {
+        id?: string;
+        name?: string;
+        issuingOrganization?: string;
+        issueDate?: string;
+        expirationDate?: string;
+        credentialId?: string;
+        credentialUrl?: string;
+      };
+      message?: string;
+      values?: {
+        id: string;
+        name: string;
+        issuingOrganization: string;
+        issueDate: Date;
+        expirationDate?: Date | null;
+        credentialId?: string | null;
+        credentialUrl?: string | null;
+      };
+    }
+  | undefined;

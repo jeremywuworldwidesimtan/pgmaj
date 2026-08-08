@@ -38,7 +38,9 @@ export default async function BasicDetails() {
           <h2 className="text-2xl font-bold">Basic Details</h2>
           <p className="text-sm text-muted-foreground">
             Here you can manage your basic details, including your name, contact
-            information, and other personal information.
+            information, and other personal information. These details are
+            stored securely and will not be shared with any third parties.
+            Please ensure that you provide accurate and up-to-date information.
           </p>
         </div>
 

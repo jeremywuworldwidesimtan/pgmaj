@@ -62,7 +62,7 @@ export default function ProfileEditForm({
             label="Email"
             type="email"
             value={initialValues?.email ?? ""}
-            description="Your email address. This cannot be changed."
+            description="Your account email address. This cannot be changed."
             disabled
           />
           <InputField
