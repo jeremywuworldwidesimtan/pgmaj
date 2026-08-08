@@ -30,7 +30,7 @@ jobs:
           NODE_ENV: production
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
-        run: npm run build
+        run: npm run build-gh
 
       - name: Count Deleted Console Logs
         id: count_logs
