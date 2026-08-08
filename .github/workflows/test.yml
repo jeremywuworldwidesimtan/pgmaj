@@ -28,7 +28,7 @@ jobs:
       - name: Build Project for Production
         env:
           NODE_ENV: production
-        run: npm run build
+        run: npm run build-no-prisma
 
       # Step 2: Calculate stripped logs and save to a file
       - name: Count Deleted Console Logs
