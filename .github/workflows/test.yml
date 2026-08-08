@@ -29,11 +29,8 @@ jobs:
         run: npm run lint
 
   test:
+    name: ODI
     runs-on: ubuntu-latest
-
-    # Grant permissions to write comments to the PR
-    permissions:
-      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -55,9 +52,6 @@ jobs:
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: npm run build-gh
 
-      - name: Write Step Summary
-        run: cat pr_summary.md >> $GITHUB_STEP_SUMMARY
-
       - name: Run Jest
         run: npm run test
 
@@ -70,6 +64,10 @@ jobs:
   build:
     name: Production build
     runs-on: ubuntu-latest
+
+    # Grant permissions to write comments to the PR
+    permissions:
+      pull-requests: write
 
     # Fork PRs do not receive repository secrets.
     if: >
