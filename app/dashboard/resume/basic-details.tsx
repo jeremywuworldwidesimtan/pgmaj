@@ -1,4 +1,4 @@
-import { FullUserInfo, getFullUserInfo } from "@/app/actions/getUserInfo";
+import { getFullUserInfo } from "@/app/actions/getUserInfo";
 import { verifySession } from "@/app/lib/dal";
 import { shortenWebURL } from "@/app/lib/helper";
 import EditResumeDetailsButton from "@/components/resume/edit-resume-details-button";

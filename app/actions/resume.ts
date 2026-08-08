@@ -9,6 +9,8 @@ import {
   ResumeEducationState,
   ResumeExperienceSchema,
   ResumeExperienceState,
+  ResumeProjectSchema,
+  ResumeProjectState,
   ResumeSkillSchema,
   ResumeSkillState,
 } from "../lib/resume-definitions";
@@ -388,7 +390,141 @@ export const deleteEducation = async (educationId: string) => {
 // #endregion
 
 // #region Projects Actions
+export async function submitResumeProject(
+  _state: ResumeProjectState,
+  formData: FormData,
+): Promise<ResumeProjectState> {
+  // get user id from session
+  const session = await verifySession();
 
+  const validatedFields = ResumeProjectSchema.safeParse({
+    id: formData.get("id") || null,
+    name: formData.get("name"),
+    link: formData.get("link") || null,
+    startDate: new Date(formData.get("startDate") as string),
+    endDate: formData.get("endDate")
+      ? new Date(formData.get("endDate") as string)
+      : null,
+    description: formData.get("description") || null,
+  });
+
+  if (validatedFields?.data?.id) {
+    // Validate that the user owns the resume before updating
+    const project = await prisma.resumeProjects.findUnique({
+      where: {
+        id: validatedFields.data.id,
+      },
+      select: {
+        resume: {
+          select: { userId: true },
+        },
+      },
+    });
+
+    const session = await verifySession();
+    const userId = session.userId;
+    if (!project || project.resume.userId !== userId) {
+      console.log("Resume not found or user does not own the resume.");
+      return {
+        message: "You do not have permission to update this resume.",
+      };
+    }
+  }
+
+  if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten().fieldErrors;
+    return {
+      errors: {
+        id: errors.id?.[0],
+        name: errors.name?.[0],
+        link: errors.link?.[0],
+        startDate: errors.startDate?.[0],
+        endDate: errors.endDate?.[0],
+        description: errors.description?.[0],
+      },
+      values: {
+        id: formData.get("id") as string,
+        name: formData.get("name") as string,
+        link: formData.get("link") as string || null,
+        startDate: new Date(formData.get("startDate") as string),
+        endDate: formData.get("endDate")
+          ? new Date(formData.get("endDate") as string)
+          : null,
+        description: formData.get("description") as string || null,
+      },
+    };
+  }
+
+  const {
+    id,
+    name,
+    link,
+    startDate,
+    endDate,
+    description,
+  } = validatedFields.data;
+
+  // Prisma's upsert nested inside an update will create the experience if missing or update them if they exist
+  await prisma.resume.update({
+    where: { userId: session.userId },
+    data: {
+      projects: {
+        upsert: {
+          where: { id: id || "" },
+          create: {
+            name,
+            link,
+            startDate,
+            endDate,
+            description,
+          },
+          update: {
+            name,
+            link,
+            startDate,
+            endDate,
+            description,
+          },
+        },
+      },
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=projects");
+  redirect("/dashboard/resume?tab=projects");
+}
+
+export const deleteProject = async (projectId: string) => {
+  // Validate that the user owns the resume before updating
+  const project = await prisma.resumeProjects.findUnique({
+    where: {
+      id: projectId,
+    },
+    select: {
+      resume: {
+        select: { userId: true },
+      },
+    },
+  });
+
+  const session = await verifySession();
+  const userId = session.userId;
+  if (!project || project.resume.userId !== userId) {
+    console.log("Resume not found or user does not own the resume.");
+    return {
+      message: "You do not have permission to update this resume.",
+    };
+  }
+  await prisma.resumeProjects.update({
+    where: { id: projectId },
+    data: {
+      softDeleted: true,
+    },
+  });
+
+  revalidatePath("/dashboard/resume?tab=projects");
+  redirect("/dashboard/resume?tab=projects");
+};
 // #endregion
 
 // #region Skills Actions

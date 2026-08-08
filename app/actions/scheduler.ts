@@ -135,6 +135,49 @@ export async function scheduleInterview(
 
   console.log("Received:", validatedFields);
 
+  // check against the applied date of the job application and the latest interview date of the job application
+  const appliedDate = await prisma.jobApplication.findUnique({
+    where: { id: formData.get("jobId") as string },
+    select: { appliedDate: true },
+  });
+
+  const latestInterview = await prisma.interview.findFirst({
+    where: {
+      jobId: formData.get("jobId") as string,
+      softDeleted: false,
+    },
+    orderBy: {
+      interviewDate: "desc",
+    },
+    select: {
+      interviewDate: true,
+    },
+  });
+
+  if (appliedDate?.appliedDate && validatedFields?.data?.interviewDate) {
+    if (validatedFields.data.interviewDate < appliedDate.appliedDate) {
+      return {
+        errors: {
+          interviewDate: [
+            "Interview date must be after the applied date of the job application.",
+          ],
+        },
+      };
+    }
+  }
+
+  if (latestInterview?.interviewDate && validatedFields?.data?.interviewDate) {
+    if (validatedFields.data.interviewDate < latestInterview.interviewDate) {
+      return {
+        errors: {
+          interviewDate: [
+            "Interview date must be after the latest interview date of the job application.",
+          ],
+        },
+      };
+    }
+  }
+
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,

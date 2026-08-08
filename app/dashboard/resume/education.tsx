@@ -1,5 +1,4 @@
 import { verifySession } from "@/app/lib/dal";
-import { ResumeEducationProps } from "@/app/types";
 import EducationCardList from "@/components/resume/education-card-list";
 import ResumeEducationButton from "@/components/resume/resume-education-button";
 import { Card } from "@/components/ui/card";

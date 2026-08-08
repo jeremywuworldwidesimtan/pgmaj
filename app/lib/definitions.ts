@@ -86,6 +86,9 @@ export const ApplicationFormSchema = z.object({
     .trim()
     .nullable(),
   notes: z.string().trim().nullable(),
+}).refine((data) => !data.latestUpdate || data.latestUpdate >= data.appliedDate, {
+  message: "Latest update must be after the applied date",
+  path: ["latestUpdate"], // This attaches the error directly to the latestUpdate field
 });
 
 export const JobDescriptionComponentSchema = z.object({

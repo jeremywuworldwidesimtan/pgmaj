@@ -240,6 +240,30 @@ export async function updateJobStatus(
     interviewerContact: formData.get("interviewerContact") || null,
   });
 
+  // date checking: if latestUpdate is provided, it must be on or after appliedDate; if interviewDate is provided, it must be on or after latestUpdate and appliedDate
+  const appliedDate = await prisma.jobApplication.findUnique({
+    where: { id: formData.get("jobId") as string },
+    select: { appliedDate: true },
+  });
+
+  if (validatedFields?.data?.latestUpdate && appliedDate?.appliedDate && validatedFields.data.latestUpdate < appliedDate.appliedDate) {
+    return {
+      errors: {
+        latestUpdate: ["Latest update must be after the applied date."],
+      },
+      message: "Validation failed. Please check the form fields.",
+    };
+  }
+
+  if (validatedFields?.data?.interviewDate && appliedDate?.appliedDate && validatedFields.data.interviewDate < appliedDate.appliedDate) {
+    return {
+      errors: {
+        interviewDate: ["Interview date must be after the applied date."],
+      },
+      message: "Validation failed. Please check the form fields.",
+    };
+  }
+
   if (!validatedFields.success) {
     return {
       errors: validatedFields?.error?.flatten()?.fieldErrors || {},
@@ -390,6 +414,13 @@ export async function submitApplicationForm(
 
   for (let i = 0; i < interviewCount; i++) {
     const interviewDate = formData.get(`interviewDate_${i}`);
+
+    if (interviewDate && new Date(interviewDate as string) < new Date(formData.get("appliedDate") as string)) {
+      return {
+        message: `Interview date at index ${i} must be after the applied date.`,
+      }
+    }
+
     const interviewLocation = formData.get(`interviewLocation_${i}`);
     const interviewerName = formData.get(`interviewerName_${i}`);
     const interviewerContact = formData.get(`interviewerContact_${i}`);

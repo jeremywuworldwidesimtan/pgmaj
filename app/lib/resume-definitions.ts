@@ -30,6 +30,9 @@ export const ResumeExperienceSchema = z.object({
   startDate: z.date({ error: "Please enter a valid date." }),
   endDate: z.date().nullable(),
   description: z.string().trim().nullable(),
+}).refine((data) => !data.endDate || data.endDate > data.startDate, {
+  message: "End date must be after the start date",
+  path: ["endDate"], // This attaches the error directly to the endDate field
 });
 
 export const ResumeEducationSchema = z.object({
@@ -48,6 +51,21 @@ export const ResumeEducationSchema = z.object({
   startDate: z.date({ error: "Please enter a valid date." }),
   endDate: z.date().nullable(),
   description: z.string().trim().nullable(),
+}).refine((data) => !data.endDate || data.endDate > data.startDate, {
+  message: "End date must be after the start date",
+  path: ["endDate"], // This attaches the error directly to the endDate field
+});
+
+export const ResumeProjectSchema = z.object({
+  id: z.string().nullable(),
+  name: z.string().trim().min(1, { error: "Project name is required." }),
+  link: z.url({ error: "Please enter a valid URL." }).trim().nullable(),
+  startDate: z.date({ error: "Please enter a valid date." }),
+  endDate: z.date().nullable(),
+  description: z.string().trim().nullable(),
+}).refine((data) => !data.endDate || data.endDate > data.startDate, {
+  message: "End date must be after the start date",
+  path: ["endDate"], // This attaches the error directly to the endDate field
 });
 
 export const ResumeSkillSchema = z.object({
@@ -134,6 +152,28 @@ export type ResumeEducationState =
     }
   | undefined;
 
+export type ResumeProjectState =
+  | {
+      errors?: {
+        id?: string;
+        name?: string;
+        link?: string;
+        startDate?: string;
+        endDate?: string;
+        description?: string;
+      };
+      message?: string;
+      values?: {
+        id: string;
+        name: string;
+        link?: string | null;
+        startDate: Date;
+        endDate?: Date | null;
+        description?: string | null;
+      };
+    }
+  | undefined;
+
 export type ResumeSkillState =
   | {
       errors?: {
@@ -151,3 +191,4 @@ export type ResumeSkillState =
       };
     }
   | undefined;
+
