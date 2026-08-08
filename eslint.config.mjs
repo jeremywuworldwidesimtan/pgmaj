@@ -7,7 +7,7 @@ const eslintConfig = defineConfig([
   ...nextTs,
   {
     rules: {
-      "no-console": process.env.NODE_ENV === "production" ? "error" : "off",
+      
     },
   },
   // Override default ignores of eslint-config-next.

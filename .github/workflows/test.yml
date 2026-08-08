@@ -6,6 +6,28 @@ on:
     branches: [main, master]
 
 jobs:
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run production ESLint checks
+        env:
+          PRODUCTION_LINT: 'true'
+        run: npm run lint
+
   test:
     runs-on: ubuntu-latest
 
@@ -20,7 +42,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-cache: "npm"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci     
@@ -32,6 +55,47 @@ jobs:
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: npm run build-gh
 
+      - name: Write Step Summary
+        run: cat pr_summary.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Run Jest
+        run: npm run test
+
+      - name: Run ESLint for Production (to prevent personal data leaks through logging)
+        # This injects the variable so ESLint catches console.log
+        env:
+          NODE_ENV: production
+        run: npm run lint
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+
+    # Fork PRs do not receive repository secrets.
+    if: >
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project for production
+        env:
+          NODE_ENV: production
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: npm run build-gh
+      
       - name: Count Deleted Console Logs
         id: count_logs
         run: |
@@ -51,15 +115,3 @@ jobs:
         with:
           header: console-log-cleanup-report
           path: pr_summary.md
-
-      - name: Write Step Summary
-        run: cat pr_summary.md >> $GITHUB_STEP_SUMMARY
-
-      - name: Run Jest
-        run: npm run test
-
-      - name: Run ESLint for Production (to prevent personal data leaks through logging)
-        # This injects the variable so ESLint catches console.log
-        env:
-          NODE_ENV: production
-        run: npm run lint
