@@ -18,7 +18,12 @@ import {
 } from "../lib/resume-definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { JobTypePrisma, JobModePrisma, DegreeType, ProficiencyLevel } from "../types";
+import {
+  JobTypePrisma,
+  JobModePrisma,
+  DegreeType,
+  ProficiencyLevel,
+} from "../types";
 
 // #region Resume Actions
 export async function updateResumeDetails(
@@ -119,7 +124,6 @@ export async function submitResumeExperience(
     const session = await verifySession();
     const userId = session.userId;
     if (!experience || experience.resume.userId !== userId) {
-      console.log("Resume not found or user does not own the resume.");
       return {
         message: "You do not have permission to update this resume.",
       };
@@ -225,7 +229,6 @@ export const deleteExperience = async (experienceId: string) => {
   const session = await verifySession();
   const userId = session.userId;
   if (!experience || experience.resume.userId !== userId) {
-    console.log("Resume not found or user does not own the resume.");
     return {
       message: "You do not have permission to delete this experience.",
     };
@@ -279,7 +282,6 @@ export async function submitResumeEducation(
     const session = await verifySession();
     const userId = session.userId;
     if (!education || education.resume.userId !== userId) {
-      console.log("Resume not found or user does not own the resume.");
       return {
         message: "You do not have permission to update this resume.",
       };
@@ -374,7 +376,6 @@ export const deleteEducation = async (educationId: string) => {
   const session = await verifySession();
   const userId = session.userId;
   if (!education || education.resume.userId !== userId) {
-    console.log("Resume not found or user does not own the resume.");
     return {
       message: "You do not have permission to delete this education.",
     };
@@ -426,7 +427,6 @@ export async function submitResumeProject(
     const session = await verifySession();
     const userId = session.userId;
     if (!project || project.resume.userId !== userId) {
-      console.log("Resume not found or user does not own the resume.");
       return {
         message: "You do not have permission to update this resume.",
       };
@@ -447,24 +447,18 @@ export async function submitResumeProject(
       values: {
         id: formData.get("id") as string,
         name: formData.get("name") as string,
-        link: formData.get("link") as string || null,
+        link: (formData.get("link") as string) || null,
         startDate: new Date(formData.get("startDate") as string),
         endDate: formData.get("endDate")
           ? new Date(formData.get("endDate") as string)
           : null,
-        description: formData.get("description") as string || null,
+        description: (formData.get("description") as string) || null,
       },
     };
   }
 
-  const {
-    id,
-    name,
-    link,
-    startDate,
-    endDate,
-    description,
-  } = validatedFields.data;
+  const { id, name, link, startDate, endDate, description } =
+    validatedFields.data;
 
   // Prisma's upsert nested inside an update will create the experience if missing or update them if they exist
   await prisma.resume.update({
@@ -512,7 +506,6 @@ export const deleteProject = async (projectId: string) => {
   const session = await verifySession();
   const userId = session.userId;
   if (!project || project.resume.userId !== userId) {
-    console.log("Resume not found or user does not own the resume.");
     return {
       message: "You do not have permission to delete this project.",
     };
@@ -541,7 +534,7 @@ export async function submitResumeSkill(
     id: formData.get("id") || null,
     skill: formData.get("skill"),
     proficiency: formData.get("proficiency") as ProficiencyLevel,
-    yearsOfExperience: Number(formData.get("yearsOfExperience"))
+    yearsOfExperience: Number(formData.get("yearsOfExperience")),
   });
 
   if (validatedFields?.data?.id) {
@@ -560,7 +553,6 @@ export async function submitResumeSkill(
     const session = await verifySession();
     const userId = session.userId;
     if (!skill || skill.resume.userId !== userId) {
-      console.log("Resume not found or user does not own the resume.");
       return {
         message: "You do not have permission to update this resume.",
       };
@@ -585,12 +577,7 @@ export async function submitResumeSkill(
     };
   }
 
-  const {
-    id,
-    skill,
-    proficiency,
-    yearsOfExperience,
-  } = validatedFields.data;
+  const { id, skill, proficiency, yearsOfExperience } = validatedFields.data;
 
   // Prisma's upsert nested inside an update will create the experience if missing or update them if they exist
   await prisma.resume.update({
@@ -634,7 +621,6 @@ export const deleteSkill = async (skillId: string) => {
   const session = await verifySession();
   const userId = session.userId;
   if (!skill || skill.resume.userId !== userId) {
-    console.log("Resume not found or user does not own the resume.");
     return {
       message: "You do not have permission to delete this skill.",
     };
@@ -669,7 +655,7 @@ export async function submitResumeCertification(
       : null,
     credentialId: formData.get("credentialId") || null,
     credentialUrl: formData.get("credentialUrl") || null,
-    });
+  });
 
   if (validatedFields?.data?.id) {
     // Validate that the user owns the resume before updating
@@ -687,7 +673,6 @@ export async function submitResumeCertification(
     const session = await verifySession();
     const userId = session.userId;
     if (!certification || certification.resume.userId !== userId) {
-      console.log("Resume not found or user does not own the resume.");
       return {
         message: "You do not have permission to update this resume.",
       };
@@ -714,8 +699,8 @@ export async function submitResumeCertification(
         expirationDate: formData.get("expirationDate")
           ? new Date(formData.get("expirationDate") as string)
           : null,
-        credentialId: formData.get("credentialId") as string || null,
-        credentialUrl: formData.get("credentialUrl") as string || null,
+        credentialId: (formData.get("credentialId") as string) || null,
+        credentialUrl: (formData.get("credentialUrl") as string) || null,
       },
     };
   }
@@ -778,7 +763,6 @@ export const deleteCertification = async (certificationId: string) => {
   const session = await verifySession();
   const userId = session.userId;
   if (!certification || certification.resume.userId !== userId) {
-    console.log("Resume not found or user does not own the resume.");
     return {
       message: "You do not have permission to delete this certification.",
     };

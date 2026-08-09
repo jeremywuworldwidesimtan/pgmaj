@@ -40,7 +40,7 @@ function parseDT(date: Date, time: Date): string {
     return "";
   }
   const combinedValueString = `${date.getFullYear().toString().padStart(4, "0")}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}T${time.getHours().toString().padStart(2, "0")}:${time.getMinutes().toString().padStart(2, "0")}:00.000Z`;
-  console.log("parseDT", combinedValueString);
+
   return combinedValueString;
 }
 
@@ -97,13 +97,14 @@ export default function DateField({
               value={date ? formatDate(date) : ""}
               disabled={disabled}
             >
-              {date ? formatDate(date) : <span>Pick a date</span>}<ChevronDownIcon className="text-muted-foreground" data-icon="inline-end" />
+              {date ? formatDate(date) : <span>Pick a date</span>}
+              <ChevronDownIcon
+                className="text-muted-foreground"
+                data-icon="inline-end"
+              />
             </Button>
           </PopoverTrigger>
-          <PopoverContent
-            className="w-auto p-0"
-            align="start"
-          >
+          <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               id={id}
               mode="single"
@@ -119,7 +120,14 @@ export default function DateField({
           <InputField
             id={`${id}-time`}
             type="time"
-            value={time ? time.toLocaleTimeString("en-GB", { hour: '2-digit', minute: '2-digit' }) : ""}
+            value={
+              time
+                ? time.toLocaleTimeString("en-GB", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })
+                : ""
+            }
             placeholder="Pick a time"
             className="text-white"
             onChange={(e) => {

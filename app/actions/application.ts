@@ -463,8 +463,6 @@ export async function submitApplicationForm(
     }
   }
 
-  console.log("Compiled Interviews:", interviews);
-
   const validatedFields = ApplicationFormSchema.safeParse({
     company: formData.get("company"),
     position: formData.get("position"),
@@ -488,8 +486,6 @@ export async function submitApplicationForm(
     referenceLink: formData.get("referenceLink"),
     notes: formData.get("notes"),
   });
-
-  console.log("Application form schema validation passed");
 
   let interviewValidation = true;
   const validatedInterviews = [];
@@ -518,7 +514,6 @@ export async function submitApplicationForm(
       break;
     } else {
       validatedInterviews.push(validatedInterview.data);
-      console.log("Interview schema validation passed");
     }
   }
 
@@ -569,9 +564,6 @@ export async function submitApplicationForm(
   if (!payload.payFrequency) {
     payload.payFrequency = null; // Set to null if empty string
   }
-
-  console.log("Payload to be submitted:", payload);
-  console.log("Payload to be submitted:", validatedInterviews);
 
   if (typeof jobId === "string" && jobId.length > 0) {
     if (!(await prisma.jobApplication.findUnique({ where: { id: jobId } }))) {

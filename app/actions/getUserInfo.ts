@@ -36,19 +36,19 @@ export const getUser = async (userId: string) => {
         firstName: true,
         lastName: true,
         credits: true,
-        preferredCurrency: true
+        preferredCurrency: true,
       },
     });
 
     return user;
   } catch (error) {
-    console.log("Failed to fetch user");
     return null;
   }
 };
 
-export const getFullUserInfo = async (userId: string): Promise<FullUserInfo | null> => {
-  console.log(`Fetching full user info for userId: ${userId}`);
+export const getFullUserInfo = async (
+  userId: string,
+): Promise<FullUserInfo | null> => {
   try {
     const user = await prisma.user.findUnique({
       where: {
@@ -82,7 +82,6 @@ export const getFullUserInfo = async (userId: string): Promise<FullUserInfo | nu
 
     return user;
   } catch (error) {
-    console.log("Failed to fetch user: ", error);
     return null;
   }
 };

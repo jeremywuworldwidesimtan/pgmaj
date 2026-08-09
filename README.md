@@ -12,9 +12,14 @@ Please Give Me A Job (PGMAJ) - an all-in-one centralized job application managem
 ## Current features
 - Track your job applications in one place.
 - Keep notes for each application.
-- View job descriptions and details.
-- See and edit profiles
-- Multi-user accounts
+- Create and view job descriptions and details for applications.
+- View and edit your user profile.
+- Set preferred currency.
+- Multi-user accounts.
+- Keep track of upcoming interviews in a calendar/scheduler-like interface. **(NEW)**
+- Schedule new interviews. **(NEW)**
+- Schedule and keep track of multiple rounds of interviews. **(NEW)**
+- Manage resume details and past experience, education, projects, skills and certifications. **(NEW)**
 ---
 ## Tech Stack Used
 

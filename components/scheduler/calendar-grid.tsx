@@ -16,7 +16,12 @@ const sampleSchedule = [
     id: "1",
     fullDate: new Date(2024, 5, 1),
     day: "1",
-    event: { time: "20:00", title: "Test1", link: "/dashboard/application/1", location: "Location 1" },
+    event: {
+      time: "20:00",
+      title: "Test1",
+      link: "/dashboard/application/1",
+      location: "Location 1",
+    },
   },
   {
     id: "2",
@@ -71,8 +76,6 @@ export default function CalendarGrid({
   const [scheduleState, setScheduleState] = useState<CalendarSchedule[]>(
     filterSchedule(month, year),
   );
-
-  console.log("scheduleState", scheduleState);
 
   return (
     // full width take over remaining height
@@ -169,9 +172,14 @@ export default function CalendarGrid({
                 <div key={i} className="text-xs">
                   <Link
                     href={s.event.link}
-                    className={cn(s.fullDate < new Date() ? "text-muted-foreground line-through" : "text-blue-500 hover:underline")}
+                    className={cn(
+                      s.fullDate < new Date()
+                        ? "text-muted-foreground line-through"
+                        : "text-blue-500 hover:underline",
+                    )}
                   >
-                    {s.event.time} - {s.event.title} {s.event.location && `at ${s.event.location}`}
+                    {s.event.time} - {s.event.title}{" "}
+                    {s.event.location && `at ${s.event.location}`}
                   </Link>
                 </div>
               ))}

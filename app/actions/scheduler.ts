@@ -129,8 +129,6 @@ export async function scheduleInterview(
     interviewerContact: formData.get("interviewerContact") || null,
   });
 
-  console.log("Received:", validatedFields);
-
   // check against the applied date of the job application and the latest interview date of the job application
   const appliedDate = await prisma.jobApplication.findUnique({
     where: { id: formData.get("jobId") as string },

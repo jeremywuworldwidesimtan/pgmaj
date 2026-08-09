@@ -17,8 +17,6 @@ export default async function proxy(req: NextRequest) {
   // 3. Decrypt the session from the cookie
   const cookie = (await cookies()).get('session')?.value
   const session = await decrypt(cookie)
-
-  console.log(`Path: ${path}, session: ${JSON.stringify(session)}`)
  
   // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session?.userId) {
